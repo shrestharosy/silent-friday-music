@@ -1,0 +1,19 @@
+{
+  "short_name": "SFM",
+  "name": "silent-friday-music-extension",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "minion.png",
+    "48": "minion.png",
+    "128": "minion.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.ts", "hot-reload.ts"]
+  },
+  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'"
+}
