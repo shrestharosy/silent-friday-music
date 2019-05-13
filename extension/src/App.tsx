@@ -11,7 +11,9 @@ const App: React.FC = () => {
           Stream music here
         </p>
         <p>
-          Yayy! it works haha
+          Yayy! it works hahahaha
+          <br/>
+          Finally 
         </p>
       </header>
     </div>

@@ -53,4 +53,4 @@ chrome.management.getSelf(self => {
   }
 });
 
-// testinggt
+export {}
