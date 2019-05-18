@@ -4,28 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --config ../prettierrc.json --write \"src/**/*.{ts,tsx,js}\"",
     "tslint": "tslint -c tslint.json -p tsconfig.json"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
-    "husky": "^2.3.0",
-    "lint-staged": "^8.1.7",
-    "prettier": "^1.17.1",
     "tslint": "^5.16.0",
     "tslint-microsoft-contrib": "^6.1.1",
     "typescript": "^3.4.5"
   },
   "dependencies": {
     "express": "^4.16.4"
-  },
-  "hooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js}": [
-      "prettier --config ../prettierrc.json --write \"src/**/*.{ts,tsx,js}\"",
-      "git add"
-    ]
   }
 }
