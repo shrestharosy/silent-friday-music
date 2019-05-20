@@ -1,0 +1,29 @@
+{
+  "name": "silent-friday-music",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/shrestharosy/silent-friday-music.git",
+  "author": "destroyer team",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^2.3.0",
+    "lerna": "^3.14.1",
+    "lint-staged": "^8.1.7",
+    "prettier": "^1.17.1"
+  },
+  "scripts": {
+    "format": "prettier --config ./prettierrc.json --write \"src/**/*.{ts,tsx,js}\"",
+    "test": "echo \"This is a test\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "prettier --config ./prettierrc.json --write \"src/**/*.{ts,tsx,js}\"",
+      "git add"
+    ]
+  }
+}
