@@ -21,6 +21,12 @@
       "run_at": "document_end"
     }
   ],
-  "permissions": ["tabs", "activeTab"],
-  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'"
+  "permissions": ["identity"],
+  "oauth2": {
+    "client_id": "546194211551-4nlkm1ganouhvnvquv8rmoccjpb3lgsq.apps.googleusercontent.com",
+    "scopes": ["email", "profile"]
+  },
+
+  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm8zFPa1MTjDF8SWtPJWoZQOBAsGw1Xy3O8nLdx9/0SZ+fNnxaxDCW82lcg+uIe4zv7uWlk1b+j5gZocxL1kkLxYMj84wsm6QsEsSmwlmR/85UfQy8RfafdxouhW6sR7IcwpJr941yyQppT5dx/MDTman4D2mxNYpJNOvHhrDVbDtLzcfECcxh0bbO+sgj4l/ozMO2mjcuhCs9ni7nwvV7LuLIIHGcf1xiflwAqs1XizeUlGH4zxMeG8ZS/O2Ud0biHfok3C4Te10yQCt+TMJOaCLsf3yhO57KHqj2UPpDFg1AeA6rcFnJ119aeWw6kcWZiK5+Tm/jwnHKNAd1V36swIDAQAB"
 }
