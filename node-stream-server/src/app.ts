@@ -8,14 +8,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-  const youtubeStream = ytdl('', { filter: 'audioonly' });
-  res.set({
-    'Content-Type': 'audio/mpeg',
-  });
-  youtubeStream.on('data', chunks => {
-    console.log(chunks);
-  });
-  res.send();
+  try {
+    const youtubeStream = ytdl('https://www.youtube.com/watch?v=IHNzOHi8sJs', { filter: 'audioonly' });
+    res.set({
+      'Content-Type': 'audio/mpeg',
+    });
+    youtubeStream.pipe(res);
+  } catch (error) {}
 });
 
 export default app;
