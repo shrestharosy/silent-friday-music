@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "loadash": "^1.0.0",
     "webpack": "^4.31.0"
   },
