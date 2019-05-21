@@ -27,6 +27,19 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       { test: /\.tsx?$/, loader: 'ts-loader' },
+      {
+        test: /public\/icons\/.*\.png$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              publicPath: PUBLIC_PATH,
+              outputPath: 'icons',
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
