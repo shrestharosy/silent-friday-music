@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/react": "^16.8.18",
+    "@types/react-dom": "^16.8.4",
     "axios": "^0.18.0",
     "loadash": "^1.0.0",
     "webpack": "^4.31.0"
