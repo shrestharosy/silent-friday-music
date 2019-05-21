@@ -6,7 +6,7 @@ const PUBLIC_PATH = '/';
 
 module.exports = {
   entry: {
-    popup: './src/index.ts',
+    popup: './src/index.tsx',
     background: './src/scripts/background/background.ts',
     content: './src/scripts/content/hotReload.js',
   },
