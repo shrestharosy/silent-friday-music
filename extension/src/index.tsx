@@ -1,7 +1,13 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 
-import './css/main.css';
-import Wrapper from './popup/wrapper';
+import './public';
 
-ReactDOM.render(<Wrapper />, document.getElementById('root'));
+import PopUpApp from './popup/App';
+
+const renderPopup = () => {
+  const rootDiv = document.getElementById('ext-root');
+  if (rootDiv) render(<PopUpApp />, rootDiv);
+};
+
+renderPopup();

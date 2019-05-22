@@ -2,10 +2,15 @@
     "compilerOptions": {
         "sourceMap": true,
         "target": "es6",
-        "module": "commonjs",
+        "module": "esnext",
+        "moduleResolution": "node",
         "jsx": "react"
     },
     "exclude": [
         "node_modules",
-    ]
+    ],
+    "externals": {
+        "react": "React",
+        "react-dom": "ReactDOM"
+      }
 }
