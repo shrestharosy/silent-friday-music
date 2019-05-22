@@ -1,33 +1,57 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+
+const PUBLIC_PATH = '/';
 
 module.exports = {
   entry: {
-    popup: path.join(__dirname, "src", "index.ts"),
-    background: path.join(__dirname, "src", "scripts", "background", "background.ts"),
-    content: path.join(__dirname, "src", "scripts", "content", "hotReload.js")
+    popup: './src/index.tsx',
+    background: './src/scripts/background/background.ts',
+    content: './src/scripts/content/hotReload.js',
   },
   output: {
-    path: path.resolve(__dirname, "dist/js"),
-    filename: "[name].js"
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'js/[name].js',
+    publicPath: PUBLIC_PATH,
   },
   watch: true,
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: ['.ts', '.tsx', '.js'],
   },
   devtool: 'cheap-module-source-map',
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
-      { test: /\.tsx?$/, loader: "ts-loader" }
-    ]
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+      {
+        test: /public\/icons\/.*\.png$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              publicPath: PUBLIC_PATH,
+              outputPath: 'icons',
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "demo"
-    })
-  ]
+      title: 'silent-friday-music',
+      template: './index.html',
+    }),
+    new CopyPlugin([
+      {
+        from: './manifest.json',
+        dest: PUBLIC_PATH,
+      },
+    ]),
+  ],
 };

@@ -1,3 +1,5 @@
 body {
   background: cornsilk;
+  min-width: 280px;
+  min-height: 100px;
 }
