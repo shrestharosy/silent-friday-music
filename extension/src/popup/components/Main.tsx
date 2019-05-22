@@ -26,26 +26,32 @@ class Main extends React.Component<{}, IMainState> {
   };
 
   async componentDidMount() {
-    try {
-      const { avatar, name, streamUrl } = await axiosInstance
-        .post<IBroadcastResponse>('/broadcast', {
-          requestUrl: 'https://www.youtube.com/watch?v=IHNzOHi8sJs',
-        })
-        .then(({ data }) => {
-          console.log(data);
-          return data;
-        })
-        .catch(error => {
-          throw error;
-        });
+    const action = {
+      type: 'LOAD_AUDIO',
+      data: 'https://www.youtube.com/watch?v=IHNzOHi8sJs',
+    };
+    chrome.runtime.sendMessage(action);
 
-      this.setState({
-        isLoaded: true,
-        avatar,
-        name,
-        streamUrl,
-      });
-    } catch (error) {}
+    // try {
+    //   const { avatar, name, streamUrl } = await axiosInstance
+    //     .post<IBroadcastResponse>('/broadcast', {
+    //       requestUrl: 'https://www.youtube.com/watch?v=IHNzOHi8sJs',
+    //     })
+    //     .then(({ data }) => {
+    //       console.log(data);
+    //       return data;
+    //     })
+    //     .catch(error => {
+    //       throw error;
+    //     });
+
+    //   this.setState({
+    //     isLoaded: true,
+    //     avatar,
+    //     name,
+    //     streamUrl,
+    //   });
+    // } catch (error) {}
   }
 
   render() {

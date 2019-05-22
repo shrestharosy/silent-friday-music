@@ -13,13 +13,14 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*/*"
-      ],
-      "js": [
-        "js/content.js"
-      ]
+      "matches": ["https://*/*"],
+      "js": ["js/content.js"]
     }
   ],
-  "permissions": ["https://*/*"]
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": true
+
+  },
+  "permissions": ["webRequest", "<all_urls>"]
 }
