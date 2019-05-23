@@ -3,14 +3,14 @@ const dotEnv = require('dotenv');
 function getEnvConfig() {
   dotEnv.Config({ path: `./.env`});
   if(
-    process.env.CLIENT_ID &&
-    process.env.CLIENT_SECRET &&
-    process.env.REDIRECT
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET &&
+    process.env.GOOGLE_REDIRECT
   ) {
     return {
-      CLIENT_ID: process.env.CLIENT_ID,
-      CLIENT_SECRET: process.env.CLIENT_SECRET,
-      REDIRECT: process.env.REDIRECT
+      CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      REDIRECT: process.env.GOOGLE_REDIRECT
     }
   } else {
     let error = `.env file missing or environment values missing`;
