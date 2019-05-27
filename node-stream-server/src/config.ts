@@ -14,6 +14,12 @@ export default {
     accessTokenSecretKey: process.env.ACCESS_TOKEN_SECRET_KEY || 'abc123',
     refreshTokenSecretKey: process.env.REFRESH_TOKEN_SECRET_KEY || 'abc123'
   },
+  mongo: {
+    mongoUsername: process.env.MONGO_USERNAME,
+    mongoPassword: process.env.MONGO_PASSWORD,
+    mongoHostname: process.env.MONGO_HOSTNAME,
+    mongoPort: process.env.MONGO_PORT,
+    mongoDb: process.env.MONGO_DB
+  },
   timeout: process.env.TIEMOUT
 }
-
