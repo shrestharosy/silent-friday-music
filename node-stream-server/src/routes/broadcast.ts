@@ -13,7 +13,9 @@ broadcastRouter.post('/', async (req, res) => {
       author: { avatar, name },
     } = basicInfo;
     res.status(200).send({ avatar, name, streamUrl: `http://localhost:3002/stream?v=${requestUrl}` });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
 });
 
 export default broadcastRouter;
