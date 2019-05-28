@@ -1,8 +1,8 @@
 import * as React from 'react';
-import axiosInstance from '../utils/axios';
 
-interface IMainState extends IBroadcastResponse {
+interface IMainState {
   isLoaded: boolean;
+  searchLink: string;
 }
 
 interface IBroadcastResponse {
@@ -16,60 +16,45 @@ class Main extends React.Component<{}, IMainState> {
     super(props);
     this.state = {
       isLoaded: false,
-      avatar: '',
-      name: '',
-      streamUrl: '',
+      searchLink: '',
     };
   }
-  handlePlay = () => {
-    console.log('playing....');
-  };
 
-  async componentDidMount() {
+  sendActionToBackground = ({ type, data }: { type: string; data?: Object }) => {
     const action = {
-      type: 'LOAD_AUDIO',
-      data: 'https://www.youtube.com/watch?v=IHNzOHi8sJs',
+      type,
+      data,
     };
     chrome.runtime.sendMessage(action);
+  };
 
-    // try {
-    //   const { avatar, name, streamUrl } = await axiosInstance
-    //     .post<IBroadcastResponse>('/broadcast', {
-    //       requestUrl: 'https://www.youtube.com/watch?v=IHNzOHi8sJs',
-    //     })
-    //     .then(({ data }) => {
-    //       console.log(data);
-    //       return data;
-    //     })
-    //     .catch(error => {
-    //       throw error;
-    //     });
+  handleSearchLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      searchLink: event.currentTarget.value,
+    });
+  };
 
-    //   this.setState({
-    //     isLoaded: true,
-    //     avatar,
-    //     name,
-    //     streamUrl,
-    //   });
-    // } catch (error) {}
-  }
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    this.sendActionToBackground({
+      type: 'LOAD_AUDIO',
+      data: {
+        requestUrl: this.state.searchLink,
+      },
+    });
+  };
 
   render() {
-    const { avatar, name, streamUrl, isLoaded } = this.state;
     return (
       <div>
-        Let's play something...
-        {isLoaded ? (
-          <React.Fragment>
-            <div>
-              <img src={avatar} />
-              <p>{name}</p>
-            </div>
-            <audio onPlay={this.handlePlay} controls src={streamUrl} />
-          </React.Fragment>
-        ) : (
-          <p>Loading...</p>
-        )}
+        <form onSubmit={this.handleSubmit}>
+          <input
+            placeholder="Put something cool!!!"
+            onChange={this.handleSearchLinkChange}
+            value={this.state.searchLink}
+          />
+        </form>
       </div>
     );
   }
