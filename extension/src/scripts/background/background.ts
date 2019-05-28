@@ -1,15 +1,17 @@
 import axios from '../../popup/utils/axios';
 
-function createAudioElement(url: string) {
+let currentAudioElement: HTMLAudioElement | null = null;
+let currentSourceElement: HTMLSourceElement | null = null;
+
+function createAudioElement() {
   const audioElement: HTMLAudioElement = document.createElement('audio');
-  audioElement.setAttribute('preload', 'auto');
-
-  const source: HTMLSourceElement = document.createElement('source');
-  source.type = 'audio/mpeg';
-  source.src = url;
-  audioElement.appendChild(source);
-
   return audioElement;
+}
+
+function createSourceElement() {
+  const sourceElement: HTMLSourceElement = document.createElement('source');
+  sourceElement.type = 'audio/mpeg';
+  return sourceElement;
 }
 
 interface IBroadcastResponse {
@@ -19,34 +21,45 @@ interface IBroadcastResponse {
 }
 
 async function loadAudio(url: string) {
-  const { avatar, name, streamUrl } = await axios
-    .post<IBroadcastResponse>('/broadcast', {
-      requestUrl: url,
-    })
-    .then(({ data }) => {
-      console.log(data);
-      return data;
-    })
-    .catch(error => {
-      throw error;
-    });
+  try {
+    const { avatar, name, streamUrl } = await axios
+      .post<IBroadcastResponse>('/broadcast', {
+        requestUrl: url,
+      })
+      .then(({ data }) => {
+        return data;
+      })
+      .catch(error => {
+        throw error;
+      });
+    changeStreamLink(streamUrl);
+    await currentAudioElement.play();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-  const audioElement = createAudioElement(streamUrl);
-  audioElement.play();
+function changeStreamLink(url: string) {
+  currentAudioElement.setAttribute('src', url);
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  const url = 'http://lezotre.free.fr/Mp3/disco.mp3';
-  const audioElement = createAudioElement(url);
+  if (!currentAudioElement && !currentSourceElement) {
+    const audioElement = createAudioElement();
+    const sourceElement = createSourceElement();
+    currentAudioElement = audioElement;
+    currentSourceElement = sourceElement; // source element append is not working...
+    document.body.appendChild(audioElement);
+  }
 
   switch (request.type) {
     case 'LOAD_AUDIO': {
-      loadAudio(request.data);
+      loadAudio(request.data.requestUrl);
       break;
     }
     case 'PLAY': {
-      audioElement.load;
-      audioElement.play();
+      currentAudioElement.load;
+      currentAudioElement.play();
     }
     default:
   }
