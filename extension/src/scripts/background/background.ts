@@ -1,4 +1,5 @@
 import axios from '../../popup/utils/axios';
+import * as io from 'socket.io-client';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentSourceElement: HTMLSourceElement | null = null;
@@ -43,6 +44,18 @@ function changeStreamLink(url: string) {
   currentAudioElement.setAttribute('src', url);
 }
 
+function initializeEventListeners() {
+  const ioInstance = io('http://localhost:3002');
+  console.log('init....');
+  ioInstance.on('connect', () => {
+    console.log('connected...');
+  });
+  currentAudioElement.addEventListener('timeupdate', () => {
+    console.log(currentAudioElement.currentTime, ioInstance);
+    ioInstance.emit('time-update', { timeStamp: currentAudioElement.currentTime });
+  });
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (!currentAudioElement && !currentSourceElement) {
     const audioElement = createAudioElement();
@@ -50,6 +63,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     currentAudioElement = audioElement;
     currentSourceElement = sourceElement; // source element append is not working...
     document.body.appendChild(audioElement);
+    initializeEventListeners();
   }
 
   switch (request.type) {
