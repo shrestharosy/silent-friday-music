@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import broadcastRouter from './routes/broadcast';
 import streamRouter from './routes/stream';
 import authRouter from './routes/auth';
+import getSocketInstance from './services/socket';
 
 const app = express();
 
