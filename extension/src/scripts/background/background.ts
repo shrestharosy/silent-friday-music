@@ -1,4 +1,5 @@
 import axios from '../../popup/utils/axios';
+import { storageUtils } from '../../popup/utils';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentSourceElement: HTMLSourceElement | null = null;
@@ -61,6 +62,56 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       currentAudioElement.load;
       currentAudioElement.play();
     }
+    case 'GET_YOUTUBE_URL': {
+      console.log('roz', localStorage.getItem('YOUTUBE_URL'));
+      return localStorage.getItem('YOUTUBE_URL');
+    }
     default:
   }
 });
+
+function addTabListener() {
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    fetchActiveYoutubeUrl();
+  });
+
+  chrome.tabs.onCreated.addListener(function(tab) {
+    fetchActiveYoutubeUrl();
+  });
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  fetchActiveYoutubeUrl();
+});
+
+chrome.tabs.onCreated.addListener(function(tab) {
+  fetchActiveYoutubeUrl();
+});
+
+function fetchActiveYoutubeUrl() {
+  chrome.tabs.query({ url: 'https://www.youtube.com/watch*' }, function(tabs) {
+    const recentTab = tabs[tabs.length - 1];
+    // console.log("bg", "recent", recentTab, recentTab.url);
+    if (recentTab) {
+      const action = {
+        type: 'YOUTUBE_URL',
+        data: {
+          url: recentTab.url,
+          title: recentTab.title,
+        },
+      };
+      localStorage.setItem('YOUTUBE_URL', recentTab.url);
+    }
+  });
+}
+
+function performBroadCast(action) {
+  // chrome.tabs.query({ active: true }, tabs => {
+  //   if (tabs.length) {
+  //     chrome.tabs.sendMessage(tabs[0].id, action, response => {
+  //       console.log('broadcasted');
+  //     });
+  //   }
+  // });
+  chrome.runtime.sendMessage(action);
+}

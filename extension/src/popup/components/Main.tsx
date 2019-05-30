@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { storageUtils } from '../utils';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
+  title: string;
 }
 
 interface IBroadcastResponse {
@@ -17,7 +19,36 @@ class Main extends React.Component<{}, IMainState> {
     this.state = {
       isLoaded: false,
       searchLink: '',
+      title: '',
     };
+  }
+
+  componentDidMount() {
+    const action = {
+      type: 'GET_YOUTUBE_URL',
+    };
+    chrome.runtime.sendMessage(action, response => {
+      console.log(response);
+      alert('ola');
+    });
+
+    // const _this = this;
+    // chrome.runtime.onMessage.addListener(function(
+    //   request,
+    //   sender,
+    //   sendResponse
+    // ) {
+    //   debugger
+    //   if (request.type === "YOUTUBE_URL") {
+    //     debugger
+    //     const { title, url } = request.data;
+    //     console.log('popup', title. url)
+    //     _this.setState({
+    //       searchLink: url,
+    //       title
+    //     });
+    //   }
+    // });
   }
 
   sendActionToBackground = ({ type, data }: { type: string; data?: Object }) => {
@@ -46,14 +77,14 @@ class Main extends React.Component<{}, IMainState> {
   };
 
   render() {
+    const { searchLink, title } = this.state;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input
-            placeholder="Put something cool!!!"
-            onChange={this.handleSearchLinkChange}
-            value={this.state.searchLink}
-          />
+          <input placeholder="Put something cool!!!" onChange={this.handleSearchLinkChange} value={searchLink} />
+          <p>Or</p>
+          <div>Please start a YouTube video</div>
+          <div>Title: {title}</div>
         </form>
       </div>
     );

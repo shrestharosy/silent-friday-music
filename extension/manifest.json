@@ -22,5 +22,5 @@
     "persistent": true
 
   },
-  "permissions": ["webRequest", "<all_urls>"]
+  "permissions": ["webRequest", "<all_urls>", "tabs", "storage"]
 }
