@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import * as authServices from '../services/authServices';
+import * as authServices from '../services/auth';
 import * as jwtServices from '../utils/jwt';
+import { createUser, getUserById, getAllUsers, getUserByGoogleId } from '../services/user';
 
 const authRouter = Router();
-
-// TODO: Add status codes and proper formatting to responses
  
 authRouter.post('/login', async (req, res, next) => {
   try {
