@@ -1,4 +1,5 @@
 import axios from '../../popup/utils/axios';
+import { storageUtils } from '../../popup/utils';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentSourceElement: HTMLSourceElement | null = null;
@@ -61,6 +62,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       currentAudioElement.load;
       currentAudioElement.play();
     }
+
     default:
   }
 });
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  fetchActiveYoutubeUrl();
+});
+
+chrome.tabs.onCreated.addListener(function(tab) {
+  fetchActiveYoutubeUrl();
+});
+
+function fetchActiveYoutubeUrl() {
+  chrome.tabs.query({ url: 'https://www.youtube.com/watch*' }, function(tabs) {
+    const recentTab = tabs[tabs.length - 1];
+    console.log(recentTab);
+    if (recentTab) {
+      const { url, title, favIconUrl } = recentTab;
+      localStorage.setItem('YOUTUBE_URL', url);
+      localStorage.setItem('YOUTUBE_TITLE', title);
+      localStorage.setItem('YOUTUBE_IMAGE', favIconUrl);
+    }
+  });
+}
