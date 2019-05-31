@@ -3,3 +3,10 @@ body {
   min-width: 280px;
   min-height: 100px;
 }
+
+input{
+  width: 90%;
+  padding: 3px;
+  border: 1px solid gainsboro;
+  border-radius: 3px;
+}

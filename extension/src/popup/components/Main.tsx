@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { storageUtils } from '../utils';
+import NowPlaying from './NowPlaying';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
-  title: string;
+  title: string | null;
+  imageUrl: string | null;
 }
 
 interface IBroadcastResponse {
@@ -19,36 +21,21 @@ class Main extends React.Component<{}, IMainState> {
     this.state = {
       isLoaded: false,
       searchLink: '',
-      title: '',
+      title: null,
+      imageUrl: null,
     };
   }
 
   componentDidMount() {
-    const action = {
-      type: 'GET_YOUTUBE_URL',
-    };
-    chrome.runtime.sendMessage(action, response => {
-      console.log(response);
-      alert('ola');
-    });
+    const searchLink = localStorage.getItem('YOUTUBE_URL');
+    const title = localStorage.getItem('YOUTUBE_TITLE');
+    const imageUrl = localStorage.getItem('YOUTUBE_IMAGE');
 
-    // const _this = this;
-    // chrome.runtime.onMessage.addListener(function(
-    //   request,
-    //   sender,
-    //   sendResponse
-    // ) {
-    //   debugger
-    //   if (request.type === "YOUTUBE_URL") {
-    //     debugger
-    //     const { title, url } = request.data;
-    //     console.log('popup', title. url)
-    //     _this.setState({
-    //       searchLink: url,
-    //       title
-    //     });
-    //   }
-    // });
+    this.setState({
+      searchLink,
+      title,
+      imageUrl,
+    });
   }
 
   sendActionToBackground = ({ type, data }: { type: string; data?: Object }) => {
@@ -77,15 +64,16 @@ class Main extends React.Component<{}, IMainState> {
   };
 
   render() {
-    const { searchLink, title } = this.state;
+    const { searchLink, title, imageUrl } = this.state;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input placeholder="Put something cool!!!" onChange={this.handleSearchLinkChange} value={searchLink} />
+          <input placeholder="Put something cool !!!" onChange={this.handleSearchLinkChange} value={searchLink} />
           <p>Or</p>
-          <div>Please start a YouTube video</div>
-          <div>Title: {title}</div>
+          <div>Try playing a YouTube video on browser tab</div>
         </form>
+        <hr />
+        <NowPlaying title={title} imageUrl={imageUrl} />
       </div>
     );
   }
