@@ -1,14 +1,13 @@
 import User from "../models/user";
-import { Document, Mongoose } from "mongoose";
 
-export interface IUser extends Document {
-  _id: string;
+export interface IUser {
+  _id?: string;
   userId: string;
   name: string;
   email: string;
   image: string;
-  accessToken: string;
-  refreshToken: Array<string>;
+  // accessToken?: string;
+  refreshToken?: Array<string>;
 }
 
 export async function getAllUsers() {
@@ -80,9 +79,24 @@ export async function createUser(user: IUser) {
   }
 }
 
+export async function updateUser(id: string , updatedUserData: IUser) {
+  try { 
+    const updateUser = await new Promise<IUser>((resolve, reject) => {
+      User.findOneAndUpdate({ _id: id }, updatedUserData, (error: Object, user: IUser | null, response: IUser) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    return updateUser;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // TODO: remaning functions
-// - Update user data
 // - Update refresh token
 // - Remove User Session
 // - Search User by name

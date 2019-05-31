@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { IUser } from '../services/user';
 
 const Schema = mongoose.Schema;
@@ -30,4 +30,4 @@ export const userSchema = new Schema({
   }
 }); 
 
-export default mongoose.model<IUser>('User', userSchema); 
+export default mongoose.model<IUser & Document>('User', userSchema);   
