@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import broadcastRouter from './routes/broadcast';
 import streamRouter from './routes/stream';
 import authRouter from './routes/auth';
+import userRouter from './routes/user';
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.get('/', (req, res) => {
 app.use('/broadcast', broadcastRouter);
 app.use('/stream', streamRouter);
 app.use('/auth', authRouter);
+app.use('/user', userRouter);
 
 export default app;

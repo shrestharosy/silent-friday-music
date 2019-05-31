@@ -19,7 +19,8 @@ export default {
     mongoPassword: process.env.MONGO_PASSWORD,
     mongoHostname: process.env.MONGO_HOSTNAME,
     mongoPort: process.env.MONGO_PORT,
-    mongoDb: process.env.MONGO_DB
+    mongoDb: process.env.MONGO_DB,
+    dbUrl: process.env.DB_URL || 'example'
   },
   timeout: process.env.TIEMOUT
 }
