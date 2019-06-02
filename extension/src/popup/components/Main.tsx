@@ -45,6 +45,12 @@ class Main extends React.Component<{}, IMainState> {
     });
   };
 
+  componentDidMount() {
+    this.sendActionToBackground({
+      type: 'INIT',
+    });
+  }
+
   render() {
     return (
       <div>

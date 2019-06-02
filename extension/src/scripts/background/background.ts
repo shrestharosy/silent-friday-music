@@ -3,6 +3,8 @@ import * as io from 'socket.io-client';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentSourceElement: HTMLSourceElement | null = null;
+let testAudioElement: HTMLAudioElement | null = null;
+let currentIoInstance: SocketIOClient.Socket | null = null;
 
 function createAudioElement() {
   const audioElement: HTMLAudioElement = document.createElement('audio');
@@ -35,6 +37,7 @@ async function loadAudio(url: string) {
       });
     changeStreamLink(streamUrl);
     await currentAudioElement.play();
+    currentAudioElement.muted = true;
   } catch (error) {
     console.log(error);
   }
@@ -42,28 +45,62 @@ async function loadAudio(url: string) {
 
 function changeStreamLink(url: string) {
   currentAudioElement.setAttribute('src', url);
+  testAudioElement.setAttribute('src', url);
 }
 
 function initializeEventListeners() {
-  const ioInstance = io('http://localhost:3002');
-  console.log('init....');
-  ioInstance.on('connect', () => {
-    console.log('connected...');
-  });
+  // const ioInstance = io('http://localhost:3002');
+  // console.log('init....');
+  // ioInstance.on('connect', () => {
+  //   console.log('connected...');
+  // });
+  console.log('init event listeners....');
   currentAudioElement.addEventListener('timeupdate', () => {
-    console.log(currentAudioElement.currentTime, ioInstance);
-    ioInstance.emit('time-update', { timeStamp: currentAudioElement.currentTime });
+    // console.log(currentAudioElement.currentTime, ioInstance);
+    currentIoInstance.emit('time-update', {
+      timeStamp: currentAudioElement.currentTime,
+      src: currentAudioElement.src,
+    });
+  });
+  currentIoInstance.on('broadcast-time-update', ({ timeStamp, src }: { timeStamp: number; src: string }) => {
+    if (testAudioElement.src !== src) {
+      testAudioElement.src = src;
+    }
+    if (timeStamp - testAudioElement.currentTime > 1) {
+      testAudioElement.pause;
+      testAudioElement.currentTime = timeStamp;
+      console.log(testAudioElement.currentTime, timeStamp, timeStamp - currentAudioElement.currentTime, 'diff');
+    }
+    testAudioElement.play();
+    console.log(testAudioElement.currentTime - timeStamp);
+    testAudioElement.addEventListener('playing', () => {
+      console.log(testAudioElement.currentTime, timeStamp);
+    });
   });
 }
 
+function initializeIOEventListeners() {
+  if (!currentIoInstance) {
+    const ioInstance = io('http://localhost:3002');
+    console.log('init....');
+    ioInstance.on('connect', () => {
+      console.log('connected...');
+    });
+    // ioInstance.on('broadcast-time-update', ({ timeStamp, src }: { timeStamp: number, src: string}) => {
+    //   console.log({timeStamp, src})
+    // })
+    currentIoInstance = ioInstance;
+  }
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (!currentAudioElement && !currentSourceElement) {
+  if (!currentAudioElement && !currentSourceElement && !testAudioElement) {
     const audioElement = createAudioElement();
     const sourceElement = createSourceElement();
     currentAudioElement = audioElement;
     currentSourceElement = sourceElement; // source element append is not working...
+    testAudioElement = createAudioElement();
     document.body.appendChild(audioElement);
-    initializeEventListeners();
   }
 
   switch (request.type) {
@@ -74,6 +111,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     case 'PLAY': {
       currentAudioElement.load;
       currentAudioElement.play();
+    }
+    case 'INIT': {
+      initializeIOEventListeners();
+      initializeEventListeners();
     }
     default:
   }

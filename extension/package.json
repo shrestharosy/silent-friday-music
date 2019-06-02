@@ -4,9 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development -w"
+    "start": "webpack --mode development -w"
   },
   "keywords": [],
   "author": "",
