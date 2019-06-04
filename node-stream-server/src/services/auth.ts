@@ -1,6 +1,6 @@
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
-import { IUser } from './user';
+import axios from 'axios';
 
 interface IUserPayload {
   userId: string;
@@ -9,31 +9,42 @@ interface IUserPayload {
   image: string;
 }
 
-export async function getUserDataFromToken(token: string) {
+export async function getUserData(token: string) {
   try {
-    const googleClient = new OAuth2Client(config.googleAuth.googleClientId, '', '');
+    return await axios
+      .get(`https://www.googleapis.com/plus/v1/people/me?access_token=${token}`)
+      .then(({ data }) => data)
+      .catch(error => error);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUserDataFromToken(token: string) {
+  const { googleClientId } = config.googleAuth;
+
+  try {
+    const googleClient = new OAuth2Client(googleClientId, '', '');
     const checkUser = await new Promise<IUserPayload>((resolve, reject) => {
       googleClient.verifyIdToken(
         {
           idToken: token,
-          audience: config.googleAuth.googleClientId,
+          audience: googleClientId,
         },
         (error: Object | null, login: any) => {
           if (error) {
-            reject(error);
+            throw new Error('Invalid google client Id');
+          }
+          const payload = login.getPayload();
+          if (payload['aud'] === googleClientId) {
+            resolve({
+              userId: payload.sub,
+              name: payload.name,
+              email: payload.email,
+              image: payload.imageUrl,
+            });
           } else {
-            const payload = login.getPayload();
-            if (payload['aud'] === config.googleAuth.googleClientId) {
-              resolve({
-                userId: payload.sub,
-                name: payload.name,
-                email: payload.email,
-                image: payload.imageUrl,
-              });
-            } else {
-              reject(error);
-              // throw new Error('Invalid google client Id');
-            }
+            reject(error);
           }
         }
       );
