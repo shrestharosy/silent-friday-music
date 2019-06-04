@@ -11,18 +11,22 @@ authRouter.post('/login', async (req, res, next) => {
       res.send('Token missing');
       throw new Error('Token missing');
     }
-    // Fetching user data from token
-    const userGoogleData = await authServices.getUserDataFromToken(req.body.token);
+
+    // Fetching user's google data from access token
+    const userGoogleData = await authServices.getUserData(req.body.token);
+
     // Checking if user exists in DB
-    let user = await userServices.getUserByGoogleId(userGoogleData.userId);
+    let user = await userServices.getUserByGoogleId(userGoogleData.id);
+    
     // Creating new user if user does not exist
     if(user === null) {
       const newUser = {
-        name: userGoogleData.name,
-        email: userGoogleData.email,
-        userId: userGoogleData.userId,
-        image: userGoogleData.image
+        name: userGoogleData.displayName,
+        email: userGoogleData.emails[0].value,
+        userId: userGoogleData.id,
+        image: userGoogleData.image.url
       }
+      console.log('NAYA USER ', newUser);
       user = await userServices.createUser(newUser);    
     }
 
@@ -38,11 +42,10 @@ authRouter.post('/login', async (req, res, next) => {
       email: user.email,
       image: user.image,
       id: user._id
-    }
+    }  
     res.send(response);
-    
   } catch (error) {
-    throw new Error(error);
+    res.status(500).send(new Error(error));
   } 
 });
 

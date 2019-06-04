@@ -1,11 +1,23 @@
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
+import axios from 'axios';
 
 interface IUserPayload {
   userId: string;
   name: string;
   email: string;
   image: string;
+}
+
+export async function getUserData(token: string) {
+  try {
+    return await axios
+      .get(`https://www.googleapis.com/plus/v1/people/me?access_token=${token}`)
+      .then(({data}) => data)
+      .catch((error) => error)
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function getUserDataFromToken(token: string) {
