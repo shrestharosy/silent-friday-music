@@ -5,6 +5,7 @@ import broadcastRouter from './routes/broadcast';
 import streamRouter from './routes/stream';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
+import roomsRouter from './routes/room';
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use('/broadcast', broadcastRouter);
 app.use('/stream', streamRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/rooms', roomsRouter);
 
 export default app;
