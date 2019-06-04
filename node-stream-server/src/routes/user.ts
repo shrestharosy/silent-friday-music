@@ -30,7 +30,7 @@ userRouter.get('/user/google/:gid', async (req, res) => {
   }
 })
 
-userRouter.post('/user/new',  async (req, res, next) => {
+userRouter.post('/user',  async (req, res, next) => {
   try {
     const data = await createUser(req.body);
     res.json(data);

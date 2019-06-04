@@ -16,7 +16,7 @@ authRouter.post('/login', async (req, res, next) => {
     // Checking if user exists in DB
     let user = await userServices.getUserByGoogleId(userGoogleData.userId);
     // Creating new user if user does not exist
-    if(user !== null) {
+    if(user === null) {
       const newUser = {
         name: userGoogleData.name,
         email: userGoogleData.email,
