@@ -6,8 +6,6 @@ export interface IUser {
   name: string;
   email: string;
   image: string;
-  // accessToken?: string;
-  refreshToken?: Array<string>;
 }
 
 export async function getAllUsers() {
@@ -96,7 +94,7 @@ export async function updateUser(id: string , updatedUserData: IUser) {
   }
 }
 
-// TODO: remaning functions
+// TODO: remaining functions
 // - Update refresh token
 // - Remove User Session
 // - Search User by name
