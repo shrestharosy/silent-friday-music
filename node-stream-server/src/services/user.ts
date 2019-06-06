@@ -1,4 +1,4 @@
-import User from "../models/user";
+import User from '../models/user';
 
 export interface IUser {
   _id?: string;
@@ -66,21 +66,21 @@ export async function createUser(user: IUser) {
     const createUser = await new Promise<IUser>((resolve, reject) => {
       const newUser = new User(user);
       newUser.save((error: Object, user: IUser) => {
-        if(error) {
+        if (error) {
           reject(error);
         } else {
           resolve(user);
         }
       });
-    })
+    });
     return createUser;
   } catch (error) {
     throw error;
   }
 }
 
-export async function updateUser(id: string , updatedUserData: IUser) {
-  try { 
+export async function updateUser(id: string, updatedUserData: IUser) {
+  try {
     const updateUser = await new Promise<IUser>((resolve, reject) => {
       User.findOneAndUpdate({ _id: id }, updatedUserData, (error: Object, user: IUser | null, response: IUser) => {
         if (error) {
@@ -100,3 +100,8 @@ export async function updateUser(id: string , updatedUserData: IUser) {
 // - Update refresh token
 // - Remove User Session
 // - Search User by name
+
+export const userService = {
+  getUserById,
+  getUserByGoogleId,
+};

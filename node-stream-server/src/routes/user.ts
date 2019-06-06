@@ -1,14 +1,32 @@
 import { Router } from 'express';
-import { getAllUsers, getUserById, getUserByGoogleId, createUser } from '../services/user';
+
+import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService } from '../services/user';
+import * as jwtServices from '../utils/jwt';
+import * as authServices from '../utils/auth';
 
 const userRouter = Router();
 
-userRouter.get('/users', async (req, res) => {
+userRouter.get('/', async (req, res) => {
   try {
     const data = await getAllUsers();
     res.json(data);
   } catch (error) {
     res.json({ message: error });
+  }
+});
+
+userRouter.get('/me', async (req, res) => {
+  const header = req.headers.authorization;
+  if (header) {
+    const id = authServices.getUserIdFromAuthHeader(header);
+    if (id) {
+      try {
+        const userProfile = await userService.getUserById(id);
+        res.json(userProfile);
+      } catch (error) {
+        res.json({ message: error });
+      }
+    }
   }
 });
 

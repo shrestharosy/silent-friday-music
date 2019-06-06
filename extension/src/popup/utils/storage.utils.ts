@@ -16,6 +16,10 @@ function removeFromStorage(dataType: string) {
   STORAGE.removeItem(dataType);
 }
 
+function clearStorage() {
+  STORAGE.clear();
+}
+
 function setInChromeStorage(key: string, value) {
   chrome.storage.local.set({ key: value }, () => {
     // console.log("Saved", key, value);
@@ -32,6 +36,7 @@ export const storageUtils = {
   getFromStorage,
   setInStorage,
   removeFromStorage,
+  clearStorage,
   setInChromeStorage,
   getFromChromeStorage,
 };

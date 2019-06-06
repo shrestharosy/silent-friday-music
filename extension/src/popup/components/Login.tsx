@@ -1,18 +1,19 @@
 import * as React from 'react';
 
-import { AuthService } from '../../service';
-import { AuthUtils } from '../utils';
+import { AuthService, UserService } from '../../service';
+import { authUtils } from '../utils';
 
 interface ILoginResponse {
   accessToken: string;
-  refreshToken: string;
 }
 
 class Login extends React.Component<{}, {}> {
   handleLogin = async () => {
-    AuthUtils.getAuthToken().then((token: string) => {
+    authUtils.getAuthToken().then((token: string) => {
       AuthService.loginRequest(token).then((response: ILoginResponse) => {
-        console.log(response);
+        UserService.getUserProfile(response.accessToken).then(response => {
+          console.log(response);
+        });
       });
     });
   };

@@ -1,26 +1,11 @@
 import axiosInstance from '../popup/utils/axios';
+import { storageUtils } from '../popup/utils';
 
 async function loginRequest(token: string) {
   try {
     const URL = `/auth/login`;
     const { data } = await axiosInstance.post(URL, { token });
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function getUserId(token: string) {
-  try {
-    const URL = `https://www.googleapis.com/oauth2/v2/userinfo?alt=json`;
-
-    const HEADER = {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    };
-    const { data } = await axiosInstance(URL, HEADER);
-    debugger;
+    storageUtils.setInStorage('TOKEN', data.accessToken);
     return data;
   } catch (error) {
     throw error;
@@ -29,5 +14,4 @@ async function getUserId(token: string) {
 
 export const AuthService = {
   loginRequest,
-  getUserId,
 };
