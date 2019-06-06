@@ -7,6 +7,7 @@ const authRouter = Router();
  
 authRouter.post('/login', async (req, res, next) => {
   try {
+    let message = "";
     if(!req.body.token) {
       res.send('Token missing');
       throw new Error('Token missing');
@@ -26,26 +27,32 @@ authRouter.post('/login', async (req, res, next) => {
         userId: userGoogleData.id,
         image: userGoogleData.image.url
       }
-      console.log('NAYA USER ', newUser);
+      message = "Created new user and logged in";
       user = await userServices.createUser(newUser);    
+    } else {
+      message = "User logged in";
     }
 
     // Generating Access and Refresh Tokens
     const tokenData = { id: user._id };
     const accessToken = jwtServices.generateAccessToken(tokenData);
     const refreshToken = jwtServices.generateRefreshToken(tokenData);
-  
-    const response = {
+    
+    // Sending tokens as response which will be stored in user localstorage
+    const response = { 
       accessToken,
-      refreshToken,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      id: user._id
-    }  
-    res.send(response);
+      refreshToken
+    }
+
+    res.status(200).json({
+      data: response,
+      message
+    });
+
   } catch (error) {
-    res.status(500).send(new Error(error));
+    res.status(500).json({
+      message: error
+    });
   } 
 });
 
