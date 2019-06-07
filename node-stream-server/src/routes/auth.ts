@@ -4,7 +4,7 @@ import * as jwtServices from '../utils/jwt';
 import * as userServices from '../services/user';
 
 const authRouter = Router();
- 
+
 authRouter.post('/login', async (req, res, next) => {
   try {
     let message = "";
@@ -18,9 +18,9 @@ authRouter.post('/login', async (req, res, next) => {
 
     // Checking if user exists in DB
     let user = await userServices.getUserByGoogleId(userGoogleData.id);
-    
+
     // Creating new user if user does not exist
-    if(user === null) {
+    if (user === null) {
       const newUser = {
         name: userGoogleData.displayName,
         email: userGoogleData.emails[0].value,
