@@ -94,10 +94,27 @@ export async function updateUser(id: string, updatedUserData: IUser) {
   }
 }
 
+export async function searchUser(searchTerm: string) {
+  try {
+    console.log("searching");
+    const user = await new Promise<IUser>((resolve, reject) => {        
+      User.find({name: { $regex: searchTerm, $options: 'i'}}, (error: Object, response: IUser) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // TODO: remaining functions
 // - Update refresh token
 // - Remove User Session
-// - Search User by name
 
 export const userService = {
   getUserById,
