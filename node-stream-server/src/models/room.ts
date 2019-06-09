@@ -12,28 +12,36 @@ export interface IRoomUpdate {
   requests?: Array<string>;
 }
 
-const roomSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const roomSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    members: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      ],
+      required: true,
+    },
+    requests: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Song',
+        },
+      ],
+    },
   },
-  members: {
-    type: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
-    required: true,
-  },
-  requests: {
-    type: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Song',
-      },
-    ],
-  },
-});
+  {
+    timestamps: {
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+    },
+  }
+);
 
 export default model<IRoom & Document>('Room', roomSchema);

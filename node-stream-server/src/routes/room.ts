@@ -5,8 +5,27 @@ const roomsRouter = Router();
 
 roomsRouter.get('/', async (req, res) => {
   try {
-    const roomList = await roomServices.getAllRooms();
+    const { query } = req;
+
+    const roomList = await roomServices.getAllRooms(query);
+
     res.json(roomList);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+});
+
+roomsRouter.get('/:roomId', async (req, res) => {
+  try {
+    const {
+      params: { roomId },
+    } = req;
+
+    const roomWithGivenId = await roomServices.getRoomById(roomId);
+
+    res.json(roomWithGivenId);
   } catch (error) {
     res.status(500).send({
       message: error.message,
@@ -16,7 +35,9 @@ roomsRouter.get('/', async (req, res) => {
 
 roomsRouter.post('/', async (req, res) => {
   try {
-    const createdRoom = await roomServices.createRoom();
+    const { body } = req;
+
+    const createdRoom = await roomServices.createRoom(body);
     res.json(createdRoom);
   } catch (error) {
     res.status(500).send({
