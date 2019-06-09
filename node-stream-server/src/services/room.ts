@@ -20,8 +20,6 @@ export async function createRoom(newRoom: IRoom) {
 }
 
 export async function getAllRooms(queryParams: IRoomQueryParams = { search: '' }) {
-  const defaultJSONOptions = RoomModel.schema.get('toJSON');
-
   try {
     const { search = '' } = queryParams;
     const searchRegex = new RegExp(search, 'i');
@@ -30,8 +28,6 @@ export async function getAllRooms(queryParams: IRoomQueryParams = { search: '' }
     return roomList;
   } catch (error) {
     throw error;
-  } finally {
-    RoomModel.schema.set('toJSON', defaultJSONOptions);
   }
 }
 
