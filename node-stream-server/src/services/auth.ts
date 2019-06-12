@@ -1,6 +1,5 @@
-import { OAuth2Client } from 'google-auth-library';
-import config from '../config';
 import axios from 'axios';
+import * as jwtServices from '../utils/jwt';
 
 interface IUserPayload {
   userId: string;
@@ -20,36 +19,11 @@ export async function getUserData(token: string) {
   }
 }
 
-export async function getUserDataFromToken(token: string) {
-  const { googleClientId } = config.googleAuth;
-
+export async function refreshExpiredToken(refreshToken: string ) {
   try {
-    const googleClient = new OAuth2Client(googleClientId, '', '');
-    const checkUser = await new Promise<IUserPayload>((resolve, reject) => {
-      googleClient.verifyIdToken(
-        {
-          idToken: token,
-          audience: googleClientId,
-        },
-        (error: Object | null, login: any) => {
-          if (error) {
-            throw new Error('Invalid google client Id');
-          }
-          const payload = login.getPayload();
-          if (payload['aud'] === googleClientId) {
-            resolve({
-              userId: payload.sub,
-              name: payload.name,
-              email: payload.email,
-              image: payload.imageUrl,
-            });
-          } else {
-            reject(error);
-          }
-        }
-      );
-    });
-    return checkUser;
+    const decodedToken = await jwtServices.decodeToken(refreshToken);
+    const newAccessToken = await jwtServices.generateAccessToken({ id: decodedToken});
+    return newAccessToken;
   } catch (error) {
     throw error;
   }
