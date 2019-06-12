@@ -1,13 +1,15 @@
 import jwbt from 'jsonwebtoken';
 import config from '../config';
 
-// TODO: Set fixed type for 'data'
-export function generateAccessToken(data: any) {
+interface ITokenPayload {
+  id: string;
+}
+
+export function generateAccessToken(data: ITokenPayload) {
   return jwbt.sign(data, config.auth.accessTokenSecretKey, { expiresIn: config.auth.accessTokenDuration });  
 }
 
-// TODO: Set fixed type for 'data'
-export function generateRefreshToken(data: any) {
+export function generateRefreshToken(data: ITokenPayload) {
   return jwbt.sign(data, config.auth.refreshTokenSecretKey, { expiresIn: config.auth.refreshTokenDuration });
 }
 

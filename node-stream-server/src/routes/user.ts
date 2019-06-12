@@ -65,7 +65,4 @@ userRouter.get('/find/:searchTerm', async (req, res) => {
   }
 });
 
-// TODO:
-// - Update user route
-
 export default userRouter;

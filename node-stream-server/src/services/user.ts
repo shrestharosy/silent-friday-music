@@ -112,10 +112,6 @@ export async function searchUser(searchTerm: string) {
   }
 }
 
-// TODO: remaining functions
-// - Update refresh token
-// - Remove User Session
-
 export const userService = {
   getUserById,
   getUserByGoogleId,
