@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwtServices from '../utils/jwt';
 
-async function verifyToken(req: Request, res: Response, next: NextFunction) {
+async function verifyToken(request: Request, response: Response, next: NextFunction) {
   try {
-    // TODO: check how tokens are stored in accessToken
-    // TODO: ask about storing in res.locals.*
-    // TODO: ask about duration of refresh and access tokens
-    const accessToken = req.headers.accessToken;
-    if (accessToken) {
-      throw new Error('No token error');
+
+    const accessToken = (request.headers.accesstoken as string).split('Bearer ')[1];
+
+    if (!accessToken) {
+      response.status(403).send({ message : 'Missing Token' });
     } else {
-      
+      await jwtServices.verifyAccessToken(accessToken);
+      // response.send(decodedUser);
+      next();
     }
     
-    const response = await jwtServices.verifyAccessToken(accessToken);
-    // TODO: if verified add response to res.local.
   } catch(error) {
-    next(error);
+    response.redirect('/auth/unauthorized');
   }
 }
 
