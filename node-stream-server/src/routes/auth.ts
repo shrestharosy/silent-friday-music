@@ -1,53 +1,22 @@
 import { Router } from 'express';
 import * as authServices from '../services/auth';
-import * as jwtServices from '../utils/jwt';
-import * as userServices from '../services/user';
 import verifyToken from '../middlewares/verifyToken';
 
 const authRouter = Router();
 
 authRouter.post('/login', async (req, res) => {
   try {
-    let message = "";
-    if(!req.body.token) {
-      res.send('Token missing');
-      throw new Error('Token missing');
+    if (!req.body.token) {
+      res.status(500).json({
+        message: 'Token missing'
+      });
     }
 
-    // Fetching user's google data from access token
-    const userGoogleData = await authServices.getUserData(req.body.token);
-
-    // Checking if user exists in DB
-    let user = await userServices.getUserByGoogleId(userGoogleData.id);
-
-    // Creating new user if user does not exist
-    if (user === null) {
-      const newUser = {
-        name: userGoogleData.displayName,
-        email: userGoogleData.emails[0].value,
-        userId: userGoogleData.id,
-        image: userGoogleData.image.url
-      }
-      message = "Created new user and logged in";
-      user = await userServices.createUser(newUser);    
-    } else {
-      message = "User logged in";
-    }
-
-    // Generating Access and Refresh Tokens
-    const tokenData = { id: user._id };
-    const accessToken = jwtServices.generateAccessToken(tokenData);
-    const refreshToken = jwtServices.generateRefreshToken(tokenData);
-    
-    // Sending tokens as response which will be stored in user localstorage
-    const response = { 
-      accessToken,
-      refreshToken
-    }
+    const authData = await authServices.loginUser(req.body.token);
 
     res.status(200).json({
-      data: response,
-      message
+      data: authData,
+      message: 'Sucessfully logged in!'
     });
 
   } catch (error) {
@@ -57,7 +26,7 @@ authRouter.post('/login', async (req, res) => {
   } 
 });
 
-authRouter.post('/logout', (req, res, next) => {
+authRouter.post('/logout', (req, res) => {
   res.send('clear local storage and blacklist the tokens until expired');
 });
 
