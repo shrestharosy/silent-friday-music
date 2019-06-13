@@ -1,6 +1,7 @@
 import axios from "../../popup/utils/axios";
 import { wrapStore } from "webext-redux";
 import { createStore } from "redux";
+import devToolsEnhancer from "remote-redux-devtools";
 
 import rootReducer from "./reducers";
 
@@ -91,7 +92,7 @@ function fetchActiveYoutubeUrl() {
   });
 }
 
-const store = createStore(rootReducer, {});
+const store = createStore(rootReducer, devToolsEnhancer());
 
 wrapStore(store, {
   portName: "silent-friday-music"

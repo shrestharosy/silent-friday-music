@@ -15,6 +15,13 @@ class Main extends React.Component<IUserProps, {}> {
     storageUtils.clearStorage();
   };
 
+  dispatchAction = () => {
+    Store.dispatch({
+      type: "DEMO_ACTION",
+      payload: "ola"
+    });
+  };
+
   render() {
     const profile: IUserProps = storageUtils.getFromStorage("USER_PROFILE");
     return (
@@ -22,6 +29,7 @@ class Main extends React.Component<IUserProps, {}> {
         Welcome {profile ? profile : ""}
         <button onClick={() => this.logout()}>Logout</button>
         <div>List of rooms</div>
+        <button onClick={() => this.dispatchAction()}>Action</button>
       </div>
     );
   }
