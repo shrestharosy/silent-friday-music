@@ -1,5 +1,5 @@
-import axiosInstance from '../popup/utils/axios';
-import { storageUtils } from '../popup/utils';
+import axiosInstance from "../utils/axios";
+import { storageUtils } from "../utils";
 
 async function loginRequest(token: string) {
   try {

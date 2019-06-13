@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { AuthService, UserService } from '../../service';
 import { authUtils } from '../utils';
+import { AuthService, UserService } from '../service';
 
 interface ILoginResponse {
   accessToken: string;
