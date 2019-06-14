@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
-import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService } from '../services/user';
-import * as jwtServices from '../utils/jwt';
+import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService, searchUser } from '../services/user';
 import * as authServices from '../utils/auth';
 
 const userRouter = Router();
@@ -30,7 +29,7 @@ userRouter.get('/me', async (req, res) => {
   }
 });
 
-userRouter.get('/user/:id', async (req, res) => {
+userRouter.get('/:id', async (req, res) => {
   try {
     const data = await getUserById(req.params.id);
     res.json(data);
@@ -39,7 +38,7 @@ userRouter.get('/user/:id', async (req, res) => {
   }
 });
 
-userRouter.get('/user/google/:gid', async (req, res) => {
+userRouter.get('/google/:gid', async (req, res) => {
   try {
     const data = await getUserByGoogleId(req.params.gid);
     res.json(data);
@@ -48,7 +47,7 @@ userRouter.get('/user/google/:gid', async (req, res) => {
   }
 });
 
-userRouter.post('/user', async (req, res, next) => {
+userRouter.post('/', async (req, res) => {
   try {
     const data = await createUser(req.body);
     res.json(data);
@@ -57,8 +56,13 @@ userRouter.post('/user', async (req, res, next) => {
   }
 });
 
-// TODO:
-// - Update user route
-// -
+userRouter.get('/find/:searchTerm', async (req, res) => {
+  try {
+    const data = await searchUser(req.params.searchTerm);    
+    res.json(data);
+  } catch(error) {
+    res.json(error)
+  }
+});
 
 export default userRouter;

@@ -6,8 +6,6 @@ export interface IUser {
   name: string;
   email: string;
   image: string;
-  // accessToken?: string;
-  refreshToken?: Array<string>;
 }
 
 export async function getAllUsers() {
@@ -96,10 +94,23 @@ export async function updateUser(id: string, updatedUserData: IUser) {
   }
 }
 
-// TODO: remaning functions
-// - Update refresh token
-// - Remove User Session
-// - Search User by name
+export async function searchUser(searchTerm: string) {
+  try {
+    console.log("searching");
+    const user = await new Promise<IUser>((resolve, reject) => {        
+      User.find({name: { $regex: searchTerm, $options: 'i'}}, (error: Object, response: IUser) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const userService = {
   getUserById,

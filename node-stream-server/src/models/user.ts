@@ -17,9 +17,6 @@ export const userSchema = new Schema({
   image: { 
     type: String 
   },
-  refreshToken: { 
-    type: Array
-  },
   createdAt: { 
     type: Date, 
     default: Date.now 
