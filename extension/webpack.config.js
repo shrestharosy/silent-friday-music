@@ -28,14 +28,14 @@ module.exports = {
       },
       { test: /\.tsx?$/, loader: 'ts-loader' },
       {
-        test: /public\/icons\/.*\.png$/,
+        test: /public\/assets\/images\/.*\.(png|jpg|svg)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              publicPath: PUBLIC_PATH,
-              outputPath: 'icons',
+              publicPath: '/public/assets/images',
+              outputPath: '/public/assets/images',
             },
           },
         ],
