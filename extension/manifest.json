@@ -7,9 +7,9 @@
     "default_popup": "index.html"
   },
   "icons": {
-    "16": "icons/minion.png",
-    "48": "icons/minion.png",
-    "128": "icons/minion.png"
+    "16": "public/assets/images/minion.png",
+    "48": "public/assets/images/minion.png",
+    "128": "public/assets/images/minion.png"
   },
   "content_scripts": [
     {

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { AuthService, UserService } from '../../service';
 import { authUtils } from '../utils';
+import { AuthService, UserService } from '../service';
+import * as GoogleLogo from '../../../public/assets/images/google-logo.svg';
 
 interface ILoginResponse {
   accessToken: string;
@@ -20,9 +21,12 @@ class Login extends React.Component<{}, {}> {
 
   render() {
     return (
-      <div>
-        <button type="submit" onClick={() => this.handleLogin()}>
-          Login
+      <div className={'login-wrapper'}>
+        <button className={'google-button'} type="submit" onClick={() => this.handleLogin()}>
+          <span className="google-button-icon">
+            <img src={GoogleLogo} alt="" />
+          </span>
+          <span className={'google-button-text'}>Sign in with Google</span>
         </button>
       </div>
     );

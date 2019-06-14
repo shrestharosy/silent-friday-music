@@ -2,15 +2,23 @@ import * as React from 'react';
 
 import WithAuthentication from '../hoc/withAuthentication';
 import { storageUtils } from '../utils';
+import Store from '../store';
 
 interface IUserProps {
   name: string;
   image: string;
 }
 
-class Main extends React.Component<{}, {}> {
+class Main extends React.Component<IUserProps, {}> {
   logout = () => {
     storageUtils.clearStorage();
+  };
+
+  dispatchAction = () => {
+    Store.dispatch({
+      type: 'DEMO_ACTION',
+      payload: 'ola',
+    });
   };
 
   render() {
@@ -20,6 +28,7 @@ class Main extends React.Component<{}, {}> {
         Welcome {profile ? profile : ''}
         <button onClick={() => this.logout()}>Logout</button>
         <div>List of rooms</div>
+        <button onClick={() => this.dispatchAction()}>Action</button>
       </div>
     );
   }
