@@ -1,7 +1,7 @@
 import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
 
-interface IProfileReduxState {
+export interface IProfileReduxState {
   _id: string;
   name: string;
   email: string;

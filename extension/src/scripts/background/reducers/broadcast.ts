@@ -1,7 +1,7 @@
 import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
 
-interface IBroadcastReduxState {
+export interface IBroadcastReduxState {
   streamUrl: string;
   status: boolean;
 }

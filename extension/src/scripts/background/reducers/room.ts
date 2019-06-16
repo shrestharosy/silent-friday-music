@@ -1,7 +1,7 @@
 import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
 
-interface IRoomReduxState {
+export interface IRoomReduxState {
   _id: string;
   members: Array<Object>;
   requests: Array<Object>;
