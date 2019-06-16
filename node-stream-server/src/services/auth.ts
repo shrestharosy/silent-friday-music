@@ -9,6 +9,13 @@ interface IUserPayload {
   image: string;
 }
 
+interface IGoogleData {
+  id: string;
+  displayName: string;
+  emails: Array<{ value: string }>;
+  image: { url: string };
+}
+
 export async function getUserData(token: string) {
   try {
     return await axios
@@ -23,37 +30,51 @@ export async function getUserData(token: string) {
 export async function loginUser(googleToken: string) {
   try {
     const userGoogleData = await getUserData(googleToken);
-    let user = await userServices.getUserByGoogleId(userGoogleData.id);
-    
-    if (user === null) {
+    const user = await checkIfUserExists(userGoogleData);
+
+    if (user) {
+    }
+    const tokenData = { id: user._id };
+    const accessToken = jwtServices.generateAccessToken(tokenData);
+    const refreshToken = jwtServices.generateRefreshToken(tokenData);
+
+    const authData = {
+      accessToken,
+      refreshToken,
+    };
+
+    return authData;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function checkIfUserExists(userGoogleData: IGoogleData) {
+  try {
+    let googleUser = await userServices.getUserByGoogleId(userGoogleData.id);
+    let modifiedGoogleUser: userServices.IUser;
+    if (googleUser === null) {
       const newUser = {
         name: userGoogleData.displayName,
         email: userGoogleData.emails[0].value,
         userId: userGoogleData.id,
-        image: userGoogleData.image.url
-      }
-      user = await userServices.createUser(newUser);
+        image: userGoogleData.image.url,
+      };
+      modifiedGoogleUser = await userServices.createUser(newUser);
+      return modifiedGoogleUser;
+    } else {
+      return googleUser;
     }
-
-    const tokenData = { id: user._id };
-    const accessToken = jwtServices.generateAccessToken(tokenData);
-    const refreshToken = jwtServices.generateRefreshToken(tokenData);
-    
-    const authData = {
-      accessToken,
-      refreshToken
-    }
-
-    return authData;
   } catch (error) {
     throw error;
   }
 }
 
-export async function refreshExpiredToken(refreshToken: string ) {
+export async function refreshExpiredToken(refreshToken: string) {
   try {
     const decodedToken = await jwtServices.decodeToken(refreshToken);
-    const newAccessToken = await jwtServices.generateAccessToken({ id: decodedToken});
+    const newAccessToken = await jwtServices.generateAccessToken(decodedToken);
     return newAccessToken;
   } catch (error) {
     throw error;

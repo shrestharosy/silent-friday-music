@@ -1,11 +1,14 @@
 import User from '../models/user';
 
-export interface IUser {
-  _id?: string;
+export interface ICreateUser {
   userId: string;
   name: string;
   email: string;
   image: string;
+}
+
+export interface IUser extends ICreateUser {
+  _id: string;
 }
 
 export async function getAllUsers() {
@@ -59,7 +62,7 @@ export async function getUserByGoogleId(id: string) {
   }
 }
 
-export async function createUser(user: IUser) {
+export async function createUser(user: ICreateUser) {
   try {
     const createUser = await new Promise<IUser>((resolve, reject) => {
       const newUser = new User(user);
@@ -96,9 +99,9 @@ export async function updateUser(id: string, updatedUserData: IUser) {
 
 export async function searchUser(searchTerm: string) {
   try {
-    console.log("searching");
-    const user = await new Promise<IUser>((resolve, reject) => {        
-      User.find({name: { $regex: searchTerm, $options: 'i'}}, (error: Object, response: IUser) => {
+    console.log('searching');
+    const user = await new Promise<IUser>((resolve, reject) => {
+      User.find({ name: { $regex: searchTerm, $options: 'i' } }, (error: Object, response: IUser) => {
         if (error) {
           reject(error);
         } else {
