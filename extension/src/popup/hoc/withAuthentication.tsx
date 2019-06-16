@@ -7,7 +7,6 @@ const WithAuthentication = (Component: any) => {
   return (props: any) => {
     const checkIsAuthenticated = authUtils.isAuthenticated();
     if (checkIsAuthenticated) {
-      console.log(Component);
       return <Component {...props} />;
     } else {
       return <Login />;
