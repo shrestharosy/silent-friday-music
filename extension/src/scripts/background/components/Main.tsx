@@ -1,9 +1,22 @@
 import * as React from 'react';
 
-import Audio from './Audio';
+import socketService from 'src/services/socket.service';
 
-const Main: React.SFC<{}> = props => {
-  return <Audio url={''} />;
-};
+import Audio from './Audio';
+import TimeKeeper from './Phantom/TimeKeeper';
+
+class Main extends React.Component<{}> {
+  componentDidMount() {
+    socketService.getIOInstance();
+  }
+  render() {
+    return (
+      <React.Fragment>
+        {/* <Audio url={''} /> */}
+        <TimeKeeper />
+      </React.Fragment>
+    );
+  }
+}
 
 export default Main;
