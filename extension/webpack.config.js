@@ -9,7 +9,7 @@ const PUBLIC_PATH = '/';
 module.exports = {
   entry: {
     popup: './src/index.tsx',
-    background: './src/scripts/background/background.ts',
+    background: './src/scripts/background/index.tsx',
     content: './src/scripts/content/hotReload.js',
   },
   output: {
@@ -47,6 +47,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'silent-friday-music',
+      chunks: ['popup'],
       template: './index.html',
     }),
     new CopyPlugin([

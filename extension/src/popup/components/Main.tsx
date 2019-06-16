@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import WithAuthentication from '../hoc/withAuthentication';
 import { storageUtils } from '../utils';
-import Store from '../store';
+import store from '../store';
+import sendActionToBackground from '../service/background.service';
+
+import Room from './Room';
 
 interface IUserProps {
   name: string;
@@ -14,8 +17,14 @@ class Main extends React.Component<IUserProps, {}> {
     storageUtils.clearStorage();
   };
 
+  componentDidMount() {
+    sendActionToBackground({
+      type: 'INIT',
+    });
+  }
+
   dispatchAction = () => {
-    Store.dispatch({
+    store.dispatch({
       type: 'DEMO_ACTION',
       payload: 'ola',
     });

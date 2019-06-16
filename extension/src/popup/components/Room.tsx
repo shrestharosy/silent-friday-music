@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { storageUtils } from '../utils';
 import NowPlaying from './NowPlaying';
+import sendActionToBackground from '../service/background.service';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
   title: string | null;
   imageUrl: string | null;
-}
-
-interface IBroadcastResponse {
-  avatar: string;
-  name: string;
-  streamUrl: string;
 }
 
 class Room extends React.Component<{}, IMainState> {
@@ -31,24 +26,12 @@ class Room extends React.Component<{}, IMainState> {
     const title = storageUtils.getFromStorage('YOUTUBE_TITLE');
     const imageUrl = storageUtils.getFromStorage('YOUTUBE_IMAGE');
 
-    this.sendActionToBackground({
-      type: 'INIT',
-    });
-
     this.setState({
       searchLink,
       title,
       imageUrl,
     });
   }
-
-  sendActionToBackground = ({ type, data }: { type: string; data?: Object }) => {
-    const action = {
-      type,
-      data,
-    };
-    chrome.runtime.sendMessage(action);
-  };
 
   handleSearchLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
@@ -59,7 +42,7 @@ class Room extends React.Component<{}, IMainState> {
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    this.sendActionToBackground({
+    sendActionToBackground({
       type: 'LOAD_AUDIO',
       data: {
         requestUrl: this.state.searchLink,
