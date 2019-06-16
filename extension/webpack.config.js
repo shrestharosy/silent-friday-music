@@ -44,6 +44,10 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    modules: [path.resolve(__dirname), 'node_modules'],
+    extensions: ['.ts', '.tsx', '.js'],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'silent-friday-music',

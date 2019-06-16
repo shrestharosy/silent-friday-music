@@ -4,7 +4,11 @@
         "target": "es6",
         "module": "esnext",
         "moduleResolution": "node",
-        "jsx": "react"
+        "jsx": "react",
+        "baseUrl": ".",
+        "paths": {
+          "src": ["src/"]
+        }
     },
     "exclude": [
         "node_modules",
