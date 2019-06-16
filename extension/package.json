@@ -4,9 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development -w"
+    "start": "webpack --mode development -w"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +19,7 @@
     "redux-logger": "^3.0.6",
     "remote-redux-devtools": "^0.5.16",
     "webext-redux": "^2.1.2",
+    "socket.io-client": "^2.2.0",
     "webpack": "^4.31.0"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "@types/jquery": "^3.3.29",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
+    "@types/socket.io-client": "^1.4.32",
     "copy-webpack-plugin": "^5.0.3",
     "css-loader": "^2.1.1",
     "file-loader": "^3.0.1",

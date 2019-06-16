@@ -31,6 +31,10 @@ class Room extends React.Component<{}, IMainState> {
     const title = storageUtils.getFromStorage('YOUTUBE_TITLE');
     const imageUrl = storageUtils.getFromStorage('YOUTUBE_IMAGE');
 
+    this.sendActionToBackground({
+      type: 'INIT',
+    });
+
     this.setState({
       searchLink,
       title,
