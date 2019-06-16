@@ -1,6 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const dotEnv = require('./env/dot-env');
 
 const PUBLIC_PATH = '/';
 
@@ -53,5 +55,9 @@ module.exports = {
         dest: PUBLIC_PATH,
       },
     ]),
+    new webpack.DefinePlugin({
+      environment: JSON.stringify('development'),
+      envConfig: JSON.stringify(dotEnv.getEnvConfig('development')),
+    }),
   ],
 };
