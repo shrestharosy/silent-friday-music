@@ -1,16 +1,15 @@
 const initialState = {
-  message: ""
+  message: '',
 };
 
-export default (
-  state = initialState,
-  action: { type: string; payload: {} }
-) => {
+export type DemoReduxState = typeof initialState;
+
+export default (state = initialState, action: { type: string; payload: {} }) => {
   switch (action.type) {
-    case "DEMO_ACTION":
+    case 'DEMO_ACTION':
       return {
         ...state,
-        message: action.payload
+        message: action.payload,
       };
     default:
       return state;

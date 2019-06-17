@@ -1,5 +1,10 @@
 import * as React from 'react';
 
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+
+import { fillProfileAction } from 'src/actionCreators/actionCreator';
+
 import { authUtils } from '../utils';
 import { AuthService, UserService } from '../service';
 import * as GoogleLogo from '../../../public/assets/images/google-logo.svg';
@@ -8,12 +13,16 @@ interface ILoginResponse {
   accessToken: string;
 }
 
-class Login extends React.Component<{}, {}> {
+interface ILoginProps {
+  fillProfileAction: typeof fillProfileAction;
+}
+
+class Login extends React.Component<ILoginProps, {}> {
   handleLogin = async () => {
     authUtils.getAuthToken().then((token: string) => {
       AuthService.loginRequest(token).then((response: ILoginResponse) => {
         UserService.getUserProfile(response.accessToken).then(response => {
-          console.log(response);
+          this.props.fillProfileAction(response);
         });
       });
     });
@@ -33,4 +42,10 @@ class Login extends React.Component<{}, {}> {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch: Dispatch<typeof fillProfileAction>) =>
+  bindActionCreators({ fillProfileAction }, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Login);

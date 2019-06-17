@@ -1,6 +1,8 @@
 import app from './app';
 import mongoose from 'mongoose';
 import config from './config';
+import getSocketInstance from './services/socket';
+import initializeSockerListeners from './socket';
 
 const { dbUrl } = config.mongo;
 mongoose.connect(dbUrl, { useNewUrlParser: true, useFindAndModify: false });
@@ -14,6 +16,12 @@ db.on('error', (error: any) => {
   console.log(error);
 });
 
-app.listen(3002, () => {
+const server = app.listen(3002, () => {
   console.log('Server is running..');
+  try {
+    getSocketInstance(server);
+    initializeSockerListeners();
+  } catch (error) {
+    throw error;
+  }
 });

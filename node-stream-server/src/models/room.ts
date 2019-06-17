@@ -35,6 +35,10 @@ const roomSchema = new Schema(
         },
       ],
     },
+    master: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: {

@@ -1,13 +1,15 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const dotEnv = require('./env/dot-env');
 
 const PUBLIC_PATH = '/';
 
 module.exports = {
   entry: {
     popup: './src/index.tsx',
-    background: './src/scripts/background/background.ts',
+    background: './src/scripts/background/index.tsx',
     content: './src/scripts/content/hotReload.js',
   },
   output: {
@@ -42,9 +44,14 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    modules: [path.resolve(__dirname), 'node_modules'],
+    extensions: ['.ts', '.tsx', '.js'],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'silent-friday-music',
+      chunks: ['popup'],
       template: './index.html',
     }),
     new CopyPlugin([
@@ -53,5 +60,9 @@ module.exports = {
         dest: PUBLIC_PATH,
       },
     ]),
+    new webpack.DefinePlugin({
+      environment: JSON.stringify('development'),
+      envConfig: JSON.stringify(dotEnv.getEnvConfig('development')),
+    }),
   ],
 };
