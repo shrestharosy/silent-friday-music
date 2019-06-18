@@ -47,7 +47,11 @@ export async function getRoomById(roomId: string) {
 export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
   try {
     const updatedRoom = await RoomModel.findOneAndUpdate({ _id: roomId }, updateRoom, { new: true });
-    return updatedRoom;
+    if (updatedRoom) {
+      return updatedRoom;
+    } else {
+      throw new Error("Room doesn't exist for a given id. Room couldn't be updated.");
+    }
   } catch (error) {
     throw error;
   }

@@ -1,11 +1,15 @@
 import { Schema, model, Document } from 'mongoose';
 
-export interface ISong {
+export interface ICreateSong {
   title: string;
   thumbnailUrl: string;
   streamUrl: string;
   channelName: string;
   avatar: string;
+}
+
+export interface ISong extends ICreateSong {
+  _id: string;
 }
 
 const songSchema = new Schema({
@@ -22,4 +26,4 @@ const songSchema = new Schema({
   },
 });
 
-export default model<ISong & Document>('Song', songSchema);
+export default model<ICreateSong & Document>('Song', songSchema);
