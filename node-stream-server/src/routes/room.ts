@@ -1,5 +1,7 @@
 import { Router } from 'express';
+
 import * as roomServices from '../services/room';
+import * as songControllers from '../controllers/song';
 
 const roomsRouter = Router();
 
@@ -71,5 +73,8 @@ roomsRouter.patch('/:roomId', async (req, res) => {
     });
   }
 });
+
+roomsRouter.post('/:roomId/songs/', songControllers.addToPlaylist);
+roomsRouter.get('/:roomId/songs/', songControllers.getPlaylist);
 
 export default roomsRouter;

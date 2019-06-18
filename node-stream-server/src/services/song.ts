@@ -3,6 +3,40 @@ import ytdl from 'ytdl-core';
 import SongModel, { ISong, ICreateSong } from '../models/song';
 import { getRoomById, updateRoom } from './room';
 
+export async function addToPlaylist(roomId: string, url: string) {
+  try {
+    const songDetails = await getSongDetails(url);
+    const { _id } = await addSong(songDetails);
+
+    const { requests } = await getRoomById(roomId);
+    requests.push(_id);
+
+    const { requests: updatedPlaylist } = await updateRoom(roomId, {
+      requests,
+    });
+    return updatedPlaylist;
+  } catch (error) {
+    throw error;
+  }
+}
+export async function getPlaylist(roomId: string) {
+  try {
+    const room = await getRoomById(roomId);
+    return room.requests;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getSongById(songId: string) {
+  try {
+    const song = await SongModel.findById(songId);
+    return song;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getSongDetails(url: string) {
   try {
     const basicInfo = await ytdl.getBasicInfo(url);
@@ -36,34 +70,6 @@ export async function addSong(newSong: ICreateSong) {
     });
     const addedSong: ISong = await song.save();
     return addedSong;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function getSongById(songId: string) {
-  try {
-    const song = await SongModel.findById(songId);
-    return song;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function addToPlaylist(roomId: string, url: string) {
-  try {
-    const songDetails = await getSongDetails(url);
-    const { _id } = await addSong(songDetails);
-    const updatedRoom = await updateRoom(roomId, { requests: [_id] });
-    return updatedRoom;
-  } catch (error) {
-    throw error;
-  }
-}
-export async function getPlaylist(roomId: string) {
-  try {
-    const room = await getRoomById(roomId);
-    return room.requests;
   } catch (error) {
     throw error;
   }
