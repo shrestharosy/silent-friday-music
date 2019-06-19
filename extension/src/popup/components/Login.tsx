@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillProfileAction } from 'src/actionCreators/actionCreator';
+import { fillProfileAction, loginAction } from 'src/actionCreators/actionCreator';
 
 import { authUtils } from '../utils';
 import { AuthService, UserService } from '../service';
@@ -14,17 +14,22 @@ interface ILoginResponse {
 }
 
 interface ILoginProps {
+  loginAction: typeof loginAction;
   fillProfileAction: typeof fillProfileAction;
 }
 
 class Login extends React.Component<ILoginProps, {}> {
   handleLogin = async () => {
+    const { loginAction } = this.props;
     authUtils.getAuthToken().then((token: string) => {
-      AuthService.loginRequest(token).then((response: ILoginResponse) => {
-        UserService.getUserProfile(response.accessToken).then(response => {
-          this.props.fillProfileAction(response);
-        });
+      await new Promise((resolve, reject) => {
+        this.props.loginAction({ token }, resolve, reject);
       });
+      // .then((response: ILoginResponse) => {
+      //   UserService.getUserProfile(response.accessToken).then(response => {
+      //     this.props.fillProfileAction(response);
+      //   });
+      // });
     });
   };
 
@@ -43,7 +48,7 @@ class Login extends React.Component<ILoginProps, {}> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<typeof fillProfileAction>) =>
-  bindActionCreators({ fillProfileAction }, dispatch);
+  bindActionCreators({ fillProfileAction, loginAction }, dispatch);
 
 export default connect(
   null,

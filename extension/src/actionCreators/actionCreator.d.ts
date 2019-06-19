@@ -2,6 +2,8 @@ import * as actionConstants from 'src/constants/actions';
 import { IFillRoomActionPayload } from 'src/scripts/background/reducers/room';
 import { IFillBroadcastActionPayload } from 'src/scripts/background/reducers/broadcast';
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
+import { ActionCallbacks } from 'src/constants/action';
+import { ILoginPayload } from 'src/sagas/auth/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -16,4 +18,9 @@ export interface FillRoomActionType {
 export interface FillProfileActionType {
   type: typeof actionConstants.FILL_PROFILE_ACTION;
   payload: IFillProfileActionPayload;
+}
+
+export interface LoginActionType extends ActionCallbacks {
+  type: typeof actionConstants.LOGIN;
+  payload: ILoginPayload;
 }
