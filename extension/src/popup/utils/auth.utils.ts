@@ -1,4 +1,5 @@
-import Store from '../store';
+import * as storageUtils from 'src/utils/storage.utils';
+import * as storageConstants from 'src/constants/storage';
 
 export function getAuthToken() {
   return new Promise((resolve, reject) => {
@@ -20,8 +21,8 @@ export function getAuthToken() {
 //           }
 
 export function isAuthenticated() {
-  const token = Store.getState().auth.accessToken;
-  if (token.length > 0) {
+  const token = storageUtils.getFromStorage(storageConstants.ACCESS_TOKEN);
+  if (token) {
     return true;
   } else {
     return false;

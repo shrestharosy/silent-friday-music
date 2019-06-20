@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillRoomAction } from 'src/actionCreators/actionCreator';
-
-import { storageUtils } from 'src/utils';
+import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 
 import { IRoom } from './Rooms';
