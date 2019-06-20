@@ -12,6 +12,7 @@ broadcastRouter.post('/', async (req, res) => {
     const {
       author: { avatar, name },
     } = basicInfo;
+    console.log(basicInfo.player_response.playabilityStatus);
     res.status(200).send({ avatar, name, streamUrl: `http://localhost:3002/stream?v=${requestUrl}` });
   } catch (error) {
     res.status(400).send({ message: error.message });
