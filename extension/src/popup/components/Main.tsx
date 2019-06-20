@@ -29,6 +29,6 @@ class Main extends React.Component<{ active: IActiveReduxState }, {}> {
   }
 }
 
-const mapStateToProps = ({ active: { component, id } }: IReduxState) => ({ active: { component, id } });
+const mapStateToProps = ({ active }: IReduxState) => ({ active });
 
 export default connect(mapStateToProps)(Main);

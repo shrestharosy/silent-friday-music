@@ -7,12 +7,13 @@ import { IActiveReduxState, AvailableComponents } from 'src/scripts/background/r
 
 import Room from './Rooms/Room';
 import Rooms from './Rooms/Rooms';
-import WithAuthentication from '../hoc/withAuthentication';
+import withAuthentication from '../hoc/withAuthentication';
 
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 
 const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
   bindActionCreators({ fillActiveAction }, dispatch);
@@ -22,12 +23,12 @@ interface IUserProps {
   image: string;
 }
 
-interface IAuthorizedCompnentsProps {
+interface IAuthorizedComponentsProps {
   active: IActiveReduxState;
   fillActiveAction: typeof fillActiveAction;
 }
 
-class Authorized extends React.Component<IAuthorizedCompnentsProps> {
+class Authorized extends React.Component<IAuthorizedComponentsProps> {
   componentDidMount() {
     sendActionToBackground({
       type: 'INIT',
@@ -54,9 +55,7 @@ class Authorized extends React.Component<IAuthorizedCompnentsProps> {
   }
 }
 
-export default WithAuthentication<IAuthorizedCompnentsProps>(
-  connect(
-    null,
-    mapDispatchToProps
-  )(Authorized)
-);
+export default connect(
+  null,
+  mapDispatchToProps
+)(withAuthentication<IAuthorizedComponentsProps>(Authorized));
