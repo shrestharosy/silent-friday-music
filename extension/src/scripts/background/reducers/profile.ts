@@ -9,7 +9,7 @@ export interface IProfileReduxState {
   image: string;
 }
 
-const initialroomReduxState: IProfileReduxState = {
+const initialProfileReduxState: IProfileReduxState = {
   _id: '',
   name: '',
   email: '',
@@ -21,7 +21,7 @@ export type IFillProfileActionPayload = IProfileReduxState;
 
 type ProfileActionType = ActionType<typeof ActionConstants.FILL_PROFILE_ACTION, IFillProfileActionPayload>;
 
-const profileReducer = (state = initialroomReduxState, action: ProfileActionType) => {
+const profileReducer = (state = initialProfileReduxState, action: ProfileActionType) => {
   switch (action.type) {
     case ActionConstants.FILL_PROFILE_ACTION: {
       return {

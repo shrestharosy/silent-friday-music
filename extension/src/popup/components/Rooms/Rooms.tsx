@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import axios from 'src/popup/utils/axios';
+import axios from 'src/utils/axios';
 
 import RoomList from './List';
 

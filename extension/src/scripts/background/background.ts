@@ -1,10 +1,10 @@
-import axios from '../../popup/utils/axios';
 import { wrapStore } from 'webext-redux';
 import { createStore } from 'redux';
 import devToolsEnhancer from 'remote-redux-devtools';
 
 import rootReducer from './reducers';
 import * as io from 'socket.io-client';
+import axiosInstance from '../../utils/axios';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentSourceElement: HTMLSourceElement | null = null;
@@ -30,7 +30,7 @@ interface IBroadcastResponse {
 
 async function loadAudio(url: string) {
   try {
-    const { avatar, name, streamUrl } = await axios
+    const { avatar, name, streamUrl } = await axiosInstance
       .post<IBroadcastResponse>('/broadcast', {
         requestUrl: url,
       })

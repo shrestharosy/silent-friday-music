@@ -6,7 +6,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
-import { authUtils } from '../utils';
+import * as authUtils from 'src/popup/utils/auth.utils';
 
 const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
   bindActionCreators({ fillActiveAction }, dispatch);

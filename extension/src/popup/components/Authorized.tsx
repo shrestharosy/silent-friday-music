@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { storageUtils } from '../utils';
+import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from '../service/background.service';
 
 import { IActiveReduxState, AvailableComponents } from 'src/scripts/background/reducers/active';
@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
-import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 
 const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
   bindActionCreators({ fillActiveAction }, dispatch);

@@ -3,6 +3,9 @@ import { IFillRoomActionPayload } from 'src/scripts/background/reducers/room';
 import { IFillBroadcastActionPayload } from 'src/scripts/background/reducers/broadcast';
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
 import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
+import { ActionCallbacks } from 'src/constants/action';
+import { ILoginPayload } from 'src/sagas/auth/apis';
+import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -22,4 +25,14 @@ export interface FillProfileActionType {
 export interface FillActiveActionType {
   type: typeof actionConstants.FILL_ACTIVE_ACTION;
   payload: IFillActiveActionPayload;
+}
+
+export interface LoginActionType extends ActionCallbacks {
+  type: typeof actionConstants.LOGIN;
+  payload: ILoginPayload;
+}
+
+export interface FillAuthActionType {
+  type: typeof actionConstants.FILL_AUTH_ACTION;
+  payload: IFillAuthActionPayload;
 }

@@ -4,6 +4,8 @@ import { IFillBroadcastActionPayload } from 'src/scripts/background/reducers/bro
 import { IFillRoomActionPayload } from 'src/scripts/background/reducers/room';
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
 import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
+import { ILoginPayload } from 'src/sagas/auth/apis';
+import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -29,6 +31,26 @@ export function fillProfileAction(payload: IFillProfileActionPayload): ActionTyp
 export function fillActiveAction(payload: IFillActiveActionPayload): ActionTypes.FillActiveActionType {
   return {
     type: actionConstants.FILL_ACTIVE_ACTION,
+    payload,
+  };
+}
+
+export function loginAction(
+  payload: ILoginPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.LoginActionType {
+  return {
+    type: actionConstants.LOGIN,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function fillAuthAction(payload: IFillAuthActionPayload): ActionTypes.FillAuthActionType {
+  return {
+    type: actionConstants.FILL_AUTH_ACTION,
     payload,
   };
 }
