@@ -1,28 +1,15 @@
 import * as React from 'react';
 
-import WithAuthentication from '../hoc/withAuthentication';
-import { storageUtils } from '../utils';
 import store from '../store';
-import sendActionToBackground from '../service/background.service';
 
-import Rooms from './Rooms/Rooms';
+import { connect } from 'react-redux';
+import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
+import { IActiveReduxState, AvailableComponents } from 'src/scripts/background/reducers/active';
+import Login from './Login';
 
-interface IUserProps {
-  name: string;
-  image: string;
-}
+import Authorized from './Authorized';
 
-class Main extends React.Component<IUserProps, {}> {
-  logout = () => {
-    storageUtils.clearStorage();
-  };
-
-  componentDidMount() {
-    sendActionToBackground({
-      type: 'INIT',
-    });
-  }
-
+class Main extends React.Component<{ active: IActiveReduxState }, {}> {
   dispatchAction = () => {
     store.dispatch({
       type: 'DEMO_ACTION',
@@ -31,16 +18,17 @@ class Main extends React.Component<IUserProps, {}> {
   };
 
   render() {
-    const profile: IUserProps = storageUtils.getFromStorage('USER_PROFILE');
+    const {
+      active: { component },
+    } = this.props;
     return (
-      <div>
-        Welcome {profile ? profile : ''}
-        <button onClick={() => this.logout()}>Logout</button>
-        <div>List of rooms</div>
-        <Rooms />
-      </div>
+      <React.Fragment>
+        {component !== AvailableComponents.LOGIN ? <Authorized active={this.props.active} /> : <Login />}
+      </React.Fragment>
     );
   }
 }
 
-export default WithAuthentication(Main);
+const mapStateToProps = ({ active: { component, id } }: IReduxState) => ({ active: { component, id } });
+
+export default connect(mapStateToProps)(Main);
