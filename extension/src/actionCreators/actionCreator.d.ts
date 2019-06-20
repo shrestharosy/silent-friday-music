@@ -4,6 +4,7 @@ import { IFillBroadcastActionPayload } from 'src/scripts/background/reducers/bro
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
 import { ActionCallbacks } from 'src/constants/action';
 import { ILoginPayload } from 'src/sagas/auth/apis';
+import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -23,4 +24,9 @@ export interface FillProfileActionType {
 export interface LoginActionType extends ActionCallbacks {
   type: typeof actionConstants.LOGIN;
   payload: ILoginPayload;
+}
+
+export interface FillAuthActionType {
+  type: typeof actionConstants.FILL_AUTH_ACTION;
+  payload: IFillAuthActionPayload;
 }
