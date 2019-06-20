@@ -9,10 +9,7 @@ export async function loginAPI(payload: ILoginPayload) {
   const { token } = payload;
   return axiosInstance
     .post(URL, { token })
-    .then(data => {
-      // storageUtils.setInStorage("TOKEN", data.accessToken);
-      data;
-    })
+    .then(({ data }) => data)
     .catch(error => {
       throw error;
     });

@@ -2,11 +2,13 @@ import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
 
 export interface IAuthReduxState {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 const initialAuthReduxState: IAuthReduxState = {
-  token: '',
+  accessToken: '',
+  refreshToken: '',
 };
 
 export type IFillAuthActionPayload = IAuthReduxState;

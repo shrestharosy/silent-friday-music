@@ -1,13 +1,10 @@
 import * as React from 'react';
-
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillProfileAction, loginAction } from 'src/actionCreators/actionCreator';
-
-import { AuthService, UserService } from '../service';
+import { getAuthToken } from '../utils/auth.utils';
 import * as GoogleLogo from '../../../public/assets/images/google-logo.svg';
-import { getAuthToken } from '../../utils/auth.utils';
 
 interface ILoginResponse {
   accessToken: string;
@@ -28,15 +25,19 @@ class Login extends React.Component<ILoginProps, {}> {
         throw error;
       });
 
-    await new Promise((resolve, reject) => {
-      this.props.loginAction({ token }, resolve, reject);
-    });
+    await this.fetchJwtToken(token);
 
     // .then((response: ILoginResponse) => {
     //   UserService.getUserProfile(response.accessToken).then(response => {
     //     this.props.fillProfileAction(response);
     //   });
     // });
+  };
+
+  fetchJwtToken = async (token: string) => {
+    await new Promise((resolve, reject) => {
+      this.props.loginAction({ token }, resolve, reject);
+    });
   };
 
   render() {

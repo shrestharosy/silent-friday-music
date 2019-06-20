@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Login from '../components/Login';
-import { isAuthenticated } from 'src/utils/auth.utils';
+import { isAuthenticated } from '../utils/auth.utils';
 
 const WithAuthentication = (Component: any) => {
   return (props: any) => {
