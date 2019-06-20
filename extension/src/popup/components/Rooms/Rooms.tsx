@@ -1,7 +1,7 @@
 import * as React from 'react';
-import axios from 'src/popup/utils/axios';
 import RoomList from './List';
 import Room from './Room';
+import axiosInstance from 'src/utils/axios';
 
 export interface IRoom {
   name: string;
@@ -28,7 +28,7 @@ class Rooms extends React.Component<{}, IRoomsState> {
   }
   async componentDidMount() {
     try {
-      const rooms = await axios
+      const rooms = await axiosInstance
         .get('/rooms')
         .then(({ data }) => data)
         .catch(error => {

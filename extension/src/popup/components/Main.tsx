@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import WithAuthentication from '../hoc/withAuthentication';
-import { storageUtils } from '../utils';
+import * as storageUtils from 'src/utils/storage.utils';
+import * as storageConstants from 'src/constants/storage';
 import store from '../store';
 import sendActionToBackground from '../service/background.service';
 
@@ -31,7 +32,7 @@ class Main extends React.Component<IUserProps, {}> {
   };
 
   render() {
-    const profile: IUserProps = storageUtils.getFromStorage('USER_PROFILE');
+    const profile: IUserProps = storageUtils.getFromStorage(storageConstants.USER_PROFILE);
     return (
       <div>
         Welcome {profile ? profile : ''}

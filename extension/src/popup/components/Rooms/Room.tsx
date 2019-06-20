@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillRoomAction } from 'src/actionCreators/actionCreator';
-
-import { storageUtils } from 'src/utils';
-import axiosInstance from 'src/popup/utils/axios';
+import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 
 import { IRoom } from './Rooms';
 import NowPlaying from '../NowPlaying';
+import axiosInstance from 'src/utils/axios';
 
 interface IMainState {
   isLoaded: boolean;
