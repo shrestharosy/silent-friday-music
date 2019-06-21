@@ -1,40 +1,44 @@
-import { Request, Response } from 'express';
-
 import * as songServices from '../services/song';
 
-export async function addToPlaylist(req: Request, res: Response) {
+export interface IAddToPlayistPayload {
+  roomId: string;
+  url: string;
+}
+
+export interface IGetPlaylistPayload {
+  roomId: string;
+}
+
+interface ISongDetailsPayload {
+  songId: string;
+}
+
+export async function addToPlaylist(payload: IAddToPlayistPayload) {
   try {
-    const roomId = req.params.roomId;
-    const { url } = req.body;
+    const { roomId, url } = payload;
     const updatedPlayList = await songServices.addToPlaylist(roomId, url);
-    res.json(updatedPlayList);
+    return updatedPlayList;
   } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
+    throw error;
   }
 }
 
-export async function getPlaylist(req: Request, res: Response) {
+export async function getPlaylist(payload: IGetPlaylistPayload) {
   try {
-    const roomId = req.params.roomId;
+    const { roomId } = payload;
     const playList = await songServices.getPlaylist(roomId);
-    res.json(playList);
+    return playList;
   } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
+    throw error;
   }
 }
 
-export async function getSongDetails(req: Request, res: Response) {
+export async function getSongDetails(payload: ISongDetailsPayload) {
   try {
-    const songId = req.params.songId;
+    const { songId } = payload;
     const songDetails = await songServices.getSongById(songId);
-    res.json(songDetails);
+    return songDetails;
   } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
+    throw error;
   }
 }

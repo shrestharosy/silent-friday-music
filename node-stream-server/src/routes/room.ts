@@ -74,7 +74,32 @@ roomsRouter.patch('/:roomId', async (req, res) => {
   }
 });
 
-roomsRouter.post('/:roomId/songs/', songControllers.addToPlaylist);
-roomsRouter.get('/:roomId/songs/', songControllers.getPlaylist);
+roomsRouter.post('/:roomId/songs', async (req, res) => {
+  const roomId = req.params.roomId;
+  const { url } = req.body;
+  try {
+    const updatedPlaylist = await songControllers.addToPlaylist({
+      roomId,
+      url,
+    });
+    res.json(updatedPlaylist);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+});
+
+roomsRouter.get('/:roomId/songs', async (req, res) => {
+  const roomId = req.params.roomId;
+  try {
+    const playlist = await songControllers.getPlaylist({ roomId });
+    res.json(playlist);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+});
 
 export default roomsRouter;
