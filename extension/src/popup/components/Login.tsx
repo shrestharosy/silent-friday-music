@@ -22,7 +22,6 @@ class Login extends React.Component<ILoginProps, {}> {
   handleLogin = async () => {
     const { token } = await getAuthToken()
       .then((response: { token: string }) => {
-        this.props.fillActiveAction({ component: AvailableComponents.ROOM_LIST, id: '' });
         return response;
       })
       .catch(error => {
@@ -30,6 +29,10 @@ class Login extends React.Component<ILoginProps, {}> {
       });
 
     await this.fetchJwtToken(token);
+    this.props.fillActiveAction({
+      component: AvailableComponents.ROOM_LIST,
+      id: '',
+    });
 
     // .then((response: ILoginResponse) => {
     //   UserService.getUserProfile(response.accessToken).then(response => {
