@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction } from 'src/actionCreators/actionCreator';
+import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 
@@ -22,6 +22,7 @@ interface IMainState {
 interface IRoomProps {
   roomId: string;
   fillRoomAction: typeof fillRoomAction;
+  addToPlaylistAction: typeof addToPlaylistAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -59,12 +60,20 @@ class Room extends React.Component<IRoomProps, IMainState> {
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const { searchLink } = this.state;
     sendActionToBackground({
       type: 'LOAD_AUDIO',
       data: {
         requestUrl: this.state.searchLink,
       },
     });
+
+    this.addToPlaylist(searchLink);
+  };
+
+  addToPlaylist = (url: string) => {
+    const { roomId, addToPlaylistAction } = this.props;
+    addToPlaylistAction({ roomId, url });
   };
 
   fetchRoomDetails = async () => {
@@ -91,11 +100,8 @@ class Room extends React.Component<IRoomProps, IMainState> {
         <div>
           Room <b>{currentRoom && currentRoom.name}</b>
         </div>
-        >
         <form onSubmit={this.handleSubmit}>
           <input placeholder="Put something cool !!!" onChange={this.handleSearchLinkChange} value={searchLink} />
-          <p>Or</p>
-          <div>Try playing a YouTube video on browser tab</div>
         </form>
         <hr />
         <NowPlaying title={title} imageUrl={imageUrl} />
@@ -104,10 +110,16 @@ class Room extends React.Component<IRoomProps, IMainState> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<typeof fillRoomAction>) =>
+const mapDispatchToProps = (
+  dispatch: Dispatch<{
+    fillRoomAction: typeof fillRoomAction;
+    addToPlaylistAction: typeof addToPlaylistAction;
+  }>
+) =>
   bindActionCreators(
     {
       fillRoomAction,
+      addToPlaylistAction,
     },
     dispatch
   );
