@@ -1,12 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:600&display=swap');
 
+/* Constants */
+:root {
+  --primary-color: rgb(255, 204, 1);
+  --primary-font-color: rgba(0,0,0,0.5);
+  --grey: rgba(0,0,0,0.1);
+}
+
 body {
-  width: 450px;
+  width: 500px;
   height: 280px;
   /* font-family: "Roboto", arial, sans-serif; */
   font-family: 'Open Sans', sans-serif;
   margin: 0;
   padding: 0;
+  color: var(--primary-font-color);
 }
  
 /* Custom Scrollbars */
@@ -15,7 +23,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.1); 
+  background: var(--grey); 
   border-radius: 1px;
 }
 
@@ -29,12 +37,16 @@ input {
 /* ======= USER WRAPPER ======= */
 
 .user-wrapper {
-  padding: 10px 20px 0px 20px;
+  padding: 12px 20px 0px 20px;
   text-align: right;
 }
 
-.user-wrapper button {
-
+.btn-logout {
+  border: 0;
+  background: none;
+}
+.btn-logout:hover {
+  cursor: pointer;
 }
 
 /* ======= COMMON CSS ======= */
@@ -58,14 +70,16 @@ input {
   background: #ffffff;
   margin: 15px;
   border-radius: 5px;
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+  box-shadow: 0px 3px 10px var(--grey);
 }
 
 /* ======= LOGIN WRAPPER ======= */
 
 .login-wrapper {
-  text-align: center;
-  line-height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .google-button {
@@ -84,7 +98,7 @@ input {
 }
 
 .google-button:hover {
-  box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 4px 5px 1px var(--grey);
 }
 
 .google-button:active {
@@ -121,23 +135,28 @@ input {
   margin: 15px;
   padding: 15px;
   border-radius: 5px;
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+  box-shadow: 0px 3px 10px var(--grey);
   font-size: 15px;
   font-weight: 700;
   color: rgba(0,0,0,0.5);
+  transition: 0.1s ease;
 }
 
 .button-wrapper:hover {
   cursor: pointer;
+  box-shadow: 1px 4px 5px 1px var(--grey);
+  transition: 0.2s ease;
 }
 
 .button-icon {
   float: right;
+  color: var(--primary-color);
+  font-size: 18px;
 }
 
 .title-wrapper {
-  padding: 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--grey);
 }
 
 .title-wrapper span {
@@ -154,6 +173,7 @@ input {
   list-style-type: none;
   overflow-y: hidden;
   max-height: 150px;
+  font-size: 13px;
 }
 
 .rooms-list:hover {
@@ -163,10 +183,112 @@ input {
 .rooms-list li {
   padding: 16px;
   color: rgba(0,0,0,0.4);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--grey);  
+  transition: 0.1s ease;
 }
 
 .rooms-list li:hover {
   cursor: pointer;
-  background: rgba(0,0,0,0.1);
+  transition: 0.1s ease;
+}
+
+.rooms-list li:hover .fa-icon-play {
+  color: var(--primary-color);
+}
+.fa-icon-play {
+  margin-right: 15px;
+  font-size: 15px;
+}
+
+/* ======= DASH WRAPPER ======= */
+
+.dash-wrapper {
+  
+}
+
+.dash-title-bar {
+  margin: 7px 0px 20px 0px;
+  padding: 25px 25px 5px 25px;
+}
+
+.room-name {
+  font-size: 22px;
+}
+
+.dash-buttons {
+  float: right;
+  display: block;
+  padding-top: 6px;
+}
+
+.dash-buttons span {
+  margin: 5px;
+  background: var(--primary-color);
+  color: white;
+  padding: 7px 10px;
+  border-radius: 50%;
+}
+
+.dash-buttons span:hover {
+  cursor: pointer;
+}
+
+.form-wrapper {
+  padding: 0px 25px;
+}
+
+.song-input {
+  width: 95%;
+  border: none;
+  background: rgba(94,94,94,0.1);
+  padding: 10px;
+}
+
+
+.song-input::placeholder {
+  color: rgba(0,0,0,0.4);
+}
+
+.now-playing-wrapper {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 30% 70%;
+  padding: 0px 25px;
+}
+
+.now-playing-img {
+  height: 100px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.now-playing-info {
+  display: block;
+  font-style: italic;
+  color: rgba(0,0,0,0.3);
+  font-weight: 100;
+}
+
+.now-playing-title {
+  display: block;
+  font-size: 15px;
+  margin-top: 5px;
+  color: rgba(0,0,0,0.4);
+}
+
+.view-playlist-button:hover {
+  cursor: pointer;
+}
+
+.view-playlist-button span {
+  display: block;
+  padding: 15px 25px;
+  font-size: 14px;
+  border-top: 1px solid var(--grey);
+  margin-top: 15px;
+}
+
+.playlist-icon {
+  float: right;
+  color: var(--primary-color);
 }

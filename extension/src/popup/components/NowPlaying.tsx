@@ -8,10 +8,14 @@ interface INowPlayingProps {
 const NowPlaying: React.SFC<INowPlayingProps> = props => {
   const { title, imageUrl } = props;
   return (
-    <div>
-      <h3>Now Playing</h3>
-      <img src={imageUrl} alt="" />
-      {title}
+    <div className="now-playing-wrapper">
+      <div>
+        <img src={imageUrl} alt="" className="now-playing-img" />
+      </div>
+      <div>
+        <span className="now-playing-info">Now Playing</span>
+        <span className="now-playing-title">{title}</span>
+      </div>
     </div>
   );
 };
