@@ -26,5 +26,6 @@
     "scopes": ["profile", "email"]
   },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlfTeUvOPdhBUo7zCSfxJX4xp5gaFyjWQ9us+7NhOORvuxDlwE40hPqZ4yQoSgxebuVEZpk5pJ/uEh11CqmlfQ+crjNXvVp1h5wT9a1b44neBFsfU0cl6rh+x6FuzC66KpANBsQ9Ru2TJLpbXdHMpjs8BBnUImt/9s48adMO7m87Gj0VLRnqZZqKdNBZO4Zsfzx5st77V/F5Cyk31LnrKwZwTgo1cR582/wcSPNyilPI1/VWsCJBbC4NM2TNcETdn81bG+GrEV2uBnQLjIzMTq77gl26FAW5T5K/31ZP2tqP5GyNheBah+yHn2WSNjXpiN7qF8d+urS2o7FT7xxk3hwIDAQAB",
-  "permissions": ["webRequest", "<all_urls>", "tabs", "storage", "identity"]
+  "permissions": ["webRequest", "<all_urls>", "tabs", "storage", "identity"],
+  "content_security_policy": "script-src http://localhost:8097/; script-src 'self'; object-src 'self';"
 }
