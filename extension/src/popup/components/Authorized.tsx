@@ -44,8 +44,10 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
     const profile: IUserProps = storageUtils.getFromStorage('USER_PROFILE');
     return (
       <React.Fragment>
-        Welcome {profile ? profile : ''}
-        <button onClick={() => this.logout()}>Logout</button>
+        <div className="user-wrapper">
+          <span> Welcome, {profile ? profile : ''} </span>
+          <button onClick={() => this.logout()}>logout</button>
+        </div>
         {component === AvailableComponents.ROOM_LIST && <Rooms />}
         {component === AvailableComponents.ROOM_DETAILS && <Room roomId={id} />}
         {component === AvailableComponents.CREATE_ROOM && <p>Create a room</p>}

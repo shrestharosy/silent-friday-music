@@ -57,8 +57,18 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
     return (
       <React.Fragment>
-        <div>List of rooms</div>
-        <div>{isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />}</div>
+        <div className="button-wrapper">
+          <span>CREATE NEW ROOM</span>
+          {/* <span className="button-icon"></span> */}
+        </div>
+        <div className={'common-wrapper rooms-wrapper'}>
+          <div className={'title-wrapper'}>
+            <span>Recent Rooms</span>
+          </div>
+          <div>
+            {isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} /> }
+          </div>
+        </div>
       </React.Fragment>
     );
   }
