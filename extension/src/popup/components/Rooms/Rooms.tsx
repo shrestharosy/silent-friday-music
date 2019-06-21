@@ -1,7 +1,14 @@
 import * as React from 'react';
+
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+
+import axios from 'src/utils/axios';
+
 import RoomList from './List';
-import Room from './Room';
-import axiosInstance from 'src/utils/axios';
+
+import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 export interface IRoom {
   name: string;
@@ -12,23 +19,24 @@ export interface IRoom {
 interface IRoomsState {
   isLoaded: boolean;
   rooms: Array<IRoom>;
-  currentView: 'list' | 'details';
   roomId?: string;
 }
 
-class Rooms extends React.Component<{}, IRoomsState> {
-  constructor(props: Readonly<{}>) {
+interface IRoomsProps {
+  fillActiveAction: typeof fillActiveAction;
+}
+
+class Rooms extends React.Component<IRoomsProps, IRoomsState> {
+  constructor(props: Readonly<IRoomsProps>) {
     super(props);
     this.state = {
       isLoaded: false,
       rooms: [],
-      currentView: 'details',
-      roomId: '5cfcf9af8b1fe42d0f9aecd0',
     };
   }
   async componentDidMount() {
     try {
-      const rooms = await axiosInstance
+      const rooms = await axios
         .get('/rooms')
         .then(({ data }) => data)
         .catch(error => {
@@ -42,25 +50,24 @@ class Rooms extends React.Component<{}, IRoomsState> {
     } catch (error) {}
   }
   handleDetailsView = (roomId: string) => {
-    this.setState(prevState => ({
-      currentView: prevState.currentView === 'list' ? 'details' : 'list',
-      roomId,
-    }));
+    this.props.fillActiveAction({ component: AvailableComponents.ROOM_DETAILS, id: roomId });
   };
   render() {
-    const { rooms, isLoaded, currentView } = this.state;
+    const { rooms, isLoaded } = this.state;
 
     return (
-      <div>
-        {isLoaded &&
-          (currentView === 'list' ? (
-            <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />
-          ) : (
-            <Room roomId={this.state.roomId} />
-          ))}
-      </div>
+      <React.Fragment>
+        <div>List of rooms</div>
+        <div>{isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />}</div>
+      </React.Fragment>
     );
   }
 }
 
-export default Rooms;
+const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
+  bindActionCreators({ fillActiveAction }, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Rooms);

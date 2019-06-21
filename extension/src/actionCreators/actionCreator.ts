@@ -3,6 +3,7 @@ import * as actionConstants from 'src/constants/actions';
 import { IFillBroadcastActionPayload } from 'src/scripts/background/reducers/broadcast';
 import { IFillRoomActionPayload } from 'src/scripts/background/reducers/room';
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
+import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
 import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
 
@@ -23,6 +24,13 @@ export function fillRoomAction(payload: IFillRoomActionPayload): ActionTypes.Fil
 export function fillProfileAction(payload: IFillProfileActionPayload): ActionTypes.FillProfileActionType {
   return {
     type: actionConstants.FILL_PROFILE_ACTION,
+    payload,
+  };
+}
+
+export function fillActiveAction(payload: IFillActiveActionPayload): ActionTypes.FillActiveActionType {
+  return {
+    type: actionConstants.FILL_ACTIVE_ACTION,
     payload,
   };
 }

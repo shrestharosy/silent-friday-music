@@ -20,7 +20,7 @@ interface IMainState {
 }
 
 interface IRoomProps {
-  roomId?: string;
+  roomId: string;
   fillRoomAction: typeof fillRoomAction;
 }
 

@@ -5,6 +5,8 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { fillProfileAction, loginAction } from 'src/actionCreators/actionCreator';
 import { getAuthToken } from '../utils/auth.utils';
 import * as GoogleLogo from '../../../public/assets/images/google-logo.svg';
+import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 interface ILoginResponse {
   accessToken: string;
@@ -13,12 +15,14 @@ interface ILoginResponse {
 interface ILoginProps {
   loginAction: typeof loginAction;
   fillProfileAction: typeof fillProfileAction;
+  fillActiveAction: typeof fillActiveAction;
 }
 
 class Login extends React.Component<ILoginProps, {}> {
   handleLogin = async () => {
     const { token } = await getAuthToken()
       .then((response: { token: string }) => {
+        this.props.fillActiveAction({ component: AvailableComponents.ROOM_LIST, id: '' });
         return response;
       })
       .catch(error => {
@@ -54,8 +58,13 @@ class Login extends React.Component<ILoginProps, {}> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<typeof fillProfileAction>) =>
-  bindActionCreators({ fillProfileAction, loginAction }, dispatch);
+const mapDispatchToProps = (
+  dispatch: Dispatch<{
+    fillProfilAction: typeof fillProfileAction;
+    fillActiveAction: typeof fillActiveAction;
+    loginAction: typeof loginAction;
+  }>
+) => bindActionCreators({ fillProfileAction, fillActiveAction, loginAction }, dispatch);
 
 export default connect(
   null,
