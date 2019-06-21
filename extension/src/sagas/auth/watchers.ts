@@ -1,11 +1,11 @@
 import { takeLatest } from 'redux-saga/effects';
 
-import * as ActionCreators from '../../actionCreators/actionCreator';
+import * as actionConstants from 'src/constants/actions';
 
 import { loginEffect } from './effects';
 
 export function* loginWatcher() {
-  yield takeLatest(ActionCreators.loginAction, loginEffect);
+  yield takeLatest(actionConstants.LOGIN, loginEffect);
 }
 
 export default function AuthWatchers() {
