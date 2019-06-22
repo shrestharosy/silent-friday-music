@@ -6,6 +6,7 @@ import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active
 import { ActionCallbacks } from 'src/constants/action';
 import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
+import { IAddtoPlaylistPayload } from 'src/sagas/song/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -35,4 +36,9 @@ export interface LoginActionType extends ActionCallbacks {
 export interface FillAuthActionType {
   type: typeof actionConstants.FILL_AUTH_ACTION;
   payload: IFillAuthActionPayload;
+}
+
+export interface AddToPlaylistActionType extends ActionCallbacks {
+  type: typeof actionConstants.ADD_TO_PLAYLIST;
+  payload: IAddtoPlaylistPayload;
 }
