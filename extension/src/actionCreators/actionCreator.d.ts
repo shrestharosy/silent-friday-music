@@ -36,3 +36,7 @@ export interface FillAuthActionType {
   type: typeof actionConstants.FILL_AUTH_ACTION;
   payload: IFillAuthActionPayload;
 }
+
+export interface FetchProfileAction extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_PROFILE_ACTION;
+}

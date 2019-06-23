@@ -54,3 +54,11 @@ export function fillAuthAction(payload: IFillAuthActionPayload): ActionTypes.Fil
     payload,
   };
 }
+
+export function fetchProfileAction(resolve?: Function, reject?: Function): ActionTypes.FetchProfileAction {
+  return {
+    type: actionConstants.FETCH_PROFILE_ACTION,
+    resolve,
+    reject,
+  };
+}
