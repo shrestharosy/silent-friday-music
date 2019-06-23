@@ -33,7 +33,7 @@ export async function getAllRooms(queryParams: IRoomQueryParams = { search: '' }
 
 export async function getRoomById(roomId: string) {
   try {
-    const foundRoom = await RoomModel.findById(roomId);
+    const foundRoom = await RoomModel.findById(roomId).populate('requests');
     if (foundRoom) {
       return foundRoom;
     } else {
