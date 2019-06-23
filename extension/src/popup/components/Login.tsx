@@ -49,14 +49,14 @@ class Login extends React.Component<ILoginProps, {}> {
 
   render() {
     return (
-      <div className={'login-wrapper'}>
-        <button className={'google-button'} type="submit" onClick={() => this.handleLogin()}>
-          <span className="google-button-icon">
-            <img src={GoogleLogo} alt="" />
-          </span>
-          <span className={'google-button-text'}>Sign in with Google</span>
-        </button>
-      </div>
+        <div className={"login-wrapper"}>
+          <button className={'google-button'} type="submit" onClick={() => this.handleLogin()}>
+            <span className="google-button-icon">
+              <img src={GoogleLogo} alt="" />
+            </span>
+            <span className={'google-button-text'}>Sign in with Google</span>
+          </button>      
+        </div>
     );
   }
 }

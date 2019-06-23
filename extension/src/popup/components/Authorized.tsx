@@ -14,6 +14,9 @@ import { bindActionCreators, Dispatch } from 'redux';
 
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+
 const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
   bindActionCreators({ fillActiveAction }, dispatch);
 
@@ -44,8 +47,12 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
     const profile: IUserProps = storageUtils.getFromStorage('USER_PROFILE');
     return (
       <React.Fragment>
-        Welcome {profile ? profile : ''}
-        <button onClick={() => this.logout()}>Logout</button>
+        <div className="user-wrapper">
+          <span> Welcome, {profile ? profile : ''} </span>
+          <button onClick={() => this.logout()} className="btn-logout">
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
+        </div>
         {component === AvailableComponents.ROOM_LIST && <Rooms />}
         {component === AvailableComponents.ROOM_DETAILS && <Room roomId={id} />}
         {component === AvailableComponents.CREATE_ROOM && <p>Create a room</p>}
