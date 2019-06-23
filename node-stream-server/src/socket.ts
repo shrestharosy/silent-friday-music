@@ -7,7 +7,7 @@ export default function initializeSockerListeners() {
   socketInstance.getIOInstance().on('connect', socket => {
     console.log('User connected..', socket.id);
     socket.on(JSON.stringify({ type: BROADCAST_SONG_TIMESTAMP }), (message: Object) => {
-      console.log(message);
+      // console.log(message);
     });
   });
 }

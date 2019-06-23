@@ -25,8 +25,8 @@ class Playlist extends React.Component<IPlaylistProps, {}> {
     const { requests } = this.props;
     return (
       <div>
-        <h1>Playlist</h1>
-        <SongList songs={requests} />
+        <h1>Full Playlist</h1>
+        <SongList requests={requests} />
       </div>
     );
   }
