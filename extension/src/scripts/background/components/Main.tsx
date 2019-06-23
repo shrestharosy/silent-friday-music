@@ -20,9 +20,7 @@ class Main extends React.Component<IMainProps> {
     return (
       <React.Fragment>
         {active.component === AvailableComponents.ROOM_DETAILS && <NowPlaying roomId={active.id} />}
-        {this.props.active.component === AvailableComponents.ROOM_LIST && storage.getFromStorage(ACCESS_TOKEN) && (
-          <TimeKeeper />
-        )}
+        {storage.getFromStorage(ACCESS_TOKEN) && <TimeKeeper />}
       </React.Fragment>
     );
   }
