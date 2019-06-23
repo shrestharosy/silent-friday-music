@@ -13,7 +13,11 @@ export default function initializeSockerListeners() {
   socketInstance.getIOInstance().use(function(socket, next) {
     try {
       const id = getUserIdFromAuthHeader(socket.handshake.query.authorization);
-      next();
+      if (id) {
+        next();
+      } else {
+        throw new Error('Token is invalid');
+      }
     } catch (error) {
       next(new Error('Unauthorized socket connection'));
     }
