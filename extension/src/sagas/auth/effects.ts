@@ -25,10 +25,7 @@ export function* loginEffect(action: ActionCreatorsTypes.LoginActionType) {
 
 export function* fetchProfileEffect(action: ActionCreatorsTypes.FetchProfileAction) {
   try {
-    console.log('effect', fetchProfileAPI);
     const data = yield call(fetchProfileAPI);
-
-    console.log(data);
 
     yield put(fillProfileAction(data));
 
@@ -36,7 +33,6 @@ export function* fetchProfileEffect(action: ActionCreatorsTypes.FetchProfileActi
       action.resolve(data);
     }
   } catch (error) {
-    console.log(error);
     if (action.reject) {
       action.reject(error);
     }
