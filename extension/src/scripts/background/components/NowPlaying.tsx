@@ -20,16 +20,16 @@ const mapDispatchToProps = (dispatch: Dispatch<{}>) => bindActionCreators({ fill
 class NowPlaying extends React.Component<INowPlayingProps> {
   componentDidMount() {
     socketService.getIOInstance().on(this.props.roomId, (message: ISocketMessage) => {
-      // console.log(message);
       const payload = message.payload as IFillNowPlayingActionPayload;
+
       if (this.props.nowPlaying.songId !== payload.songId) {
         this.props.fillNowPlayingAction(payload);
       }
     });
   }
   render() {
-    const { streamUrl } = this.props.nowPlaying;
-    return <Audio url={streamUrl} />;
+    const { streamUrl, timestamp } = this.props.nowPlaying;
+    return <Audio url={`${streamUrl}&t=${timestamp}`} />;
   }
 }
 
