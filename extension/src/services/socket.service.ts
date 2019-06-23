@@ -1,5 +1,9 @@
 import * as io from 'socket.io-client';
 import config from '../config';
+import * as storage from 'src/utils/storage.utils';
+import { ACCESS_TOKEN } from 'src/constants/storage';
+
+let socketServiceInstance: SocketService | null = null;
 
 export interface ISocketMessage {
   type: string;
@@ -18,13 +22,24 @@ class SocketService implements ISocket {
     this.initialize(config.ApiEnv.baseURL);
   }
   initialize(baseURL: string) {
-    this.IOInstance = io(baseURL);
+    this.IOInstance = io(baseURL, {
+      query: {
+        authorization: `Bearer ${storage.getFromStorage(ACCESS_TOKEN)}`,
+      },
+    });
   }
   getIOInstance = () => {
     return this.IOInstance;
   };
 }
 
-const socketServiceInstance = new SocketService();
+function createSocketInstance() {
+  return new SocketService();
+}
 
-export default socketServiceInstance;
+export default function getSocketInstance() {
+  if (socketServiceInstance === null) {
+    socketServiceInstance = createSocketInstance();
+  }
+  return socketServiceInstance;
+}
