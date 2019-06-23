@@ -6,6 +6,7 @@ import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profi
 import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
 import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
+import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -60,5 +61,12 @@ export function fetchProfileAction(resolve?: Function, reject?: Function): Actio
     type: actionConstants.FETCH_PROFILE_ACTION,
     resolve,
     reject,
+  };
+}
+
+export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingAction {
+  return {
+    type: actionConstants.FILL_NOW_PLAYING_ACTION,
+    payload,
   };
 }
