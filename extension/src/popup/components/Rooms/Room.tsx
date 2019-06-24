@@ -11,6 +11,9 @@ import NowPlaying from '../Songs/NowPlaying';
 import axiosInstance from 'src/utils/axios';
 import Playlist from '../Songs/Playlist';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
+
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
@@ -45,9 +48,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
     this.fetchRoomDetails();
 
     this.setState({
-      searchLink,
-      title,
-      imageUrl,
+      searchLink: searchLink ? searchLink : '',
+      title: title ? title : '',
+      imageUrl: imageUrl ? imageUrl : '',
     });
   }
 
@@ -97,16 +100,37 @@ class Room extends React.Component<IRoomProps, IMainState> {
     const { roomId } = this.props;
     const { searchLink, title, imageUrl, currentRoom } = this.state;
     return (
-      <div>
-        <div>
-          Room <b>{currentRoom && currentRoom.name}</b>
+      <div className="common-wrapper dash-wrapper">
+        <div className="dash-title-bar">
+          <span className="room-name">{currentRoom && currentRoom.name}</span>
+          <div className="dash-buttons">
+            <span>
+              <FontAwesomeIcon icon={faVolumeMute} />
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faUserPlus} />
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faDoorOpen} />
+            </span>
+          </div>
         </div>
         <form onSubmit={this.handleSubmit}>
-          <input placeholder="Put something cool !!!" onChange={this.handleSearchLinkChange} value={searchLink} />
+          <input
+            className="song-input"
+            placeholder="Paste a youtube URL to add song to queue..."
+            onChange={this.handleSearchLinkChange}
+            value={searchLink}
+          />
         </form>
-        <hr />
         <NowPlaying title={title} imageUrl={imageUrl} />
         <Playlist roomId={roomId} />
+        <div className="view-playlist-button">
+          <span>
+            View Full Playlist
+            <FontAwesomeIcon icon={faListOl} className="playlist-icon" />
+          </span>
+        </div>
       </div>
     );
   }

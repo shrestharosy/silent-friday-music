@@ -10,6 +10,9 @@ import RoomList from './List';
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+
 export interface IRoom {
   name: string;
   _id: string;
@@ -46,7 +49,6 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
         rooms,
         isLoaded: true,
       });
-      console.log(rooms);
     } catch (error) {}
   }
   handleDetailsView = (roomId: string) => {
@@ -57,8 +59,18 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
     return (
       <React.Fragment>
-        <div>List of rooms</div>
-        <div>{isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />}</div>
+        <div className="button-wrapper">
+          <span>CREATE NEW ROOM</span>
+          <span className="button-icon">
+            <FontAwesomeIcon icon={faPlusCircle} />
+          </span>
+        </div>
+        <div className={'common-wrapper rooms-wrapper'}>
+          <div className={'title-wrapper'}>
+            <span>Recent Rooms</span>
+          </div>
+          <div>{isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />}</div>
+        </div>
       </React.Fragment>
     );
   }

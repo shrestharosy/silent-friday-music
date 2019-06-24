@@ -1,22 +1,29 @@
 import * as React from 'react';
 
-import socketService from 'src/services/socket.service';
-
-import Audio from './Audio';
+import NowPlaying from './NowPlaying';
 import TimeKeeper from './Phantom/TimeKeeper';
+import { connect } from 'react-redux';
+import { IReduxState } from '../reducers/rootReducer';
+import { IActiveReduxState, AvailableComponents } from '../reducers/active';
+import * as storage from 'src/utils/storage.utils';
+import { ACCESS_TOKEN } from 'src/constants/storage';
 
-class Main extends React.Component<{}> {
-  componentDidMount() {
-    socketService.getIOInstance();
-  }
+const mapStateToProps = ({ active }: IReduxState) => ({ active });
+
+interface IMainProps {
+  active: IActiveReduxState;
+}
+
+class Main extends React.Component<IMainProps> {
   render() {
+    const { active } = this.props;
     return (
       <React.Fragment>
-        {/* <Audio url={''} /> */}
-        <TimeKeeper />
+        {active.component === AvailableComponents.ROOM_DETAILS && <NowPlaying roomId={active.id} />}
+        {storage.getFromStorage(ACCESS_TOKEN) && <TimeKeeper />}
       </React.Fragment>
     );
   }
 }
 
-export default Main;
+export default connect(mapStateToProps)(Main);

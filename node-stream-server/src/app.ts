@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 app.use('/broadcast', broadcastRouter);
 app.use('/stream', streamRouter);
 app.use('/auth', authRouter);
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 app.use('/rooms', roomsRouter);
 app.use('/songs', songsRouter);
 

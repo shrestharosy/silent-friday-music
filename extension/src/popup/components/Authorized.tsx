@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import * as storageUtils from 'src/utils/storage.utils';
-import sendActionToBackground from '../service/background.service';
 
 import { IActiveReduxState, AvailableComponents } from 'src/scripts/background/reducers/active';
 
@@ -12,10 +11,18 @@ import withAuthentication from '../hoc/withAuthentication';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { fillActiveAction, fetchProfileAction } from 'src/actionCreators/actionCreator';
 
-const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
-  bindActionCreators({ fillActiveAction }, dispatch);
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
+import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
+
+const mapStateToProps = ({ profile }: IReduxState) => ({ profile });
+
+const mapDispatchToProps = (
+  dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction; fetchProfileAction: typeof fetchProfileAction }>
+) => bindActionCreators({ fillActiveAction, fetchProfileAction }, dispatch);
 
 interface IUserProps {
   name: string;
@@ -25,13 +32,19 @@ interface IUserProps {
 interface IAuthorizedComponentsProps {
   active: IActiveReduxState;
   fillActiveAction: typeof fillActiveAction;
+  fetchProfileAction: typeof fetchProfileAction;
+  profile: IProfileReduxState;
 }
 
 class Authorized extends React.Component<IAuthorizedComponentsProps> {
-  componentDidMount() {
-    sendActionToBackground({
-      type: 'INIT',
-    });
+  async componentDidMount() {
+    try {
+      await new Promise((resolve, reject) => {
+        this.props.fetchProfileAction(resolve, reject);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   logout = () => {
@@ -41,11 +54,16 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
 
   render() {
     const { component, id } = this.props.active;
-    const profile: IUserProps = storageUtils.getFromStorage('USER_PROFILE');
+    const { profile } = this.props;
+
     return (
       <React.Fragment>
-        Welcome {profile ? profile : ''}
-        <button onClick={() => this.logout()}>Logout</button>
+        <div className="user-wrapper">
+          <span> Welcome, {profile ? profile.name : ''} </span>
+          <button onClick={() => this.logout()} className="btn-logout">
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
+        </div>
         {component === AvailableComponents.ROOM_LIST && <Rooms />}
         {component === AvailableComponents.ROOM_DETAILS && <Room roomId={id} />}
         {component === AvailableComponents.CREATE_ROOM && <p>Create a room</p>}
@@ -55,6 +73,6 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withAuthentication<IAuthorizedComponentsProps>(Authorized));

@@ -7,6 +7,7 @@ import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active
 import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
+import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -79,5 +80,20 @@ export function getPlaylistAction(
     payload,
     resolve,
     reject,
+  };
+}
+
+export function fetchProfileAction(resolve?: Function, reject?: Function): ActionTypes.FetchProfileAction {
+  return {
+    type: actionConstants.FETCH_PROFILE_ACTION,
+    resolve,
+    reject,
+  };
+}
+
+export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingAction {
+  return {
+    type: actionConstants.FILL_NOW_PLAYING_ACTION,
+    payload,
   };
 }

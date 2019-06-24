@@ -13,9 +13,9 @@ class Main extends React.Component<{ active: IActiveReduxState }, {}> {
       active: { component },
     } = this.props;
     return (
-      <React.Fragment>
+      <div className={'main-wrapper'}>
         {component !== AvailableComponents.LOGIN ? <Authorized active={this.props.active} /> : <Login />}
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -13,7 +13,7 @@ interface IPlayerProps extends IBroadcastReduxState {
 class Player extends React.Component<IPlayerProps> {
   render() {
     const { streamUrl, onTimestampUpdate } = this.props;
-    return <Audio onTimestampUpdate={onTimestampUpdate} url={streamUrl} />;
+    return <Audio mute onTimestampUpdate={onTimestampUpdate} url={streamUrl} />;
   }
 }
 

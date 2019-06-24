@@ -33,12 +33,6 @@ class Login extends React.Component<ILoginProps, {}> {
       component: AvailableComponents.ROOM_LIST,
       id: '',
     });
-
-    // .then((response: ILoginResponse) => {
-    //   UserService.getUserProfile(response.accessToken).then(response => {
-    //     this.props.fillProfileAction(response);
-    //   });
-    // });
   };
 
   fetchJwtToken = async (token: string) => {
