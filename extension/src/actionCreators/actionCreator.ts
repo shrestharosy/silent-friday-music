@@ -97,3 +97,11 @@ export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): Act
     payload,
   };
 }
+
+export function fetchUsers(resolve?: Function, reject?: Function): ActionTypes.FetchUsersAction {
+  return {
+    type: actionConstants.FETCH_USERS,
+    resolve,
+    reject,
+  };
+}

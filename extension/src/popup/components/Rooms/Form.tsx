@@ -2,19 +2,34 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { Form, InjectedFormikProps, withFormik, FormikBag } from 'formik';
+import Select from 'react-select';
 
-import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { fillActiveAction, fetchUsers } from 'src/actionCreators/actionCreator';
 
-interface ICreateRoomFormProps {}
+interface ICreateRoomFormProps {
+  fetchUsers: typeof fetchUsers;
+}
+
+const SKUOperatorOptions = [
+  { value: 'EQUAL', label: '=' },
+  { value: 'GREATER_THAN', label: '>' },
+  { value: 'LESS_THAN', label: '<' },
+];
 
 interface IFormValues {
   roomName: string;
 }
 
-class CreateRoomForm extends React.Component<InjectedFormikProps<{}, IFormValues>, {}> {
+class CreateRoomForm extends React.Component<InjectedFormikProps<ICreateRoomFormProps, IFormValues>, {}> {
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     this.props.setFieldValue('roomName', value.trim());
+  };
+
+  getOptionsAsync = async (imput: string) => {
+    const users = await new Promise((resolve, reject) => {
+      this.props.fetchUsers(resolve, reject);
+    });
   };
 
   render() {
@@ -26,13 +41,28 @@ class CreateRoomForm extends React.Component<InjectedFormikProps<{}, IFormValues
     return (
       <Form>
         <input
-          name={name}
-          id={name}
+          name={'roomName'}
+          id={'roomName'}
           type="text"
           className={'song-input'}
           value={roomName}
           onChange={event => this.handleChange(event)}
           placeholder={'Enter Room Name'}
+        />
+
+        <Select
+          //   id={name}
+          //   name={name}
+          className={'select-custom'}
+          classNamePrefix={'select-active'}
+          placeholder={'Add members'}
+          options={SKUOperatorOptions}
+          onChange={this.handleChange}
+          onMenuOpen={() => this.getOptionsAsync('')}
+          //   value={selectedValue}
+          isSearchable={true}
+          isClearable={true}
+          isMulti={true}
         />
         <button
           type="submit"
@@ -46,7 +76,7 @@ class CreateRoomForm extends React.Component<InjectedFormikProps<{}, IFormValues
   }
 }
 
-const WrappedForm = withFormik<{}, IFormValues>({
+const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
   enableReinitialize: true,
   mapPropsToValues() {
     return {
@@ -65,9 +95,9 @@ const WrappedForm = withFormik<{}, IFormValues>({
 
 const mapDispatchToProps = (
   dispatch: Dispatch<{
-    fillActiveAction: typeof fillActiveAction;
+    fetchUsers: typeof fetchUsers;
   }>
-) => bindActionCreators({ fillActiveAction }, dispatch);
+) => bindActionCreators({ fetchUsers }, dispatch);
 
 const ConnectedForm = connect(
   null,
