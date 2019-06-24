@@ -5,7 +5,8 @@ import { IFillRoomActionPayload } from 'src/scripts/background/reducers/room';
 import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profile';
 import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
 import { ILoginPayload } from 'src/sagas/auth/apis';
-import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
+import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
+import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
@@ -36,6 +37,13 @@ export function fillActiveAction(payload: IFillActiveActionPayload): ActionTypes
   };
 }
 
+export function fillPlaylistAction(payload: IFillPlaylistActionPayload): ActionTypes.FillPlaylistActionType {
+  return {
+    type: actionConstants.FILL_PLAYLIST_ACTION,
+    payload,
+  };
+}
+
 export function loginAction(
   payload: ILoginPayload,
   resolve?: Function,
@@ -49,10 +57,29 @@ export function loginAction(
   };
 }
 
-export function fillAuthAction(payload: IFillAuthActionPayload): ActionTypes.FillAuthActionType {
+export function addToPlaylistAction(
+  payload: IAddtoPlaylistPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.AddToPlaylistActionType {
   return {
-    type: actionConstants.FILL_AUTH_ACTION,
+    type: actionConstants.ADD_TO_PLAYLIST,
     payload,
+    resolve,
+    reject,
+  };
+}
+
+export function getPlaylistAction(
+  payload: ISongsPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.GetPlaylistActionType {
+  return {
+    type: actionConstants.GET_PLAYLIST,
+    payload,
+    resolve,
+    reject,
   };
 }
 

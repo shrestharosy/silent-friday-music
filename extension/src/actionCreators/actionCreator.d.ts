@@ -5,7 +5,8 @@ import { IFillProfileActionPayload } from 'src/scripts/background/reducers/profi
 import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active';
 import { ActionCallbacks } from 'src/constants/action';
 import { ILoginPayload } from 'src/sagas/auth/apis';
-import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
+import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
+import { IFillPlaylistActionPayload } from 'src/scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 
 export interface FillBroadcastActionType {
@@ -33,9 +34,19 @@ export interface LoginActionType extends ActionCallbacks {
   payload: ILoginPayload;
 }
 
-export interface FillAuthActionType {
-  type: typeof actionConstants.FILL_AUTH_ACTION;
-  payload: IFillAuthActionPayload;
+export interface FillPlaylistActionType {
+  type: typeof actionConstants.FILL_PLAYLIST_ACTION;
+  payload: IFillPlaylistActionPayload;
+}
+
+export interface AddToPlaylistActionType extends ActionCallbacks {
+  type: typeof actionConstants.ADD_TO_PLAYLIST;
+  payload: IAddtoPlaylistPayload;
+}
+
+export interface GetPlaylistActionType extends ActionCallbacks {
+  type: typeof actionConstants.GET_PLAYLIST;
+  payload: ISongsPayload;
 }
 
 export interface FetchProfileAction extends ActionCallbacks {

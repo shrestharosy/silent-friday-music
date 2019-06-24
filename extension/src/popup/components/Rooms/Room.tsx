@@ -3,13 +3,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction } from 'src/actionCreators/actionCreator';
+import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
-
 import { IRoom } from './Rooms';
-import NowPlaying from '../NowPlaying';
+import NowPlaying from '../Songs/NowPlaying';
 import axiosInstance from 'src/utils/axios';
+import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -33,6 +33,7 @@ interface IMainState {
 interface IRoomProps {
   roomId: string;
   fillRoomAction: typeof fillRoomAction;
+  addToPlaylistAction: typeof addToPlaylistAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -71,12 +72,20 @@ class Room extends React.Component<IRoomProps, IMainState> {
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const { searchLink } = this.state;
     sendActionToBackground({
       type: 'LOAD_AUDIO',
       data: {
         requestUrl: this.state.searchLink,
       },
     });
+
+    this.addToPlaylist(searchLink);
+  };
+
+  addToPlaylist = (url: string) => {
+    const { roomId, addToPlaylistAction } = this.props;
+    addToPlaylistAction({ roomId, url });
   };
 
   fetchRoomDetails = async () => {
@@ -104,6 +113,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   render() {
     const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
+    const { roomId } = this.props;
     return (
       <React.Fragment>
         <div className="common-wrapper dash-wrapper">
@@ -137,8 +147,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
             </span>
           </div>
         </div>
+        <Playlist roomId={roomId} showPlaylist={showPlaylist} togglePlaylist={this.togglePlaylist} />
 
-        <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
+        {/* <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
           <div className="cd-panel-container">
             <div className="container cd-panel-content">
               <div className="playlist-title-bar no-focus-outline">
@@ -159,16 +170,22 @@ class Room extends React.Component<IRoomProps, IMainState> {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </React.Fragment>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<typeof fillRoomAction>) =>
+const mapDispatchToProps = (
+  dispatch: Dispatch<{
+    fillRoomAction: typeof fillRoomAction;
+    addToPlaylistAction: typeof addToPlaylistAction;
+  }>
+) =>
   bindActionCreators(
     {
       fillRoomAction,
+      addToPlaylistAction,
     },
     dispatch
   );

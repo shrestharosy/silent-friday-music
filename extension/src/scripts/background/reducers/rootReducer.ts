@@ -4,7 +4,7 @@ import broadcast, { IBroadcastReduxState } from './broadcast';
 import room, { IRoomReduxState } from './room';
 import profile, { IProfileReduxState } from './profile';
 import active, { IActiveReduxState } from './active';
-import auth, { IAuthReduxState } from './auth';
+import song, { IPlaylistReduxState } from './song';
 import nowPlaying, { INowPlayingReduxState } from './nowPlaying';
 
 export interface IReduxState {
@@ -12,7 +12,7 @@ export interface IReduxState {
   room: IRoomReduxState;
   profile: IProfileReduxState;
   active: IActiveReduxState;
-  auth: IAuthReduxState;
+  song: IPlaylistReduxState;
   nowPlaying: INowPlayingReduxState;
 }
 
@@ -21,6 +21,6 @@ export default combineReducers<IReduxState>({
   room,
   profile,
   active,
-  auth,
+  song,
   nowPlaying,
 });
