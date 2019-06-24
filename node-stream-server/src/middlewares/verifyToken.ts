@@ -1,21 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwtServices from '../utils/jwt';
 
-async function verifyToken(request: Request, response: Response, next: NextFunction) {
-  try {
+export interface IVerifiedRequest extends Request {
+  auth?: {
+    userId: string;
+  };
+}
 
-    const accessToken = (request.headers.accesstoken as string).split('Bearer ')[1];
+async function verifyToken(request: IVerifiedRequest, response: Response, next: NextFunction) {
+  try {
+    const accessToken = (request.headers.authorization as string).split('Bearer ')[1];
 
     if (!accessToken) {
-      response.status(403).send({ message : 'Missing Token' });
+      throw new Error('Missing token');
     } else {
-      await jwtServices.verifyAccessToken(accessToken);
-      // response.send(decodedUser);
-      next();
+      const { id } = (await jwtServices.verifyAccessToken(accessToken)) as { id: string };
+      if (id) {
+        request.auth = { userId: id };
+        next();
+      } else {
+        throw new Error('Invalid token');
+      }
     }
-    
-  } catch(error) {
-    response.redirect('/auth/unauthorized');
+  } catch (error) {
+    response.status(403).send({ message: 'Not Authorized' });
   }
 }
 

@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService, searchUser } from '../services/user';
 import * as authServices from '../utils/auth';
+import { IVerifiedRequest } from '../middlewares/verifyToken';
 
 const userRouter = Router();
 
@@ -14,20 +15,12 @@ userRouter.get('/', async (req, res) => {
   }
 });
 
-userRouter.get('/me', async (req, res) => {
+userRouter.get('/me', async (req: IVerifiedRequest, res) => {
   try {
-    const header = req.headers.authorization;
-    if (header) {
-      const id = authServices.getUserIdFromAuthHeader(header);
-      if (id) {
-        const userProfile = await userService.getUserById(id);
-        res.json(userProfile);
-      } else {
-        throw new Error('Token invalid');
-      }
-    } else {
-      throw new Error('Authorization header required');
-    }
+    const { auth = { userId: '' } } = req;
+    const userProfile = await userService.getUserById(auth.userId);
+
+    res.json(userProfile);
   } catch (error) {
     res.status(400).send({ message: error.message });
   }

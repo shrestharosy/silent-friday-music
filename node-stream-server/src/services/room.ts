@@ -1,7 +1,9 @@
 import RoomModel, { IRoom, IRoomUpdate } from '../models/room';
+import { Types } from 'mongoose';
 
 interface IRoomQueryParams {
   search?: string;
+  userId?: string;
 }
 
 export async function createRoom(newRoom: IRoom) {
@@ -19,11 +21,12 @@ export async function createRoom(newRoom: IRoom) {
   }
 }
 
-export async function getAllRooms(queryParams: IRoomQueryParams = { search: '' }) {
+export async function getAllRooms(queryParams: IRoomQueryParams = { search: '', userId: '' }) {
   try {
-    const { search = '' } = queryParams;
+    const { search = '', userId = '' } = queryParams;
+
     const searchRegex = new RegExp(search, 'i');
-    const roomList: Array<IRoom> = await RoomModel.find({ name: searchRegex });
+    const roomList: Array<IRoom> = await RoomModel.find({ name: searchRegex, members: userId });
 
     return roomList;
   } catch (error) {
