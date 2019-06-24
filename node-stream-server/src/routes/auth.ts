@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as authServices from '../services/auth';
-import verifyToken, { IVerifiedRequest } from '../middlewares/verifyToken';
+import verifyToken from '../middlewares/verifyToken';
 
 const authRouter = Router();
 
