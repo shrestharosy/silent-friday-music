@@ -37,6 +37,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
       rooms: [],
     };
   }
+
   async componentDidMount() {
     try {
       const rooms = await axios
@@ -51,9 +52,11 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
       });
     } catch (error) {}
   }
+
   handleDetailsView = (roomId: string) => {
     this.props.fillActiveAction({ component: AvailableComponents.ROOM_DETAILS, id: roomId });
   };
+
   render() {
     const { rooms, isLoaded } = this.state;
 

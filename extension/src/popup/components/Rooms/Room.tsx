@@ -12,7 +12,14 @@ import axiosInstance from 'src/utils/axios';
 import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
+import {
+  faVolumeMute,
+  faUserPlus,
+  faDoorOpen,
+  faListOl,
+  faChevronCircleLeft,
+  faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface IMainState {
   isLoaded: boolean;
@@ -20,6 +27,7 @@ interface IMainState {
   title: string | null;
   imageUrl: string | null;
   currentRoom: IRoom | null;
+  showPlaylist: boolean;
 }
 
 interface IRoomProps {
@@ -37,6 +45,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       title: null,
       imageUrl: null,
       currentRoom: null,
+      showPlaylist: false,
     };
   }
 
@@ -96,42 +105,71 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }
   };
 
+  togglePlaylist = () => {
+    this.setState(prevState => ({
+      showPlaylist: !prevState.showPlaylist,
+    }));
+  };
+
   render() {
-    const { roomId } = this.props;
-    const { searchLink, title, imageUrl, currentRoom } = this.state;
+    const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
     return (
-      <div className="common-wrapper dash-wrapper">
-        <div className="dash-title-bar">
-          <span className="room-name">{currentRoom && currentRoom.name}</span>
-          <div className="dash-buttons">
+      <React.Fragment>
+        <div className="common-wrapper dash-wrapper">
+          <div className="dash-title-bar">
+            <span className="room-name">{currentRoom && currentRoom.name}</span>
+            <div className="dash-buttons">
+              <span>
+                <FontAwesomeIcon icon={faVolumeMute} />
+              </span>
+              <span>
+                <FontAwesomeIcon icon={faUserPlus} />
+              </span>
+              <span>
+                <FontAwesomeIcon icon={faDoorOpen} />
+              </span>
+            </div>
+          </div>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              className="song-input"
+              placeholder="Paste a youtube URL to add song to queue..."
+              onChange={this.handleSearchLinkChange}
+              value={searchLink}
+            />
+          </form>
+          <NowPlaying title={title} imageUrl={imageUrl} />
+          <div className="view-playlist-button" onClick={this.togglePlaylist}>
             <span>
-              <FontAwesomeIcon icon={faVolumeMute} />
-            </span>
-            <span>
-              <FontAwesomeIcon icon={faUserPlus} />
-            </span>
-            <span>
-              <FontAwesomeIcon icon={faDoorOpen} />
+              View Full Playlist
+              <FontAwesomeIcon icon={faListOl} className="playlist-icon" />
             </span>
           </div>
         </div>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className="song-input"
-            placeholder="Paste a youtube URL to add song to queue..."
-            onChange={this.handleSearchLinkChange}
-            value={searchLink}
-          />
-        </form>
-        <NowPlaying title={title} imageUrl={imageUrl} />
-        <Playlist roomId={roomId} />
-        <div className="view-playlist-button">
-          <span>
-            View Full Playlist
-            <FontAwesomeIcon icon={faListOl} className="playlist-icon" />
-          </span>
+
+        <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
+          <div className="cd-panel-container">
+            <div className="container cd-panel-content">
+              <div className="playlist-title-bar no-focus-outline">
+                <button className="btn btn-one cd-panel-close " onClick={this.togglePlaylist}>
+                  <FontAwesomeIcon icon={faChevronCircleLeft} className="back-icon" />
+                </button>
+                <span className="playlist-title">Full Playlist</span>
+              </div>
+              <div className="songs-list-wrapper">
+                <ul className="songs-list">
+                  <li>
+                    <span>Song name Song name Song nameSong name Song nameSong name Song name Song name </span>
+                    <span onClick={() => {}}>
+                      <FontAwesomeIcon icon={faTimesCircle} className="close-icon" />
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
