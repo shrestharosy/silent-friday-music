@@ -12,8 +12,7 @@ import NowPlaying from '../NowPlaying';
 import axiosInstance from 'src/utils/axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from "@fortawesome/free-solid-svg-icons";
-
+import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
 
 interface IMainState {
   isLoaded: boolean;
@@ -48,9 +47,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
     this.fetchRoomDetails();
 
     this.setState({
-      searchLink,
-      title,
-      imageUrl,
+      searchLink: searchLink ? searchLink : '',
+      title: title ? title : '',
+      imageUrl: imageUrl ? imageUrl : '',
     });
   }
 
@@ -95,23 +94,30 @@ class Room extends React.Component<IRoomProps, IMainState> {
         <div className="dash-title-bar">
           <span className="room-name">{currentRoom && currentRoom.name}</span>
           <div className="dash-buttons">
-            <span><FontAwesomeIcon icon={faVolumeMute} /></span>
-            <span><FontAwesomeIcon icon={faUserPlus} /></span>
-            <span><FontAwesomeIcon icon={faDoorOpen} /></span>
+            <span>
+              <FontAwesomeIcon icon={faVolumeMute} />
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faUserPlus} />
+            </span>
+            <span>
+              <FontAwesomeIcon icon={faDoorOpen} />
+            </span>
           </div>
         </div>
         <form onSubmit={this.handleSubmit}>
-          <input 
-            className="song-input" 
-            placeholder="Paste a youtube URL to add song to queue..." 
-            onChange={this.handleSearchLinkChange} 
-            value={searchLink} 
+          <input
+            className="song-input"
+            placeholder="Paste a youtube URL to add song to queue..."
+            onChange={this.handleSearchLinkChange}
+            value={searchLink}
           />
         </form>
         <NowPlaying title={title} imageUrl={imageUrl} />
         <div className="view-playlist-button">
-          <span>View Full Playlist
-            <FontAwesomeIcon icon={faListOl} className="playlist-icon"/>
+          <span>
+            View Full Playlist
+            <FontAwesomeIcon icon={faListOl} className="playlist-icon" />
           </span>
         </div>
       </div>

@@ -15,17 +15,21 @@ userRouter.get('/', async (req, res) => {
 });
 
 userRouter.get('/me', async (req, res) => {
-  const header = req.headers.authorization;
-  if (header) {
-    const id = authServices.getUserIdFromAuthHeader(header);
-    if (id) {
-      try {
+  try {
+    const header = req.headers.authorization;
+    if (header) {
+      const id = authServices.getUserIdFromAuthHeader(header);
+      if (id) {
         const userProfile = await userService.getUserById(id);
         res.json(userProfile);
-      } catch (error) {
-        res.json({ message: error });
+      } else {
+        throw new Error('Token invalid');
       }
+    } else {
+      throw new Error('Authorization header required');
     }
+  } catch (error) {
+    res.status(400).send({ message: error.message });
   }
 });
 
@@ -58,10 +62,10 @@ userRouter.post('/', async (req, res) => {
 
 userRouter.get('/find/:searchTerm', async (req, res) => {
   try {
-    const data = await searchUser(req.params.searchTerm);    
+    const data = await searchUser(req.params.searchTerm);
     res.json(data);
-  } catch(error) {
-    res.json(error)
+  } catch (error) {
+    res.json(error);
   }
 });
 

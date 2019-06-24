@@ -1,6 +1,11 @@
 import * as io from 'socket.io-client';
 import config from '../config';
 
+export interface ISocketMessage {
+  type: string;
+  payload: Object;
+}
+
 interface ISocket {
   getIOInstance(): SocketIOClient.Socket;
   initialize: (baseURL: string) => void;

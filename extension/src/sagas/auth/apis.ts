@@ -14,3 +14,12 @@ export async function loginAPI(payload: ILoginPayload) {
       throw error;
     });
 }
+
+export async function fetchProfileAPI() {
+  return axiosInstance
+    .get('/users/me')
+    .then(({ data }) => data)
+    .catch(error => {
+      throw error;
+    });
+}
