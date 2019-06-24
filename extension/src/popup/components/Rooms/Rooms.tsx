@@ -50,7 +50,6 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
         rooms,
         isLoaded: true,
       });
-      console.log(rooms);
     } catch (error) {}
   }
 

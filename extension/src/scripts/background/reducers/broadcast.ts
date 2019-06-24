@@ -4,11 +4,13 @@ import * as ActionConstants from 'src/constants/actions';
 export interface IBroadcastReduxState {
   streamUrl: string;
   status: boolean;
+  songId: string;
 }
 
 const initialBroadcastReduxState: IBroadcastReduxState = {
   streamUrl: '',
   status: false,
+  songId: '',
 };
 
 export type IFillBroadcastActionPayload = IBroadcastReduxState;

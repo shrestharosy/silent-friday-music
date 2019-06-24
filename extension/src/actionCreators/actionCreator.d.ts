@@ -6,6 +6,7 @@ import { IFillActiveActionPayload } from 'src/scripts/background/reducers/active
 import { ActionCallbacks } from 'src/constants/action';
 import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IFillAuthActionPayload } from '../scripts/background/reducers/auth';
+import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -35,4 +36,13 @@ export interface LoginActionType extends ActionCallbacks {
 export interface FillAuthActionType {
   type: typeof actionConstants.FILL_AUTH_ACTION;
   payload: IFillAuthActionPayload;
+}
+
+export interface FetchProfileAction extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_PROFILE_ACTION;
+}
+
+export interface FillNowPlayingAction {
+  type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
+  payload: IFillNowPlayingActionPayload;
 }

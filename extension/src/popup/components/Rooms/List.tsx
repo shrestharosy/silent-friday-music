@@ -11,7 +11,7 @@ interface IRoomListProps {
 const RoomList: React.SFC<IRoomListProps> = ({ rooms, onRoomSelect }) => (
   <ul className="rooms-list">
     {rooms.map(({ name, _id }) => (
-      <li onClick={() => onRoomSelect(_id)}>
+      <li key={_id} onClick={() => onRoomSelect(_id)}>
         <FontAwesomeIcon icon={faPlayCircle} className="fa-icon-play" />
         <span>{name}</span>
       </li>

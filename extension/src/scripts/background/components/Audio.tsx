@@ -3,6 +3,7 @@ import * as React from 'react';
 interface IAudioProps {
   url: string;
   onTimestampUpdate?: (timestamp: number) => void;
+  mute?: boolean;
 }
 
 interface IAudioState {
@@ -47,9 +48,9 @@ class Audio extends React.Component<IAudioProps, IAudioState> {
     }
   }
   render() {
-    const { url } = this.props;
+    const { url, mute = false } = this.props;
 
-    return <audio ref={this.audioRef} src={url} />;
+    return <audio ref={this.audioRef} src={url} muted={mute} />;
   }
 }
 

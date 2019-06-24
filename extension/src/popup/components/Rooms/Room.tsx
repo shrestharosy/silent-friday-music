@@ -56,9 +56,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
     this.fetchRoomDetails();
 
     this.setState({
-      searchLink,
-      title,
-      imageUrl,
+      searchLink: searchLink ? searchLink : '',
+      title: title ? title : '',
+      imageUrl: imageUrl ? imageUrl : '',
     });
   }
 
