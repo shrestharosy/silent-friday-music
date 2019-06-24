@@ -1,11 +1,6 @@
 import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
-
-interface ISong {
-  _id: string;
-  streamUrl: string;
-  thumbnailUrl: string;
-}
+import { ISong } from './song';
 
 export interface IRoomReduxState {
   _id: string;

@@ -7,9 +7,8 @@ import * as ActionConstants from 'src/constants/actions';
 
 export function* addToPlaylistEffect(action: ActionCreatorsTypes.AddToPlaylistActionType) {
   try {
-    const updatedPlaylist = yield call(addToPlayListAPI, action.payload);
-    yield put(ActionCreators.fillPlaylistAction({ requests: updatedPlaylist }));
-
+    const updatedRoom = yield call(addToPlayListAPI, action.payload);
+    yield put(ActionCreators.fillRoomAction(updatedRoom));
     if (action.resolve) {
       action.resolve();
     }
@@ -23,7 +22,7 @@ export function* addToPlaylistEffect(action: ActionCreatorsTypes.AddToPlaylistAc
 export function* getPlaylistEffect(action: ActionCreatorsTypes.GetPlaylistActionType) {
   try {
     const playlist = yield call(getPlaylistAPI, action.payload);
-    yield put(ActionCreators.fillPlaylistAction(playlist));
+    yield put(ActionCreators.fillPlaylistAction({ requests: playlist.requests }));
     if (action.resolve) {
       action.resolve();
     }

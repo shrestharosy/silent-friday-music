@@ -12,14 +12,7 @@ import axiosInstance from 'src/utils/axios';
 import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faVolumeMute,
-  faUserPlus,
-  faDoorOpen,
-  faListOl,
-  faChevronCircleLeft,
-  faTimesCircle,
-} from '@fortawesome/free-solid-svg-icons';
+import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
 
 interface IMainState {
   isLoaded: boolean;
@@ -148,29 +141,6 @@ class Room extends React.Component<IRoomProps, IMainState> {
           </div>
         </div>
         <Playlist roomId={roomId} showPlaylist={showPlaylist} togglePlaylist={this.togglePlaylist} />
-
-        {/* <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
-          <div className="cd-panel-container">
-            <div className="container cd-panel-content">
-              <div className="playlist-title-bar no-focus-outline">
-                <button className="btn btn-one cd-panel-close " onClick={this.togglePlaylist}>
-                  <FontAwesomeIcon icon={faChevronCircleLeft} className="back-icon" />
-                </button>
-                <span className="playlist-title">Full Playlist</span>
-              </div>
-              <div className="songs-list-wrapper">
-                <ul className="songs-list">
-                  <li>
-                    <span>Song name Song name Song nameSong name Song nameSong name Song name Song name </span>
-                    <span onClick={() => {}}>
-                      <FontAwesomeIcon icon={faTimesCircle} className="close-icon" />
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </React.Fragment>
     );
   }
