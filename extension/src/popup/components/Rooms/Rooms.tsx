@@ -11,7 +11,7 @@ import { fillActiveAction } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 export interface IRoom {
   name: string;
@@ -37,6 +37,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
       rooms: [],
     };
   }
+
   async componentDidMount() {
     try {
       const rooms = await axios
@@ -52,9 +53,11 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
       console.log(rooms);
     } catch (error) {}
   }
+
   handleDetailsView = (roomId: string) => {
     this.props.fillActiveAction({ component: AvailableComponents.ROOM_DETAILS, id: roomId });
   };
+
   render() {
     const { rooms, isLoaded } = this.state;
 
@@ -70,9 +73,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
           <div className={'title-wrapper'}>
             <span>Recent Rooms</span>
           </div>
-          <div>
-            {isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} /> }
-          </div>
+          <div>{isLoaded && <RoomList rooms={rooms} onRoomSelect={this.handleDetailsView} />}</div>
         </div>
       </React.Fragment>
     );
