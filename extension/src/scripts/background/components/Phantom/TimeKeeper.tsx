@@ -7,7 +7,7 @@ import { IProfileReduxState } from '../../reducers/profile';
 import { fillBroadcastAction } from 'src/actionCreators/actionCreator';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import socketInstance from 'src/services/socket.service';
+import getSocketInstance from 'src/services/socket.service';
 
 import Player from './Player';
 import { BROADCAST_SONG_TIMESTAMP, UPDATE_NOW_PLAYING } from 'src/constants/socket';
@@ -63,17 +63,19 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
     const { songId, streamUrl } = this.props.broadcast;
     const { _id: roomId } = this.props.room;
 
-    socketInstance.getIOInstance().emit(JSON.stringify({ type: BROADCAST_SONG_TIMESTAMP }), {
-      receiverId: roomId,
-      message: {
-        type: UPDATE_NOW_PLAYING,
-        payload: {
-          songId,
-          streamUrl,
-          timestamp,
+    getSocketInstance()
+      .getIOInstance()
+      .emit(JSON.stringify({ type: BROADCAST_SONG_TIMESTAMP }), {
+        receiverId: roomId,
+        message: {
+          type: UPDATE_NOW_PLAYING,
+          payload: {
+            songId,
+            streamUrl,
+            timestamp,
+          },
         },
-      },
-    });
+      });
   };
 
   render() {

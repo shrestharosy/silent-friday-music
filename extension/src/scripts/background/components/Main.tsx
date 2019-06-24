@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import socketService from 'src/services/socket.service';
-
 import NowPlaying from './NowPlaying';
 import TimeKeeper from './Phantom/TimeKeeper';
 import { connect } from 'react-redux';
 import { IReduxState } from '../reducers/rootReducer';
 import { IActiveReduxState, AvailableComponents } from '../reducers/active';
+import * as storage from 'src/utils/storage.utils';
+import { ACCESS_TOKEN } from 'src/constants/storage';
 
 const mapStateToProps = ({ active }: IReduxState) => ({ active });
 
@@ -15,15 +15,12 @@ interface IMainProps {
 }
 
 class Main extends React.Component<IMainProps> {
-  componentDidMount() {
-    socketService.getIOInstance();
-  }
   render() {
     const { active } = this.props;
     return (
       <React.Fragment>
         {active.component === AvailableComponents.ROOM_DETAILS && <NowPlaying roomId={active.id} />}
-        <TimeKeeper />
+        {storage.getFromStorage(ACCESS_TOKEN) && <TimeKeeper />}
       </React.Fragment>
     );
   }
