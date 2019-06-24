@@ -5,27 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 interface ISongListProps {
-  requests: Array<ISong>;
+  list: Array<ISong>;
 }
 
-const SongList: React.SFC<ISongListProps> = ({ requests }) => (
-  // <ul>
-  //   {requests.length > 0 &&
-  //     requests.map(({ title, thumbnailUrl }, index) => {
-  //       return (
-  //         <div>
-  //           <img src={thumbnailUrl} alt="" />
-  //           <li key={index}>{title}</li>
-  //         </div>
-  //       );
-  //     })}
-  // </ul>
+const SongList: React.SFC<ISongListProps> = ({ list }) => (
   <div className="songs-list-wrapper">
     <ul className="songs-list">
-      {requests.length > 0 &&
-        requests.map(({ title, thumbnailUrl }, index) => {
+      {list.length > 0 &&
+        list.map(({ title, thumbnailUrl }, index) => {
           return (
-            <li>
+            <li key={index}>
               <span>{title}</span>
               <span onClick={() => {}}>
                 <FontAwesomeIcon icon={faTimesCircle} className="close-icon" />

@@ -2,8 +2,10 @@ import { ActionType } from 'src/constants/action';
 import * as ActionConstants from 'src/constants/actions';
 
 export interface ISong {
+  _id: string;
   title: string;
   thumbnailUrl: string;
+  streamUrl: string;
 }
 
 export interface IPlaylistReduxState {
@@ -23,7 +25,7 @@ const playlistReducer = (state = initialPlaylistReduxState, action: PlaylistActi
     case ActionConstants.FILL_PLAYLIST_ACTION: {
       return {
         ...state,
-        requests: action.payload,
+        ...action.payload,
       };
     }
     default: {
