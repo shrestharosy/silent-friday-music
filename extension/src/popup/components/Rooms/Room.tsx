@@ -113,6 +113,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   render() {
     const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
+    const { roomId } = this.props;
     return (
       <React.Fragment>
         <div className="common-wrapper dash-wrapper">
@@ -146,8 +147,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
             </span>
           </div>
         </div>
+        <Playlist roomId={roomId} showPlaylist={showPlaylist} togglePlaylist={this.togglePlaylist} />
 
-        <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
+        {/* <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
           <div className="cd-panel-container">
             <div className="container cd-panel-content">
               <div className="playlist-title-bar no-focus-outline">
@@ -168,7 +170,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </React.Fragment>
     );
   }

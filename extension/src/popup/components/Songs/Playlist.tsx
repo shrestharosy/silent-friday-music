@@ -6,11 +6,15 @@ import { getPlaylistAction } from '../../../actionCreators/actionCreator';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import SongList from './List';
 import { ISong } from 'src/scripts/background/reducers/song';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface IPlaylistProps {
   roomId: string;
   requests: Array<ISong>;
+  showPlaylist: boolean;
   getPlaylistAction: typeof getPlaylistAction;
+  togglePlaylist: () => void;
 }
 
 class Playlist extends React.Component<IPlaylistProps, {}> {
@@ -22,11 +26,24 @@ class Playlist extends React.Component<IPlaylistProps, {}> {
   }
 
   render() {
-    const { requests } = this.props;
+    const { requests, showPlaylist, togglePlaylist } = this.props;
     return (
-      <div>
-        <h1>Full Playlist</h1>
-        <SongList requests={requests} />
+      // <div>
+      //   <h1>Full Playlist</h1>
+      //   <SongList requests={requests} />
+      // </div>
+      <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
+        <div className="cd-panel-container">
+          <div className="container cd-panel-content">
+            <div className="playlist-title-bar no-focus-outline">
+              <button className="btn btn-one cd-panel-close " onClick={togglePlaylist}>
+                <FontAwesomeIcon icon={faChevronCircleLeft} className="back-icon" />
+              </button>
+              <span className="playlist-title">Full Playlist</span>
+            </div>
+            <SongList requests={requests} />
+          </div>
+        </div>
       </div>
     );
   }
