@@ -46,7 +46,13 @@ export async function getRoomById(roomId: string) {
 
 export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
   try {
-    const updatedRoom = await RoomModel.findOneAndUpdate({ _id: roomId }, updateRoom, { new: true });
+    const { name: queriedName } = await getRoomById(roomId);
+    const { name = queriedName, members = [], requests = [] } = updateRoom;
+    const updatedRoom = await RoomModel.findByIdAndUpdate(
+      { _id: roomId },
+      { name, $push: { members, requests } },
+      { new: true }
+    ).populate('requests');
     if (updatedRoom) {
       return updatedRoom;
     } else {

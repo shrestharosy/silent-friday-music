@@ -1,19 +1,12 @@
 import ytdl from 'ytdl-core';
 
 import SongModel, { ISong, ICreateSong } from '../models/song';
-import RoomModel from '../models/room';
 import { getRoomById, updateRoom } from './room';
 
 export async function addToPlaylist(roomId: string, url: string) {
   try {
-    const songDetails = await getSongDetails(url);
-    const { _id } = await addSong(songDetails);
-    const { requests } = await getRoomById(roomId);
-    requests.push(_id);
-    await updateRoom(roomId, {
-      requests,
-    });
-    const updatedPlaylist = getPlaylist(roomId);
+    const { _id } = await addSong(url);
+    const updatedPlaylist = await updateRoom(roomId, { requests: [_id] });
     return updatedPlaylist;
   } catch (error) {
     throw error;
@@ -57,9 +50,10 @@ export async function getSongDetails(url: string) {
   }
 }
 
-export async function addSong(newSong: ICreateSong) {
+export async function addSong(url: string) {
   try {
-    const { title, thumbnailUrl, streamUrl } = newSong;
+    const songDetails = await getSongDetails(url);
+    const { title, thumbnailUrl, streamUrl } = songDetails;
     const song = new SongModel({
       title,
       thumbnailUrl,
