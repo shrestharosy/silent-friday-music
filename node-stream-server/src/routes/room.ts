@@ -2,14 +2,16 @@ import { Router } from 'express';
 
 import * as roomServices from '../services/room';
 import * as songControllers from '../controllers/song';
+import { IVerifiedRequest } from '../middlewares/verifyToken';
 
 const roomsRouter = Router();
 
-roomsRouter.get('/', async (req, res) => {
+roomsRouter.get('/', async (req: IVerifiedRequest, res) => {
   try {
     const { query } = req;
+    const { auth = { userId: '' } } = req;
 
-    const roomList = await roomServices.getAllRooms(query);
+    const roomList = await roomServices.getAllRooms({ ...query, userId: auth.userId });
 
     res.json(roomList);
   } catch (error) {
