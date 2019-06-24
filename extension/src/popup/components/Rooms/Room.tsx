@@ -6,10 +6,10 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
-
 import { IRoom } from './Rooms';
-import NowPlaying from '../NowPlaying';
+import NowPlaying from '../Songs/NowPlaying';
 import axiosInstance from 'src/utils/axios';
+import Playlist from '../Songs/Playlist';
 
 interface IMainState {
   isLoaded: boolean;
@@ -94,6 +94,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
+    const { roomId } = this.props;
     const { searchLink, title, imageUrl, currentRoom } = this.state;
     return (
       <div>
@@ -105,6 +106,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
         </form>
         <hr />
         <NowPlaying title={title} imageUrl={imageUrl} />
+        <Playlist roomId={roomId} />
       </div>
     );
   }
