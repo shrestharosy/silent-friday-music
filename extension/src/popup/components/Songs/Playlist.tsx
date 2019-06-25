@@ -14,6 +14,7 @@ interface IPlaylistProps {
   room: IRoomReduxState;
   showPlaylist: boolean;
   getPlaylistAction: typeof getPlaylistAction;
+  currentSongId: string;
   togglePlaylist: () => void;
 }
 
@@ -30,6 +31,7 @@ class Playlist extends React.Component<IPlaylistProps, {}> {
       room: { requests },
       showPlaylist,
       togglePlaylist,
+      currentSongId,
     } = this.props;
     return (
       <div className={`cd-panel cd-panel-bottom from-bottom ${showPlaylist ? 'is-visible' : ''} `}>
@@ -41,7 +43,7 @@ class Playlist extends React.Component<IPlaylistProps, {}> {
               </button>
               <span className="playlist-title">Full Playlist</span>
             </div>
-            <SongList list={requests} />
+            <SongList list={requests} currentSongId={currentSongId} />
           </div>
         </div>
       </div>

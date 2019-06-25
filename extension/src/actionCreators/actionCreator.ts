@@ -16,6 +16,27 @@ export function fillBroadcastAction(payload: IFillBroadcastActionPayload): Actio
   };
 }
 
+export function fetchRoomsListAction(resolve?: Function, reject?: Function): ActionTypes.FetchRoomsListActionType {
+  return {
+    type: actionConstants.FETCH_ROOMS_LIST_ACTION,
+    resolve,
+    reject,
+  };
+}
+
+export function fetchRoomInfoAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchRoomInfoActionType {
+  return {
+    type: actionConstants.FETCH_ROOM_INFO_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
 export function fillRoomAction(payload: IFillRoomActionPayload): ActionTypes.FillRoomActionType {
   return {
     type: actionConstants.FILL_ROOM_ACTION,
@@ -95,6 +116,19 @@ export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): Act
   return {
     type: actionConstants.FILL_NOW_PLAYING_ACTION,
     payload,
+  };
+}
+
+export function fetchCurrentSongDetailsAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchCurrentSongDetailsAction {
+  return {
+    type: actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION,
+    payload,
+    resolve,
+    reject,
   };
 }
 

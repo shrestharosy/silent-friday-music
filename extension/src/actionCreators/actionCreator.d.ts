@@ -14,6 +14,15 @@ export interface FillBroadcastActionType {
   payload: IFillBroadcastActionPayload;
 }
 
+export interface FetchRoomsListActionType extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_ROOMS_LIST_ACTION;
+}
+
+export interface FetchRoomInfoActionType extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_ROOM_INFO_ACTION;
+  payload: string;
+}
+
 export interface FillRoomActionType {
   type: typeof actionConstants.FILL_ROOM_ACTION;
   payload: IFillRoomActionPayload;
@@ -56,6 +65,11 @@ export interface FetchProfileAction extends ActionCallbacks {
 export interface FillNowPlayingAction {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
+}
+
+export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION;
+  payload: string;
 }
 
 export interface LeaveRoomAction extends ActionCallbacks {
