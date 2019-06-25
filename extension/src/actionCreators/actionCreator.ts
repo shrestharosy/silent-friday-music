@@ -131,3 +131,12 @@ export function fetchCurrentSongDetailsAction(
     reject,
   };
 }
+
+export function leaveRoomAction(payload: string, resolve?: Function, reject?: Function): ActionTypes.LeaveRoomAction {
+  return {
+    type: actionConstants.LEAVE_ROOM_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}

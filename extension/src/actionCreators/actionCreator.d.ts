@@ -71,3 +71,8 @@ export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
   type: typeof actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION;
   payload: string;
 }
+
+export interface LeaveRoomAction extends ActionCallbacks {
+  type: typeof actionConstants.LEAVE_ROOM_ACTION;
+  payload: string;
+}

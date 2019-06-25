@@ -8,6 +8,8 @@ import {
   addToPlaylistAction,
   fetchCurrentSongDetailsAction,
   fetchRoomInfoAction,
+  leaveRoomAction,
+  fillActiveAction,
 } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
@@ -21,6 +23,7 @@ import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/fre
 import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { INowPlayingReduxState } from 'src/scripts/background/reducers/nowPlaying';
+import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 interface IMainState {
   isLoaded: boolean;
@@ -37,6 +40,8 @@ interface IRoomProps {
   addToPlaylistAction: typeof addToPlaylistAction;
   fetchRoomInfoAction: typeof fetchRoomInfoAction;
   fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
+  leaveRoomAction: typeof leaveRoomAction;
+  fillActiveAction: typeof fillActiveAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -132,14 +137,14 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   handleLeaveRoom = async () => {
-    console.log('leave room');
     try {
-      await axiosInstance
-        .post(`/rooms/${this.props.roomId}/leave`)
-        .then(({ data }) => data)
-        .catch(error => {
-          throw error;
-        });
+      await new Promise((resolve, reject) => {
+        this.props.leaveRoomAction(this.props.roomId, resolve, reject);
+      });
+      this.props.fillActiveAction({
+        component: AvailableComponents.ROOM_LIST,
+        id: '',
+      });
     } catch (error) {
       console.log(error);
     }
@@ -204,6 +209,8 @@ const mapDispatchToProps = (
     addToPlaylistAction: typeof addToPlaylistAction;
     fetchRoomInfoAction: typeof fetchRoomInfoAction;
     fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
+    leaveRoomAction: typeof leaveRoomAction;
+    fillActiveAction: typeof fillActiveAction;
   }>
 ) =>
   bindActionCreators(
@@ -212,6 +219,8 @@ const mapDispatchToProps = (
       addToPlaylistAction,
       fetchRoomInfoAction,
       fetchCurrentSongDetailsAction,
+      leaveRoomAction,
+      fillActiveAction,
     },
     dispatch
   );

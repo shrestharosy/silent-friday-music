@@ -17,3 +17,12 @@ export async function fetchRoomInfo(payload: string) {
       throw error;
     });
 }
+
+export function leaveRoomAPI(payload: string) {
+  return axiosInstance
+    .get(`/rooms/${payload}`)
+    .then(({ data }) => data)
+    .catch(error => {
+      throw error;
+    });
+}
