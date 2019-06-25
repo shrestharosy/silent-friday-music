@@ -7,6 +7,7 @@ import authRouter from './routes/auth';
 import userRouter from './routes/user';
 import roomsRouter from './routes/room';
 import songsRouter from './routes/song';
+import verifyToken from './middlewares/verifyToken';
 
 const app = express();
 
@@ -25,11 +26,11 @@ app.get('/', (req, res) => {
   res.send('This is test');
 });
 
-app.use('/broadcast', broadcastRouter);
-app.use('/stream', streamRouter);
 app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/rooms', roomsRouter);
-app.use('/songs', songsRouter);
+app.use('/broadcast', verifyToken, broadcastRouter);
+app.use('/stream', verifyToken, streamRouter);
+app.use('/users', verifyToken, userRouter);
+app.use('/rooms', verifyToken, roomsRouter);
+app.use('/songs', verifyToken, songsRouter);
 
 export default app;
