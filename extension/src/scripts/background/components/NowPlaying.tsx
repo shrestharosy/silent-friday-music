@@ -6,6 +6,7 @@ import { fillNowPlayingAction } from 'src/actionCreators/actionCreator';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { IReduxState } from '../reducers/rootReducer';
+import { UPDATE_NOW_PLAYING } from 'src/constants/socket';
 
 interface INowPlayingProps {
   nowPlaying: INowPlayingReduxState;
@@ -22,10 +23,12 @@ class NowPlaying extends React.Component<INowPlayingProps> {
     getSocketInstance()
       .getIOInstance()
       .on(this.props.roomId, (message: ISocketMessage) => {
-        const payload = message.payload as IFillNowPlayingActionPayload;
+        if (message.type === UPDATE_NOW_PLAYING) {
+          const payload = message.payload as IFillNowPlayingActionPayload;
 
-        if (this.props.nowPlaying.songId !== payload.songId) {
-          this.props.fillNowPlayingAction(payload);
+          if (this.props.nowPlaying.songId !== payload.songId) {
+            this.props.fillNowPlayingAction(payload);
+          }
         }
       });
   }

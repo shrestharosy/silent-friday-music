@@ -104,4 +104,10 @@ roomsRouter.get('/:roomId/songs', async (req, res) => {
   }
 });
 
+roomsRouter.post('/:roomId/leave', async (req, res) => {
+  const roomId = req.params.roomId;
+  roomServices.selectMaster(roomId);
+  res.status(200).send();
+});
+
 export default roomsRouter;

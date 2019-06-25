@@ -1,5 +1,7 @@
 import RoomModel, { IRoom, IRoomUpdate } from '../models/room';
-import { Types } from 'mongoose';
+import getSocketInstance from '../services/socket';
+import { BROADCAST_MASTER_SELECTION_REQUEST, REQUEST_TO_BE_MASTER } from '../../../extension/src/constants/socket';
+import { ISocketRequest, getSocketIds } from '../socket';
 
 interface IRoomQueryParams {
   search?: string;
@@ -34,9 +36,11 @@ export async function getAllRooms(queryParams: IRoomQueryParams = { search: '', 
   }
 }
 
-export async function getRoomById(roomId: string) {
+export async function getRoomById(roomId: string, populate = true) {
   try {
-    const foundRoom = await RoomModel.findById(roomId).populate('requests');
+    const foundRoom = populate
+      ? await RoomModel.findById(roomId).populate('requests')
+      : await RoomModel.findById(roomId);
     if (foundRoom) {
       return foundRoom;
     } else {
@@ -49,11 +53,11 @@ export async function getRoomById(roomId: string) {
 
 export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
   try {
-    const { name: queriedName } = await getRoomById(roomId);
-    const { name = queriedName, members = [], requests = [] } = updateRoom;
+    const { name: queriedName, master: queriedMaster } = await getRoomById(roomId);
+    const { name = queriedName, members = [], requests = [], master = queriedMaster } = updateRoom;
     const updatedRoom = await RoomModel.findByIdAndUpdate(
       { _id: roomId },
-      { name, $push: { members, requests } },
+      { name, master, $push: { members, requests } },
       { new: true }
     ).populate('requests');
     if (updatedRoom) {
@@ -63,5 +67,44 @@ export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
     }
   } catch (error) {
     throw error;
+  }
+}
+
+export async function selectMaster(roomId: string) {
+  try {
+    const { members } = await getRoomById(roomId);
+
+    const ioInstance = getSocketInstance().getIOInstance();
+
+    ioInstance.emit(roomId, { type: BROADCAST_MASTER_SELECTION_REQUEST });
+
+    const socketIds = getSocketIds(members);
+
+    const activeSockets = ioInstance.sockets.sockets;
+
+    const potentialMasterIds: Array<string> = [];
+
+    const masterRequestCallBack = async (request: ISocketRequest) => {
+      const {
+        payload: { userId },
+      } = request.message as { payload: { userId: string } };
+
+      potentialMasterIds.push(userId);
+      if (potentialMasterIds.length === 1) {
+        try {
+          await updateRoom(roomId, { master: userId });
+        } catch (error) {
+          throw error;
+        }
+      }
+    };
+
+    socketIds.map(socketId => {
+      const activeSocket = activeSockets[socketId];
+
+      activeSocket.once(JSON.stringify({ type: REQUEST_TO_BE_MASTER, roomId }), masterRequestCallBack);
+    });
+  } catch (error) {
+    console.log(error);
   }
 }
