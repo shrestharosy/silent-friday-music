@@ -253,6 +253,7 @@ input {
   display: grid;
   grid-template-columns: 30% 70%;
   padding: 0px 20px;
+  min-height: 100px;
 }
 
 .now-playing-img {
@@ -418,13 +419,16 @@ input {
   margin: 5px 10px;
 }
 
-.songs-list {
+.songs-list-wrapper {
+  max-height: 243px;
   overflow-y: scroll;
+}
+
+.songs-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
   font-size: 13px;
-  max-height: 245px;
 }
 
 .songs-list li {
@@ -434,6 +438,16 @@ input {
   color: rgba(0,0,0,0.4);
   border-bottom: 1px solid var(--grey);  
   transition: 0.1s ease;
+}
+
+.current-song {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.current-icon {
+  font-size: 17px;
+  margin-right: 15px;
 }
 
 .songs-list li span {

@@ -138,14 +138,16 @@ class Room extends React.Component<IRoomProps, IMainState> {
               </span>
             </div>
           </div>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              className="song-input"
-              placeholder="Paste a youtube URL to add song to queue..."
-              onChange={this.handleSearchLinkChange}
-              value={searchLink}
-            />
-          </form>
+          <div className="form-wrapper">
+            <form onSubmit={this.handleSubmit}>
+              <input
+                className="song-input"
+                placeholder="Paste a youtube URL to add song to queue..."
+                onChange={this.handleSearchLinkChange}
+                value={searchLink}
+              />
+            </form>
+          </div>
           <NowPlaying title={title} imageUrl={imageUrl} />
           <div className="view-playlist-button" onClick={this.togglePlaylist}>
             <span>
