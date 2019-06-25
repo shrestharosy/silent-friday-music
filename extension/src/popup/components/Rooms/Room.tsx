@@ -3,7 +3,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
+import {
+  fillRoomAction,
+  addToPlaylistAction,
+  leaveRoomAction,
+  fillActiveAction,
+} from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 import { IRoom } from './Rooms';
@@ -13,6 +18,7 @@ import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
+import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 interface IMainState {
   isLoaded: boolean;
@@ -27,6 +33,8 @@ interface IRoomProps {
   roomId: string;
   fillRoomAction: typeof fillRoomAction;
   addToPlaylistAction: typeof addToPlaylistAction;
+  leaveRoomAction: typeof leaveRoomAction;
+  fillActiveAction: typeof fillActiveAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -105,14 +113,14 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   handleLeaveRoom = async () => {
-    console.log('leave room');
     try {
-      await axiosInstance
-        .post(`/rooms/${this.props.roomId}/leave`)
-        .then(({ data }) => data)
-        .catch(error => {
-          throw error;
-        });
+      await new Promise((resolve, reject) => {
+        this.props.leaveRoomAction(this.props.roomId, resolve, reject);
+      });
+      this.props.fillActiveAction({
+        component: AvailableComponents.ROOM_LIST,
+        id: '',
+      });
     } catch (error) {
       console.log(error);
     }
@@ -166,12 +174,16 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
     addToPlaylistAction: typeof addToPlaylistAction;
+    leaveRoomAction: typeof leaveRoomAction;
+    fillActiveAction: typeof fillActiveAction;
   }>
 ) =>
   bindActionCreators(
     {
       fillRoomAction,
       addToPlaylistAction,
+      leaveRoomAction,
+      fillActiveAction,
     },
     dispatch
   );
