@@ -421,8 +421,15 @@ input {
 }
 
 .songs-list-wrapper {
-  max-height: 243px;
+  max-height: 238px;
   overflow-y: scroll;
+}
+
+.info {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
 }
 
 .songs-list {

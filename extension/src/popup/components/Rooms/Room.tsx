@@ -166,7 +166,11 @@ class Room extends React.Component<IRoomProps, IMainState> {
               />
             </form>
           </div>
-          {currentSong && <NowPlaying title={currentSong.title} imageUrl={currentSong.thumbnailUrl} />}
+          {currentSong ? (
+            <NowPlaying title={currentSong.title} imageUrl={currentSong.thumbnailUrl} />
+          ) : (
+            <span className="info">Not playing any songs at the moment</span>
+          )}
           <div className="view-playlist-button" onClick={this.togglePlaylist}>
             <span>
               View Full Playlist
@@ -174,7 +178,12 @@ class Room extends React.Component<IRoomProps, IMainState> {
             </span>
           </div>
         </div>
-        <Playlist roomId={roomId} showPlaylist={showPlaylist} togglePlaylist={this.togglePlaylist} />
+        <Playlist
+          roomId={roomId}
+          showPlaylist={showPlaylist}
+          togglePlaylist={this.togglePlaylist}
+          currentSongId={currentSong && currentSong._id}
+        />
       </React.Fragment>
     );
   }

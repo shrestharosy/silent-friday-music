@@ -6,17 +6,18 @@ import { faPlayCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 interface ISongListProps {
   list: Array<ISong>;
+  currentSongId: string;
 }
 
-const SongList: React.SFC<ISongListProps> = ({ list }) => (
+const SongList: React.SFC<ISongListProps> = ({ list, currentSongId }) => (
   <div className="songs-list-wrapper">
     <ul className="songs-list">
       {list.length > 0 &&
-        list.map(({ title, thumbnailUrl }, index) => {
+        list.map(({ title, _id }, index) => {
           return (
-            <li>
-              <span className="current-song">
-                <FontAwesomeIcon icon={faPlayCircle} className="current-icon" />
+            <li key={index}>
+              <span className={`${_id === currentSongId ? 'current-song' : ''}`}>
+                {_id === currentSongId ? <FontAwesomeIcon icon={faPlayCircle} className="current-icon" /> : ''}
                 {title}
               </span>
               <span onClick={() => {}}>
