@@ -3,7 +3,6 @@ import { call, put } from 'redux-saga/effects';
 import { addToPlayListAPI, getPlaylistAPI, fetchCurrentSongDetails } from './apis';
 import * as ActionCreatorsTypes from '../../actionCreators/actionCreator.d';
 import * as ActionCreators from 'src/actionCreators/actionCreator';
-import * as ActionConstants from 'src/constants/actions';
 
 export function* addToPlaylistEffect(action: ActionCreatorsTypes.AddToPlaylistActionType) {
   try {
@@ -37,7 +36,6 @@ export function* fetchCurrentSongDetailsEffect(action: ActionCreatorsTypes.Fetch
   try {
     const data = yield call(fetchCurrentSongDetails, action.payload);
     if (action.resolve) {
-      console.log(data);
       action.resolve(data);
     }
   } catch (error) {

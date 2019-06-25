@@ -3,7 +3,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction, addToPlaylistAction, fetchCurrentSongDetailsAction } from 'src/actionCreators/actionCreator';
+import {
+  fillRoomAction,
+  addToPlaylistAction,
+  fetchCurrentSongDetailsAction,
+  fetchRoomInfoAction,
+} from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 import { IRoom } from './Rooms';
@@ -30,6 +35,7 @@ interface IRoomProps {
   songId: string;
   fillRoomAction: typeof fillRoomAction;
   addToPlaylistAction: typeof addToPlaylistAction;
+  fetchRoomInfoAction: typeof fetchRoomInfoAction;
   fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
 }
 
@@ -59,6 +65,15 @@ class Room extends React.Component<IRoomProps, IMainState> {
     });
   }
 
+  componentDidUpdate(prevProps: Readonly<IRoomProps>) {
+    const currentSongId = this.props.songId;
+    const prevSongId = prevProps.songId;
+
+    if (currentSongId !== prevSongId) {
+      this.fetchSongDetails();
+    }
+  }
+
   handleSearchLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       searchLink: event.currentTarget.value,
@@ -86,17 +101,14 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   fetchRoomDetails = async () => {
     if (this.props.roomId) {
+      const { roomId } = this.props;
       try {
-        const currentRoom = await axiosInstance
-          .get(`/rooms/${this.props.roomId}`)
-          .then(({ data }) => data)
-          .catch(error => {
-            throw error;
-          });
+        const currentRoom = await new Promise<IRoom>((resolve, reject) => {
+          this.props.fetchRoomInfoAction(roomId, resolve, reject);
+        });
         this.setState({
           currentRoom,
         });
-        this.props.fillRoomAction(currentRoom);
       } catch (error) {}
     }
   };
@@ -107,13 +119,10 @@ class Room extends React.Component<IRoomProps, IMainState> {
       const currentSong = await new Promise<ISong>((resolve, reject) => {
         this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
       });
-      console.log('c', currentSong);
       this.setState({
         currentSong,
       });
-    } catch (error) {
-      console.log('songDetails', error);
-    }
+    } catch (error) {}
   };
 
   togglePlaylist = () => {
@@ -193,6 +202,7 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
     addToPlaylistAction: typeof addToPlaylistAction;
+    fetchRoomInfoAction: typeof fetchRoomInfoAction;
     fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
   }>
 ) =>
@@ -200,6 +210,7 @@ const mapDispatchToProps = (
     {
       fillRoomAction,
       addToPlaylistAction,
+      fetchRoomInfoAction,
       fetchCurrentSongDetailsAction,
     },
     dispatch

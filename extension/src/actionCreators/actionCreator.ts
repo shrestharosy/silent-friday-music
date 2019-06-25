@@ -16,6 +16,27 @@ export function fillBroadcastAction(payload: IFillBroadcastActionPayload): Actio
   };
 }
 
+export function fetchRoomsListAction(resolve?: Function, reject?: Function): ActionTypes.FetchRoomsListActionType {
+  return {
+    type: actionConstants.FETCH_ROOMS_LIST_ACTION,
+    resolve,
+    reject,
+  };
+}
+
+export function fetchRoomInfoAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchRoomInfoActionType {
+  return {
+    type: actionConstants.FETCH_ROOM_INFO_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
 export function fillRoomAction(payload: IFillRoomActionPayload): ActionTypes.FillRoomActionType {
   return {
     type: actionConstants.FILL_ROOM_ACTION,

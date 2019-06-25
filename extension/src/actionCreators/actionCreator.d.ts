@@ -14,6 +14,15 @@ export interface FillBroadcastActionType {
   payload: IFillBroadcastActionPayload;
 }
 
+export interface FetchRoomsListActionType extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_ROOMS_LIST_ACTION;
+}
+
+export interface FetchRoomInfoActionType extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_ROOM_INFO_ACTION;
+  payload: string;
+}
+
 export interface FillRoomActionType {
   type: typeof actionConstants.FILL_ROOM_ACTION;
   payload: IFillRoomActionPayload;
