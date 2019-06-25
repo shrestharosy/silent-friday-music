@@ -3,9 +3,6 @@ import { Router } from 'express';
 import * as roomServices from '../services/room';
 import * as songControllers from '../controllers/song';
 import { IVerifiedRequest } from '../middlewares/verifyToken';
-import getSocketInstance from '../services/socket';
-import { BROADCAST_MASTER_SELECTION_REQUEST, REQUEST_TO_BE_MASTER } from '../../../extension/src/constants/socket';
-import { ISocketRequest, getSocketIds } from '../socket';
 
 const roomsRouter = Router();
 
@@ -109,44 +106,8 @@ roomsRouter.get('/:roomId/songs', async (req, res) => {
 
 roomsRouter.post('/:roomId/leave', async (req, res) => {
   const roomId = req.params.roomId;
-  console.log(roomId, 'leave');
-  try {
-    const { members } = await roomServices.getRoomById(roomId);
-
-    const ioInstance = getSocketInstance().getIOInstance();
-
-    ioInstance.emit(roomId, { type: BROADCAST_MASTER_SELECTION_REQUEST });
-
-    const socketIds = getSocketIds(members);
-
-    const activeSockets = ioInstance.sockets.sockets;
-
-    const potentialMasterIds: Array<string> = [];
-
-    console.log(JSON.stringify({ type: REQUEST_TO_BE_MASTER, roomId }));
-
-    const masterRequestCallBack = async (request: ISocketRequest) => {
-      const {
-        payload: { userId },
-      } = request.message as { payload: { userId: string } };
-      console.log(potentialMasterIds, 'ppotentialMasters', request);
-      potentialMasterIds.push(userId);
-      if (potentialMasterIds.length === 1) {
-        try {
-          await roomServices.updateRoom(roomId, { master: userId });
-        } catch (error) {
-          throw error;
-        }
-      }
-    };
-
-    socketIds.map(socketId => {
-      const activeSocket = activeSockets[socketId];
-      activeSockets[socketId].once(JSON.stringify({ type: REQUEST_TO_BE_MASTER, roomId }), masterRequestCallBack);
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  roomServices.selectMaster(roomId);
+  res.status(200).send();
 });
 
 export default roomsRouter;
