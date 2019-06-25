@@ -34,9 +34,11 @@ export async function getAllRooms(queryParams: IRoomQueryParams = { search: '', 
   }
 }
 
-export async function getRoomById(roomId: string) {
+export async function getRoomById(roomId: string, populate = true) {
   try {
-    const foundRoom = await RoomModel.findById(roomId).populate('requests');
+    const foundRoom = populate
+      ? await RoomModel.findById(roomId).populate('requests')
+      : await RoomModel.findById(roomId);
     if (foundRoom) {
       return foundRoom;
     } else {
@@ -49,11 +51,11 @@ export async function getRoomById(roomId: string) {
 
 export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
   try {
-    const { name: queriedName } = await getRoomById(roomId);
-    const { name = queriedName, members = [], requests = [] } = updateRoom;
+    const { name: queriedName, master: queriedMaster } = await getRoomById(roomId);
+    const { name = queriedName, members = [], requests = [], master = queriedMaster } = updateRoom;
     const updatedRoom = await RoomModel.findByIdAndUpdate(
       { _id: roomId },
-      { name, $push: { members, requests } },
+      { name, master, $push: { members, requests } },
       { new: true }
     ).populate('requests');
     if (updatedRoom) {
