@@ -104,6 +104,20 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }));
   };
 
+  handleLeaveRoom = async () => {
+    console.log('leave room');
+    try {
+      await axiosInstance
+        .post(`/rooms/${this.props.roomId}/leave`)
+        .then(({ data }) => data)
+        .catch(error => {
+          throw error;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
     const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
     const { roomId } = this.props;
@@ -119,7 +133,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               <span>
                 <FontAwesomeIcon icon={faUserPlus} />
               </span>
-              <span>
+              <span onClick={this.handleLeaveRoom}>
                 <FontAwesomeIcon icon={faDoorOpen} />
               </span>
             </div>

@@ -7,6 +7,7 @@ import { IReduxState } from '../reducers/rootReducer';
 import { IActiveReduxState, AvailableComponents } from '../reducers/active';
 import * as storage from 'src/utils/storage.utils';
 import { ACCESS_TOKEN } from 'src/constants/storage';
+import SocketHandler from './SocketHandler';
 
 const mapStateToProps = ({ active }: IReduxState) => ({ active });
 
@@ -21,6 +22,9 @@ class Main extends React.Component<IMainProps> {
       <React.Fragment>
         {active.component === AvailableComponents.ROOM_DETAILS && <NowPlaying roomId={active.id} />}
         {storage.getFromStorage(ACCESS_TOKEN) && <TimeKeeper />}
+        {storage.getFromStorage(ACCESS_TOKEN) && active.component === AvailableComponents.ROOM_DETAILS && (
+          <SocketHandler />
+        )}
       </React.Fragment>
     );
   }
