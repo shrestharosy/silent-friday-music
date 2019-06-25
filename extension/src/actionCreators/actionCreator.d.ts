@@ -57,3 +57,7 @@ export interface FillNowPlayingAction {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
 }
+
+export interface FetchUsersAction extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_USERS;
+}
