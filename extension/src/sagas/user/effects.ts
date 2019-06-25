@@ -9,7 +9,7 @@ export interface IUser {
   email: string;
 }
 
-export function* fetchUsersEffect(action: ActionCreatorsTypes.FetchUsersAction) {
+export function* fetchUsersEffect(action: ActionCreatorsTypes.FetchUsersActionType) {
   try {
     const users: Array<IUser> = yield call(fetchUsersAPI);
     if (action.resolve) {

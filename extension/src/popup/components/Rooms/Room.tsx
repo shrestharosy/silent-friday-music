@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction, addToPlaylistAction, fillActiveAction } from 'src/actionCreators/actionCreator';
+import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 import { IRoom } from './Rooms';
@@ -13,7 +13,6 @@ import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
-import { AvailableComponents } from '../../../scripts/background/reducers/active';
 
 interface IMainState {
   isLoaded: boolean;
@@ -28,7 +27,6 @@ interface IRoomProps {
   roomId: string;
   fillRoomAction: typeof fillRoomAction;
   addToPlaylistAction: typeof addToPlaylistAction;
-  fillActiveAction: typeof fillActiveAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -106,13 +104,6 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }));
   };
 
-  leaveRoom = () => {
-    this.props.fillActiveAction({
-      component: AvailableComponents.ROOM_LIST,
-      id: '',
-    });
-  };
-
   render() {
     const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
     const { roomId } = this.props;
@@ -128,7 +119,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               <span>
                 <FontAwesomeIcon icon={faUserPlus} />
               </span>
-              <span onClick={() => this.leaveRoom()}>
+              <span>
                 <FontAwesomeIcon icon={faDoorOpen} />
               </span>
             </div>
@@ -159,14 +150,12 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
     addToPlaylistAction: typeof addToPlaylistAction;
-    fillActiveAction: typeof fillActiveAction;
   }>
 ) =>
   bindActionCreators(
     {
       fillRoomAction,
       addToPlaylistAction,
-      fillActiveAction,
     },
     dispatch
   );

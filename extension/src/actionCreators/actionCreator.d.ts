@@ -8,6 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from 'src/scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
+import { ICreateRoomPayload } from 'src/sagas/room/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -53,11 +54,16 @@ export interface FetchProfileAction extends ActionCallbacks {
   type: typeof actionConstants.FETCH_PROFILE_ACTION;
 }
 
-export interface FillNowPlayingAction {
+export interface FillNowPlayingActionType {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
 }
 
-export interface FetchUsersAction extends ActionCallbacks {
+export interface FetchUsersActionType extends ActionCallbacks {
   type: typeof actionConstants.FETCH_USERS;
+}
+
+export interface CreateRoomActionType extends ActionCallbacks {
+  type: typeof actionConstants.CREATE_ROOM;
+  payload: ICreateRoomPayload;
 }

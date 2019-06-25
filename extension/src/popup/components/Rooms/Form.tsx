@@ -4,14 +4,17 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { Form, InjectedFormikProps, withFormik, FormikBag } from 'formik';
 import Select from 'react-select';
 
-import { fetchUsers } from 'src/actionCreators/actionCreator';
+import { fetchUsersAction, createRoomAction, fillActiveAction } from 'src/actionCreators/actionCreator';
 import { IUser } from '../../../sagas/user/effects';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
+import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 interface ICreateRoomFormProps {
   profile: IProfileReduxState;
-  fetchUsers: typeof fetchUsers;
+  fetchUsersAction: typeof fetchUsersAction;
+  createRoomAction: typeof createRoomAction;
+  fillActiveAction: typeof fillActiveAction;
 }
 
 interface IFormValues {
@@ -52,9 +55,10 @@ class CreateRoomForm extends React.Component<
     this.setState({
       isLoading: true,
     });
+
     // const formattedInput = input ? input : '';
     const users = await new Promise((resolve, reject) => {
-      this.props.fetchUsers(resolve, reject);
+      this.props.fetchUsersAction(resolve, reject);
     })
       .then((users: Array<IUser>) => {
         return users;
@@ -68,7 +72,7 @@ class CreateRoomForm extends React.Component<
     });
 
     const mappedOptions: Array<IOptionsProps> = filteredUsers.map((user: IUser) => {
-      return { value: user.name, label: user.name };
+      return { value: user._id, label: user.name };
     });
 
     this.setState({
@@ -93,6 +97,7 @@ class CreateRoomForm extends React.Component<
       isSubmitting,
       errors,
       touched,
+      handleSubmit,
     } = this.props;
 
     const { isLoading, options } = this.state;
@@ -151,19 +156,31 @@ const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
     };
   },
   validate: (values: IFormValues) => {
-    let errors = { errorInRoomName: '', errorInUsersList: '' };
+    let errors: { [key: string]: string } = {};
     if (values.roomName.length === 0) {
       errors.errorInRoomName = 'Please enter a room name';
     }
     if (values.usersList.length === 0) {
       errors.errorInUsersList = 'Please select at least one user';
     }
-    if (Object.keys(errors).length) {
+    if (errors.errorInRoomName || errors.errorInUsersList) {
       return errors;
     }
   },
-  handleSubmit(values: IFormValues, actions: FormikBag<{}, {}>) {
-    // inside action
+  handleSubmit: async (values: IFormValues, actions: FormikBag<ICreateRoomFormProps, {}>) => {
+    const { roomName: name, usersList } = values;
+    const members: string[] = usersList.map((user: IOptionsProps) => {
+      return user.value;
+    });
+    try {
+      await actions.props.createRoomAction({ name, members, master: '5d11dc3c329b1843382b4575' });
+      actions.props.fillActiveAction({
+        component: AvailableComponents.ROOM_LIST,
+        id: '',
+      });
+    } catch (error) {
+      throw error;
+    }
     actions.setSubmitting(false);
   },
 })(CreateRoomForm);
@@ -172,9 +189,11 @@ const mapStateToProps = ({ profile }: IReduxState) => ({ profile });
 
 const mapDispatchToProps = (
   dispatch: Dispatch<{
-    fetchUsers: typeof fetchUsers;
+    fetchUsersAction: typeof fetchUsersAction;
+    createRoomAction: typeof createRoomAction;
+    fillActiveAction: typeof fillActiveAction;
   }>
-) => bindActionCreators({ fetchUsers }, dispatch);
+) => bindActionCreators({ fetchUsersAction, createRoomAction, fillActiveAction }, dispatch);
 
 const ConnectedForm = connect(
   mapStateToProps,

@@ -8,6 +8,6 @@ export function* fetchUsersWatcher() {
   yield takeLatest(actionConstants.FETCH_USERS, fetchUsersEffect);
 }
 
-export default function SongWatchers() {
+export default function UserWatchers() {
   return [fetchUsersWatcher()];
 }
