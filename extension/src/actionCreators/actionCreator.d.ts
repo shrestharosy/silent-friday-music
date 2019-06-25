@@ -57,3 +57,8 @@ export interface FillNowPlayingAction {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
 }
+
+export interface LeaveRoomAction extends ActionCallbacks {
+  type: typeof actionConstants.LEAVE_ROOM_ACTION;
+  payload: string;
+}

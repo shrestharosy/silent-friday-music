@@ -97,3 +97,12 @@ export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): Act
     payload,
   };
 }
+
+export function leaveRoomAction(payload: string, resolve?: Function, reject?: Function): ActionTypes.LeaveRoomAction {
+  return {
+    type: actionConstants.LEAVE_ROOM_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
