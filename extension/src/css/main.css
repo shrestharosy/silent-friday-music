@@ -253,11 +253,12 @@ input {
   display: grid;
   grid-template-columns: 30% 70%;
   padding: 0px 20px;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 .now-playing-img {
-  height: 100px;
+  height: 90px;
+  width: 120px;
   margin-right: 10px;
   border-radius: 5px;
 }

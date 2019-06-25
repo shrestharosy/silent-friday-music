@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { fillRoomAction, addToPlaylistAction } from 'src/actionCreators/actionCreator';
+import { fillRoomAction, addToPlaylistAction, fetchCurrentSongDetailsAction } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 import { IRoom } from './Rooms';
@@ -13,20 +13,24 @@ import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
+import { ISong } from 'src/scripts/background/reducers/song';
+import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
+import { INowPlayingReduxState } from 'src/scripts/background/reducers/nowPlaying';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
-  title: string | null;
-  imageUrl: string | null;
   currentRoom: IRoom | null;
   showPlaylist: boolean;
+  currentSong: ISong | null;
 }
 
 interface IRoomProps {
   roomId: string;
+  songId: string;
   fillRoomAction: typeof fillRoomAction;
   addToPlaylistAction: typeof addToPlaylistAction;
+  fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -35,10 +39,9 @@ class Room extends React.Component<IRoomProps, IMainState> {
     this.state = {
       isLoaded: false,
       searchLink: '',
-      title: null,
-      imageUrl: null,
       currentRoom: null,
       showPlaylist: false,
+      currentSong: null,
     };
   }
 
@@ -49,10 +52,10 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
     this.fetchRoomDetails();
 
+    this.fetchSongDetails();
+
     this.setState({
       searchLink: searchLink ? searchLink : '',
-      title: title ? title : '',
-      imageUrl: imageUrl ? imageUrl : '',
     });
   }
 
@@ -98,6 +101,21 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }
   };
 
+  fetchSongDetails = async () => {
+    const { songId } = this.props;
+    try {
+      const currentSong = await new Promise<ISong>((resolve, reject) => {
+        this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
+      });
+      console.log('c', currentSong);
+      this.setState({
+        currentSong,
+      });
+    } catch (error) {
+      console.log('songDetails', error);
+    }
+  };
+
   togglePlaylist = () => {
     this.setState(prevState => ({
       showPlaylist: !prevState.showPlaylist,
@@ -119,7 +137,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, title, imageUrl, currentRoom, showPlaylist } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -148,7 +166,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               />
             </form>
           </div>
-          <NowPlaying title={title} imageUrl={imageUrl} />
+          {currentSong && <NowPlaying title={currentSong.title} imageUrl={currentSong.thumbnailUrl} />}
           <div className="view-playlist-button" onClick={this.togglePlaylist}>
             <span>
               View Full Playlist
@@ -166,17 +184,21 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
     addToPlaylistAction: typeof addToPlaylistAction;
+    fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
   }>
 ) =>
   bindActionCreators(
     {
       fillRoomAction,
       addToPlaylistAction,
+      fetchCurrentSongDetailsAction,
     },
     dispatch
   );
 
+const mapStateToProps = ({ nowPlaying: { songId } }: IReduxState) => ({ songId });
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Room);

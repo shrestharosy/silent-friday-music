@@ -97,3 +97,16 @@ export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): Act
     payload,
   };
 }
+
+export function fetchCurrentSongDetailsAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchCurrentSongDetailsAction {
+  return {
+    type: actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}

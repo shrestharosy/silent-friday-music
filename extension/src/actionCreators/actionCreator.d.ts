@@ -57,3 +57,8 @@ export interface FillNowPlayingAction {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
 }
+
+export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION;
+  payload: string;
+}
