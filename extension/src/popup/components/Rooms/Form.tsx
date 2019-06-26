@@ -99,41 +99,43 @@ class CreateRoomForm extends React.Component<
 
     const { isLoading, options } = this.state;
     return (
-      <Form>
-        <input
-          name={'roomName'}
-          id={'roomName'}
-          type="text"
-          className={'song-input'}
-          value={roomName}
-          onChange={event => this.handleChange(event)}
-          placeholder={'Enter Room Name'}
-        />
+      <div className="new-room-form-wrapper">
+        <Form>
+          <input
+            name={'roomName'}
+            id={'roomName'}
+            type="text"
+            className={'name-input'}
+            value={roomName}
+            onChange={event => this.handleChange(event)}
+            placeholder={'Enter Room Name'}
+          />
 
-        {touched.roomName && errors && errors.roomName && <span>{errors.roomName}</span>}
+          {touched.roomName && errors && errors.roomName && <span>{errors.roomName}</span>}
 
-        <Select
-          id={'usersList'}
-          name={'usersList'}
-          // className={'select-custom'}
-          // classNamePrefix={'select-active'}
-          placeholder={'Add members'}
-          isLoading={isLoading}
-          options={options}
-          onChange={this.handleUserSelect}
-          onMenuOpen={() => this.getOptionsAsync('')}
-          // onInputChange={this.handleInputChange}
-          value={usersList}
-          isSearchable={true}
-          isClearable={true}
-          isMulti={true}
-        />
+          <Select
+            id={'usersList'}
+            name={'usersList'}
+            // classNamePrefix={'select-active'}
+            placeholder={'Add members'}
+            isLoading={isLoading}
+            options={options}
+            onChange={this.handleUserSelect}
+            onMenuOpen={() => this.getOptionsAsync('')}
+            // onInputChange={this.handleInputChange}
+            value={usersList}
+            isSearchable={true}
+            isClearable={true}
+            isMulti={true}
+            className={'user-select'}
+          />
 
-        {touched.usersList && errors && errors.usersList && <span>{errors.usersList}</span>}
-        <button type="submit" disabled={!dirty || isSubmitting}>
-          START STREAMING
-        </button>
-      </Form>
+          {touched.usersList && errors && errors.usersList && <span>{errors.usersList}</span>}
+          <button type="submit" disabled={!dirty || isSubmitting} className="create-button">
+            START STREAMING
+          </button>
+        </Form>
+      </div>
     );
   }
 }
