@@ -6,6 +6,7 @@ export interface ISong {
   title: string;
   thumbnailUrl: string;
   streamUrl: string;
+  lengthSeconds: number;
 }
 
 export interface IPlaylistReduxState {

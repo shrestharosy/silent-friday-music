@@ -50,7 +50,7 @@ export default function initializeSockerListeners() {
     }
 
     socket.on(JSON.stringify({ type: BROADCAST_SONG_TIMESTAMP }), (request: ISocketRequest) => {
-      // console.log(request, BROADCAST_SONG_TIMESTAMP);
+      console.log(request, BROADCAST_SONG_TIMESTAMP);
       socketInstance.getIOInstance().emit(request.receiverId, request.message);
     });
   });

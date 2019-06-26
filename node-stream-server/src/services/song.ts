@@ -36,6 +36,7 @@ export async function getSongDetails(url: string) {
       player_response: {
         videoDetails: { videoId },
       },
+      length_seconds: lengthSeconds,
     } = basicInfo;
     const response = {
       avatar,
@@ -43,6 +44,7 @@ export async function getSongDetails(url: string) {
       title,
       thumbnailUrl: `https://i1.ytimg.com/vi/${videoId}/hqdefault.jpg`,
       streamUrl: `http://localhost:3002/stream?v=${url}`,
+      lengthSeconds,
     };
     return response;
   } catch (error) {
@@ -53,11 +55,12 @@ export async function getSongDetails(url: string) {
 export async function addSong(url: string) {
   try {
     const songDetails = await getSongDetails(url);
-    const { title, thumbnailUrl, streamUrl } = songDetails;
+    const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
     const song = new SongModel({
       title,
       thumbnailUrl,
       streamUrl,
+      lengthSeconds,
     });
     const addedSong: ISong = await song.save();
     return addedSong;

@@ -5,6 +5,7 @@ export interface ICreateSong {
   title: string;
   thumbnailUrl: string;
   streamUrl: string;
+  lengthSeconds: number;
   // channelName: string;
   // avatar: string;
 }
@@ -25,6 +26,10 @@ export const songSchema = new Schema({
   },
   streamUrl: {
     type: String,
+    required: true,
+  },
+  lengthSeconds: {
+    type: Number,
     required: true,
   },
 });
