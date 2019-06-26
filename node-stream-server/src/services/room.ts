@@ -129,26 +129,18 @@ export function isMasterActiveInRoom(room: IRoom & Document) {
     } else {
       const activeSockets = ioInstance.sockets.sockets;
 
-      console.log(CHECK_MASTER_IS_ONLINE, room._id);
-
-      ioInstance.emit(room._id, { type: CHECK_MASTER_IS_ONLINE });
-
       activeSockets[masterSocketId].once(
         JSON.stringify({ type: ACK_MASTER_IS_ONLINE, roomId: room._id }),
         (request: ISocketRequest) => {
           setTimeout(() => {
-            console.log(
-              request.message && request.receiverId,
-              ACK_MASTER_IS_ONLINE,
-              request,
-              new Date().toTimeString()
-            );
             if (!(!!request.message && !!request.receiverId)) {
               selectMaster(room._id);
             }
           }, +config.masterResponseTimeTolerance);
         }
       );
+
+      ioInstance.emit(room._id, { type: CHECK_MASTER_IS_ONLINE });
     }
   } catch (error) {
     console.log(error);
