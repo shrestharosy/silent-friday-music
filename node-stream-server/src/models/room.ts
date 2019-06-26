@@ -4,6 +4,7 @@ export interface IRoom {
   name: string;
   members: Array<string>;
   requests: Array<string>;
+  master: string;
 }
 
 export interface IRoomUpdate {

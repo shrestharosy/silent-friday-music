@@ -173,7 +173,7 @@ const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
       return user.value;
     });
     try {
-      await actions.props.createRoomAction({ name, members, master: '5d11dc3c329b1843382b4575' });
+      await actions.props.createRoomAction({ name, members });
       actions.props.fillActiveAction({
         component: AvailableComponents.ROOM_LIST,
         id: '',
