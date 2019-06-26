@@ -8,7 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from 'src/scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
-import { ICreateRoomPayload } from 'src/sagas/room/apis';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload } from 'src/sagas/room/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -85,4 +85,9 @@ export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
 export interface LeaveRoomAction extends ActionCallbacks {
   type: typeof actionConstants.LEAVE_ROOM_ACTION;
   payload: string;
+}
+
+export interface RemoveFinishedSongType extends ActionCallbacks {
+  type: typeof actionConstants.REMOVE_FINISHED_SONG;
+  payload: IRemoveFinishedSongPayload;
 }

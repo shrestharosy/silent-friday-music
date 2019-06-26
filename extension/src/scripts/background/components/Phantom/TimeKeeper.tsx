@@ -1,10 +1,11 @@
 import * as React from 'react';
+import config from 'src/config';
 
 import { connect } from 'react-redux';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { IRoomReduxState } from '../../reducers/room';
 import { IProfileReduxState } from '../../reducers/profile';
-import { fillBroadcastAction } from 'src/actionCreators/actionCreator';
+import { fillBroadcastAction, removeFinishedSongAction } from 'src/actionCreators/actionCreator';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import getSocketInstance from 'src/services/socket.service';
@@ -20,6 +21,7 @@ interface ITimeKeeperProps {
   broadcast: IBroadcastReduxState;
   nowPlaying: INowPlayingReduxState;
   fillBroadcastAction: typeof fillBroadcastAction;
+  removeFinishedSongAction: typeof removeFinishedSongAction;
 }
 
 class TimeKeeper extends React.Component<ITimeKeeperProps> {
@@ -48,6 +50,21 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
     }
   }
 
+  getNextSong() {
+    const { requests } = this.props.room;
+    const { songId } = this.props.nowPlaying;
+    const index = requests.findIndex(({ _id }) => _id === songId);
+    if (index > -1) {
+      if (typeof requests[index + 1] === 'undefined') {
+        console.log('Last song in array...');
+      } else {
+        return requests[index + 1];
+      }
+    } else {
+      console.log('song not found in requests array');
+    }
+  }
+
   componentDidUpdate(prevProps: Readonly<ITimeKeeperProps>) {
     const { master: prevMaster } = prevProps.room;
     const { _id: prevProfileId } = prevProps.profile;
@@ -59,14 +76,14 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
     }
   }
 
-  // Add lengthSeconds to broadcast
-  // Check if timmestamp = lengthSeconds
-  // Change song : fillBroadcastAction
-  // API for updating request array
-
   handleTimestampUpdate = (timestamp: number) => {
-    const { songId, streamUrl } = this.props.broadcast;
+    const { songId, streamUrl, lengthSeconds } = this.props.broadcast;
     const { _id: roomId } = this.props.room;
+
+    if (timestamp >= lengthSeconds) {
+      console.log(timestamp, lengthSeconds, 'Partys over');
+      this.changeSong();
+    }
 
     getSocketInstance()
       .getIOInstance()
@@ -83,6 +100,18 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
       });
   };
 
+  changeSong = () => {
+    const { _id: roomId } = this.props.room;
+    const { _id: songId, streamUrl, lengthSeconds } = this.getNextSong();
+    setTimeout(() => {
+      this.props.fillBroadcastAction({ streamUrl, songId, status: true, lengthSeconds });
+      const resp = new Promise((resolve, reject) => {
+        return this.props.removeFinishedSongAction({ roomId, songId }, resolve, reject);
+      });
+      console.log(resp);
+    }, config.ApiEnv.songChangeBufferTime);
+  };
+
   render() {
     return <Player onTimestampUpdate={this.handleTimestampUpdate} />;
   }
@@ -96,7 +125,7 @@ const mapStateToProps = ({ room, profile, broadcast, nowPlaying }: IReduxState) 
 });
 
 const mapDipatchToProps = (dispatch: Dispatch<typeof fillBroadcastAction>) =>
-  bindActionCreators({ fillBroadcastAction }, dispatch);
+  bindActionCreators({ fillBroadcastAction, removeFinishedSongAction }, dispatch);
 
 export default connect(
   mapStateToProps,
