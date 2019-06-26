@@ -1,16 +1,15 @@
 FROM node:10.16.0-jessie
-
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
-
-COPY package*.json ./
-
+#COPY all the codebase
+COPY . ./
 USER node
 
-RUN yarn install
-
 COPY --chown=node:node . .
-
+#RUN cd node-stream-server && yarn install 
 EXPOSE 8080
-CMD [ "yarn", "install" ]
+
+WORKDIR node-stream-server
+RUN yarn install 
+CMD [ "yarn", "start" ]
