@@ -145,26 +145,6 @@ class Room extends React.Component<IRoomProps, IMainState> {
       await new Promise((resolve, reject) => {
         this.props.leaveRoomAction(this.props.roomId, resolve, reject);
       });
-      this.props.fillNowPlayingAction({
-        songId: '',
-        streamUrl: '',
-        timestamp: '',
-      });
-      this.props.fillRoomAction({
-        _id: '',
-        members: [],
-        requests: [],
-        name: '',
-        master: '',
-      });
-
-      this.props.fillBroadcastAction({
-        streamUrl: '',
-        songId: '',
-        status: false,
-        lengthSeconds: 0,
-      });
-
       this.props.fillActiveAction({
         component: AvailableComponents.ROOM_LIST,
         id: '',

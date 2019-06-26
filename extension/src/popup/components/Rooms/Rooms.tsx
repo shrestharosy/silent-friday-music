@@ -7,7 +7,13 @@ import axios from 'src/utils/axios';
 
 import RoomList from './List';
 
-import { fillActiveAction, fetchRoomsListAction } from 'src/actionCreators/actionCreator';
+import {
+  fillActiveAction,
+  fetchRoomsListAction,
+  fillNowPlayingAction,
+  fillRoomAction,
+  fillBroadcastAction,
+} from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,6 +34,9 @@ interface IRoomsState {
 interface IRoomsProps {
   fillActiveAction: typeof fillActiveAction;
   fetchRoomsListAction: typeof fetchRoomsListAction;
+  fillNowPlayingAction: typeof fillNowPlayingAction;
+  fillRoomAction: typeof fillRoomAction;
+  fillBroadcastAction: typeof fillBroadcastAction;
 }
 
 class Rooms extends React.Component<IRoomsProps, IRoomsState> {
@@ -41,6 +50,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
   async componentDidMount() {
     try {
+      await this.clearReduxState();
       const rooms = await new Promise<Array<IRoom>>((resolve, reject) => {
         this.props.fetchRoomsListAction(resolve, reject);
       });
@@ -50,6 +60,27 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
       });
     } catch (error) {}
   }
+
+  clearReduxState = () => {
+    this.props.fillNowPlayingAction({
+      songId: '',
+      streamUrl: '',
+      timestamp: '',
+    });
+    this.props.fillRoomAction({
+      _id: '',
+      members: [],
+      requests: [],
+      name: '',
+      master: '',
+    });
+    this.props.fillBroadcastAction({
+      streamUrl: '',
+      songId: '',
+      status: false,
+      lengthSeconds: 0,
+    });
+  };
 
   handleDetailsView = (roomId: string) => {
     this.props.fillActiveAction({
@@ -91,8 +122,21 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillActiveAction: typeof fillActiveAction;
     fetchRoomsListAction: typeof fetchRoomsListAction;
+    fillNowPlayingAction: typeof fillNowPlayingAction;
+    fillRoomAction: typeof fillRoomAction;
+    fillBroadcastAction: typeof fillBroadcastAction;
   }>
-) => bindActionCreators({ fillActiveAction, fetchRoomsListAction }, dispatch);
+) =>
+  bindActionCreators(
+    {
+      fillActiveAction,
+      fetchRoomsListAction,
+      fillNowPlayingAction,
+      fillRoomAction,
+      fillBroadcastAction,
+    },
+    dispatch
+  );
 
 export default connect(
   null,
