@@ -17,6 +17,27 @@ export function fillBroadcastAction(payload: IFillBroadcastActionPayload): Actio
   };
 }
 
+export function fetchRoomsListAction(resolve?: Function, reject?: Function): ActionTypes.FetchRoomsListActionType {
+  return {
+    type: actionConstants.FETCH_ROOMS_LIST_ACTION,
+    resolve,
+    reject,
+  };
+}
+
+export function fetchRoomInfoAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchRoomInfoActionType {
+  return {
+    type: actionConstants.FETCH_ROOM_INFO_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
 export function fillRoomAction(payload: IFillRoomActionPayload): ActionTypes.FillRoomActionType {
   return {
     type: actionConstants.FILL_ROOM_ACTION,
@@ -106,6 +127,18 @@ export function fetchUsersAction(resolve?: Function, reject?: Function): ActionT
     reject,
   };
 }
+export function fetchCurrentSongDetailsAction(
+  payload: string,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.FetchCurrentSongDetailsAction {
+  return {
+    type: actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
 
 export function createRoomAction(
   payload: ICreateRoomPayload,
@@ -114,6 +147,15 @@ export function createRoomAction(
 ): ActionTypes.CreateRoomActionType {
   return {
     type: actionConstants.CREATE_ROOM,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function leaveRoomAction(payload: string, resolve?: Function, reject?: Function): ActionTypes.LeaveRoomAction {
+  return {
+    type: actionConstants.LEAVE_ROOM_ACTION,
     payload,
     resolve,
     reject,

@@ -7,7 +7,7 @@ import axios from 'src/utils/axios';
 
 import RoomList from './List';
 
-import { fillActiveAction } from 'src/actionCreators/actionCreator';
+import { fillActiveAction, fetchRoomsListAction } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,6 +27,7 @@ interface IRoomsState {
 
 interface IRoomsProps {
   fillActiveAction: typeof fillActiveAction;
+  fetchRoomsListAction: typeof fetchRoomsListAction;
 }
 
 class Rooms extends React.Component<IRoomsProps, IRoomsState> {
@@ -40,12 +41,9 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
   async componentDidMount() {
     try {
-      const rooms = await axios
-        .get('/rooms')
-        .then(({ data }) => data)
-        .catch(error => {
-          throw error;
-        });
+      const rooms = await new Promise<Array<IRoom>>((resolve, reject) => {
+        this.props.fetchRoomsListAction(resolve, reject);
+      });
       this.setState({
         rooms,
         isLoaded: true,
@@ -89,8 +87,12 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction }>) =>
-  bindActionCreators({ fillActiveAction }, dispatch);
+const mapDispatchToProps = (
+  dispatch: Dispatch<{
+    fillActiveAction: typeof fillActiveAction;
+    fetchRoomsListAction: typeof fetchRoomsListAction;
+  }>
+) => bindActionCreators({ fillActiveAction, fetchRoomsListAction }, dispatch);
 
 export default connect(
   null,

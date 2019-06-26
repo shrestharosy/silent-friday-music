@@ -31,3 +31,12 @@ export async function getPlaylistAPI(payload: ISongsPayload) {
       throw error;
     });
 }
+
+export async function fetchCurrentSongDetails(payload: string) {
+  return axiosInstance
+    .get(`/songs/${payload}`)
+    .then(({ data }) => data)
+    .catch(error => {
+      throw error;
+    });
+}

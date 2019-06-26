@@ -11,6 +11,7 @@ export interface IRoomUpdate {
   name?: string;
   members?: Array<string>;
   requests?: Array<string>;
+  master?: string;
 }
 
 const roomSchema = new Schema(
