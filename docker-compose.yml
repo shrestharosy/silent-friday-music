@@ -1,0 +1,32 @@
+version: '3.0'
+services: 
+  backend:
+    build:
+      context: .
+    container_name: sfm_node
+    env_file:
+     - /home/ubuntu/env/.env
+    ports:
+      - '8080:8080'
+    networks:
+      - sfm_network
+    volumes:
+      - /home/ubuntu/node_volume:/app
+
+  mongo:
+    image: mongo:3.4
+    container_name: sfm_mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - sfm_network
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sfm-admin
+      MONGO_INITDB_ROOT_PASSWORD: sfm-admin-123
+    volumes:
+      - /home/ubuntu/mongo_volume:/data/db
+
+networks:
+  sfm_network:
+    driver: bridge
