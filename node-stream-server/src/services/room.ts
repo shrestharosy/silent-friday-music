@@ -8,7 +8,6 @@ interface IRoomQueryParams {
 
 export async function createRoom(newRoom: IRoom) {
   try {
-    console.log(newRoom);
     const { name, members = [], requests = [], master } = newRoom;
     const room = new RoomModel({
       name,
