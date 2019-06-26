@@ -10,11 +10,12 @@ interface IRoomQueryParams {
 
 export async function createRoom(newRoom: IRoom) {
   try {
-    const { name, members = [], requests = [] } = newRoom;
+    const { name, members = [], requests = [], master } = newRoom;
     const room = new RoomModel({
       name,
       members,
       requests,
+      master,
     });
     const createdRoom: IRoom = await room.save();
     return createdRoom;
@@ -26,7 +27,6 @@ export async function createRoom(newRoom: IRoom) {
 export async function getAllRooms(queryParams: IRoomQueryParams = { search: '', userId: '' }) {
   try {
     const { search = '', userId = '' } = queryParams;
-
     const searchRegex = new RegExp(search, 'i');
     const roomList: Array<IRoom> = await RoomModel.find({ name: searchRegex, members: userId });
 

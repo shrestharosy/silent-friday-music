@@ -52,7 +52,17 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
   }
 
   handleDetailsView = (roomId: string) => {
-    this.props.fillActiveAction({ component: AvailableComponents.ROOM_DETAILS, id: roomId });
+    this.props.fillActiveAction({
+      component: AvailableComponents.ROOM_DETAILS,
+      id: roomId,
+    });
+  };
+
+  handleCreateRoom = () => {
+    this.props.fillActiveAction({
+      component: AvailableComponents.CREATE_ROOM,
+      id: '',
+    });
   };
 
   render() {
@@ -60,7 +70,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
     return (
       <React.Fragment>
-        <div className="button-wrapper">
+        <div className="button-wrapper" onClick={() => this.handleCreateRoom()}>
           <span>CREATE NEW ROOM</span>
           <span className="button-icon">
             <FontAwesomeIcon icon={faPlusCircle} />

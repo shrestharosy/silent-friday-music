@@ -8,6 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
+import { ICreateRoomPayload } from 'src/sagas/room/apis';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -112,13 +113,20 @@ export function fetchProfileAction(resolve?: Function, reject?: Function): Actio
   };
 }
 
-export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingAction {
+export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingActionType {
   return {
     type: actionConstants.FILL_NOW_PLAYING_ACTION,
     payload,
   };
 }
 
+export function fetchUsersAction(resolve?: Function, reject?: Function): ActionTypes.FetchUsersActionType {
+  return {
+    type: actionConstants.FETCH_USERS,
+    resolve,
+    reject,
+  };
+}
 export function fetchCurrentSongDetailsAction(
   payload: string,
   resolve?: Function,
@@ -126,6 +134,19 @@ export function fetchCurrentSongDetailsAction(
 ): ActionTypes.FetchCurrentSongDetailsAction {
   return {
     type: actionConstants.FETCH_CURRENT_SONG_DETAILS_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function createRoomAction(
+  payload: ICreateRoomPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.CreateRoomActionType {
+  return {
+    type: actionConstants.CREATE_ROOM,
     payload,
     resolve,
     reject,
