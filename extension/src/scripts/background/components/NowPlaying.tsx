@@ -25,7 +25,6 @@ class NowPlaying extends React.Component<INowPlayingProps> {
       .on(this.props.roomId, (message: ISocketMessage) => {
         if (message.type === UPDATE_NOW_PLAYING) {
           const payload = message.payload as IFillNowPlayingActionPayload;
-
           if (this.props.nowPlaying.songId !== payload.songId) {
             this.props.fillNowPlayingAction(payload);
           }

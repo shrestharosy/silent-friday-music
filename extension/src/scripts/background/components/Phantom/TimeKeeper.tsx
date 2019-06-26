@@ -32,8 +32,8 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
     const { master } = this.props.room;
 
     if (master === profileId && master) {
-      const { _id: songId, streamUrl } = this.getNowPlaying();
-      this.props.fillBroadcastAction({ streamUrl, songId, status: true });
+      const { _id: songId, streamUrl, lengthSeconds } = this.getNowPlaying();
+      this.props.fillBroadcastAction({ streamUrl, songId, status: true, lengthSeconds });
     }
   };
 
@@ -58,6 +58,11 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
       this.handleBeingMaster();
     }
   }
+
+  // Add lengthSeconds to broadcast
+  // Check if timmestamp = lengthSeconds
+  // Change song : fillBroadcastAction
+  // API for updating request array
 
   handleTimestampUpdate = (timestamp: number) => {
     const { songId, streamUrl } = this.props.broadcast;

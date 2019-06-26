@@ -162,6 +162,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
         streamUrl: '',
         songId: '',
         status: false,
+        lengthSeconds: 0,
       });
 
       this.props.fillActiveAction({

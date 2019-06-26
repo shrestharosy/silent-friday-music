@@ -5,12 +5,14 @@ export interface IBroadcastReduxState {
   streamUrl: string;
   status: boolean;
   songId: string;
+  lengthSeconds: number;
 }
 
 const initialBroadcastReduxState: IBroadcastReduxState = {
   streamUrl: '',
   status: false,
   songId: '',
+  lengthSeconds: 0,
 };
 
 export type IFillBroadcastActionPayload = IBroadcastReduxState;
