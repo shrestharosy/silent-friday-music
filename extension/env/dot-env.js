@@ -7,6 +7,7 @@ function getEnvConfig(environment) {
     return {
       BASE_URL: process.env.BASE_URL,
       TIMEOUT: process.env.TIMEOUT,
+      SONG_CHANGE_BUFFER_TIME: process.env.SONG_CHANGE_BUFFER_TIME,
     };
   } else {
     let errorMessage = `Cannot find .env.${environment} file or environment values are missing`;
