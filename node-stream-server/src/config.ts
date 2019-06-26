@@ -5,14 +5,14 @@ export default {
   googleAuth: {
     googleClientId: process.env.GOOGLE_CLIENT_ID || 'abc123',
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || 'abc123',
-    authRedirect: process.env.AUTH_REDIRECT
+    authRedirect: process.env.AUTH_REDIRECT,
   },
   auth: {
     saltRounds: process.env.SALT_ROUNDS,
-    accessTokenDuration: process.env.ACCESS_TOKEN_DURATION, 
+    accessTokenDuration: process.env.ACCESS_TOKEN_DURATION,
     refreshTokenDuration: process.env.REFRESH_TOKEN_DURATION,
     accessTokenSecretKey: process.env.ACCESS_TOKEN_SECRET_KEY || 'abc123',
-    refreshTokenSecretKey: process.env.REFRESH_TOKEN_SECRET_KEY || 'abc123'
+    refreshTokenSecretKey: process.env.REFRESH_TOKEN_SECRET_KEY || 'abc123',
   },
   mongo: {
     mongoUsername: process.env.MONGO_USERNAME,
@@ -20,7 +20,7 @@ export default {
     mongoHostname: process.env.MONGO_HOSTNAME,
     mongoPort: process.env.MONGO_PORT,
     mongoDb: process.env.MONGO_DB,
-    dbUrl: process.env.DB_URL || 'example'
+    dbUrl: process.env.DB_URL || 'example',
   },
-  timeout: process.env.TIEMOUT
-}
+  masterResponseTimeTolerance: process.env.MASTER_RESPONSE_TIME_TOLERANCE || '30000',
+};
