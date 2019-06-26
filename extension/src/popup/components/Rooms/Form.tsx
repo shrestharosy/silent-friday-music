@@ -20,8 +20,6 @@ interface ICreateRoomFormProps {
 interface IFormValues {
   roomName: string;
   usersList: Array<IOptionsProps>;
-  errorInRoomName: string;
-  errorInUsersList: string;
 }
 
 interface ICreateRoomFormState {
@@ -97,7 +95,6 @@ class CreateRoomForm extends React.Component<
       isSubmitting,
       errors,
       touched,
-      handleSubmit,
     } = this.props;
 
     const { isLoading, options } = this.state;
@@ -113,7 +110,7 @@ class CreateRoomForm extends React.Component<
           placeholder={'Enter Room Name'}
         />
 
-        <span>{errors && touched.roomName && errors.errorInRoomName}</span>
+        {touched.roomName && errors && errors.roomName && <span>{errors.roomName}</span>}
 
         <Select
           id={'usersList'}
@@ -132,12 +129,8 @@ class CreateRoomForm extends React.Component<
           isMulti={true}
         />
 
-        <span>{errors && touched.usersList && errors.errorInUsersList}</span>
-        <button
-          type="submit"
-          disabled={!dirty || isSubmitting}
-          //   onClick={() => props.apply(values)}
-        >
+        {touched.usersList && errors && errors.usersList && <span>{errors.usersList}</span>}
+        <button type="submit" disabled={!dirty || isSubmitting}>
           START STREAMING
         </button>
       </Form>
@@ -158,14 +151,12 @@ const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
   validate: (values: IFormValues) => {
     let errors: { [key: string]: string } = {};
     if (values.roomName.length === 0) {
-      errors.errorInRoomName = 'Please enter a room name';
+      errors.roomName = 'Please enter a room name';
     }
     if (values.usersList.length === 0) {
-      errors.errorInUsersList = 'Please select at least one user';
+      errors.usersList = 'Please select at least one user';
     }
-    if (errors.errorInRoomName || errors.errorInUsersList) {
-      return errors;
-    }
+    return errors;
   },
   handleSubmit: async (values: IFormValues, actions: FormikBag<ICreateRoomFormProps, {}>) => {
     const { roomName: name, usersList } = values;
