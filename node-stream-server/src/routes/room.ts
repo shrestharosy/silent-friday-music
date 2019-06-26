@@ -10,8 +10,10 @@ roomsRouter.get('/', async (req: IVerifiedRequest, res) => {
   try {
     const { query } = req;
     const { auth = { userId: '' } } = req;
-
-    const roomList = await roomServices.getAllRooms({ ...query, userId: auth.userId });
+    const roomList = await roomServices.getAllRooms({
+      ...query,
+      userId: auth.userId,
+    });
 
     res.json(roomList);
   } catch (error) {
@@ -37,11 +39,15 @@ roomsRouter.get('/:roomId', async (req, res) => {
   }
 });
 
-roomsRouter.post('/', async (req, res) => {
+roomsRouter.post('/', async (req: IVerifiedRequest, res) => {
   try {
     const { body } = req;
-
-    const createdRoom = await roomServices.createRoom(body);
+    const { auth = { userId: '' } } = req;
+    const createdRoom = await roomServices.createRoom({
+      ...body,
+      master: auth.userId,
+      members: [...body.members, auth.userId],
+    });
     res.json(createdRoom);
   } catch (error) {
     res.status(500).send({

@@ -1,6 +1,14 @@
 import { takeLatest } from 'redux-saga/effects';
+
 import * as actionConstants from 'src/constants/actions';
+
+import { createRoomEffect } from './effects';
+
 import { fetchRoomsListEffect, fetchRoomInfoEffect, leaveRoomEffect } from './effects';
+
+export function* createRoomWatcher() {
+  yield takeLatest(actionConstants.CREATE_ROOM, createRoomEffect);
+}
 
 export function* fetchRoomsListWatcher() {
   yield takeLatest(actionConstants.FETCH_ROOMS_LIST_ACTION, fetchRoomsListEffect);
@@ -15,5 +23,5 @@ export function* leaveRoomWatcher() {
 }
 
 export default function roomWatchers() {
-  return [fetchRoomsListWatcher(), fetchRoomInfoWatcher(), leaveRoomWatcher()];
+  return [createRoomWatcher(), fetchRoomsListWatcher(), fetchRoomInfoWatcher(), leaveRoomWatcher()];
 }
