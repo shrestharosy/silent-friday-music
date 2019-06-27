@@ -1,44 +1,68 @@
 import { Router } from 'express';
 import * as authServices from '../services/auth';
 import verifyToken from '../middlewares/verifyToken';
+import responseMiddleware, { IResponseRequest } from '../middlewares/response';
 
 const authRouter = Router();
 
-authRouter.post('/login', async (req, res) => {
-  try {
-    if (!req.body.token) {
-      res.status(500).json({
-        message: 'Token missing',
+authRouter.post(
+  '/login',
+  async (req: IResponseRequest, res, next) => {
+    try {
+      if (!req.body.token) {
+        next({
+          error: {
+            status: 400,
+            message: 'Token is missing',
+          },
+        });
+      }
+
+      const authData = await authServices.loginUser(req.body.token);
+
+      req.response = {
+        payload: {
+          ...authData,
+          message: 'Successfully logged in!',
+        },
+      };
+      next();
+    } catch (error) {
+      next({
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
+  },
+  responseMiddleware
+);
 
-    const authData = await authServices.loginUser(req.body.token);
-
-    res.status(200).json({
-      ...authData,
-      message: 'Sucessfully logged in!',
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
-  }
+authRouter.post('/logout', (req, res, next) => {
+  next();
 });
 
-authRouter.post('/logout', (req, res) => {
-  res.send('clear local storage and blacklist the tokens until expired');
-});
-
-authRouter.post('/refresh-token', async (req, res) => {
-  try {
-    const newToken = await authServices.refreshExpiredToken(req.body.refreshToken);
-    return res.json(newToken);
-  } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
-  }
-});
+authRouter.post(
+  '/refresh-token',
+  async (req: IResponseRequest, res, next) => {
+    try {
+      const newToken = await authServices.refreshExpiredToken(req.body.refreshToken);
+      req.response = {
+        payload: {
+          accessToken: newToken,
+        },
+      };
+      next();
+    } catch (error) {
+      next({
+        status: 500,
+        message: error,
+      });
+    }
+  },
+  responseMiddleware
+);
 
 authRouter.get('/unauthorized', (req, res) => {
   res.status(403).send({ message: 'Unauthorized access' });
