@@ -35,10 +35,7 @@ streamRouter.get('/', (req, res, next) => {
       youtubeStream.pipe(res);
     }
   } catch (error) {
-    next({
-      status: 500,
-      message: error,
-    });
+    next(error);
   }
 });
 

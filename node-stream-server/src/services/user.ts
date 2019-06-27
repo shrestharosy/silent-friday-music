@@ -39,7 +39,11 @@ export async function getUserById(id: string) {
         }
       });
     });
-    return userData;
+    if (userData) {
+      return userData;
+    } else {
+      throw new Error('No User with that id');
+    }
   } catch (error) {
     throw error;
   }

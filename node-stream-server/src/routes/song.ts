@@ -18,12 +18,7 @@ songsRouter.get(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware

@@ -17,12 +17,7 @@ userRouter.get(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
@@ -41,12 +36,7 @@ userRouter.get(
 
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
@@ -62,12 +52,7 @@ userRouter.get(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
@@ -83,12 +68,7 @@ userRouter.get(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
@@ -104,7 +84,7 @@ userRouter.post('/', async (req: IResponseRequest, res, next) => {
   } catch (error) {
     next({
       status: 500,
-      message: error,
+      message: error.message,
     });
   }
 });
@@ -119,12 +99,7 @@ userRouter.get(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware

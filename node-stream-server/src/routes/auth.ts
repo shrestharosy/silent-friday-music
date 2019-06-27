@@ -28,12 +28,7 @@ authRouter.post(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
@@ -55,12 +50,7 @@ authRouter.post(
       };
       next();
     } catch (error) {
-      next({
-        error: {
-          status: 500,
-          message: error,
-        },
-      });
+      next(error);
     }
   },
   responseMiddleware
