@@ -80,8 +80,9 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
   handleTimestampUpdate = (timestamp: number) => {
     const { songId, streamUrl, lengthSeconds } = this.props.broadcast;
     const { _id: roomId } = this.props.room;
+    console.log(`handle timestamp update ${timestamp} / ${lengthSeconds}`);
 
-    if (roomId && lengthSeconds && timestamp >= lengthSeconds) {
+    if (roomId && lengthSeconds && timestamp >= lengthSeconds - 1) {
       console.log(timestamp, lengthSeconds, 'Partys over');
       this.changeSong();
     }
@@ -104,8 +105,11 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
   changeSong = () => {
     const { _id: songId, streamUrl, lengthSeconds } = this.getNextSong();
     setTimeout(async () => {
+      await console.log('removing song from playlist...');
       await this.removeSongFromPlaylist();
+      await console.log('removed song... filling broadcast...');
       await this.props.fillBroadcastAction({ streamUrl, songId, status: true, lengthSeconds });
+      await console.log('new broadcast ready...');
     }, config.ApiEnv.songChangeBufferTime);
   };
 
