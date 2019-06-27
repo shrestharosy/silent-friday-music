@@ -11,13 +11,11 @@ export default function validationMiddleware(schema: Joi.SchemaLike) {
     Joi.validate(body, schema, (err, value) => {
       if (err) {
         response.status(422).send({
-          status: 'error',
           errorMessage: handleErrorObjet(err),
         });
       } else {
         response.json({
           status: 'success',
-          message: 'Room created successfully',
         });
       }
     });

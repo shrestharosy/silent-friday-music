@@ -3,7 +3,6 @@ import Joi from 'joi';
 const name = Joi.string()
   .alphanum()
   .max(30)
-  .required()
   .error(errors => {
     errors.forEach(err => {
       switch (err.type) {
@@ -23,18 +22,22 @@ const name = Joi.string()
   });
 
 const members = Joi.array()
-  .min(1)
+  .items(Joi.string().required())
   .unique();
 
-// const master = Joi.string().required;
+const master = Joi.string();
 
-// const requests = Joi.array().items(Joi.string());
+const requests = Joi.array().items(Joi.string());
 
 const baseRoom = Joi.object().keys({
   name,
   members,
-  // requests,
-  // master
+  master,
+  requests,
 });
 
-export const createRoomSchema = baseRoom;
+export const createRoomSchema = baseRoom.keys({
+  members: members.min(1),
+});
+
+export const updateRoomSchema = baseRoom;

@@ -3,13 +3,15 @@ import { Router } from 'express';
 import * as roomServices from '../services/room';
 import * as songControllers from '../controllers/song';
 import { IVerifiedRequest } from '../middlewares/verifyToken';
-import validateCreateRoom from '../middlewares/validation';
 import validationMiddleware from '../middlewares/validation';
-import { createRoomSchema } from '../validationSchema/room';
+import { createRoomSchema, updateRoomSchema } from '../validationSchema/room';
+import { addSongSchema } from '../validationSchema/song';
 
 const roomsRouter = Router();
 
-const roomValidationMiddleware = validationMiddleware(createRoomSchema);
+const createRoomValidationMiddleware = validationMiddleware(createRoomSchema);
+const updateRoomValidationMiddleware = validationMiddleware(updateRoomSchema);
+const songValidationMiddleware = validationMiddleware(addSongSchema);
 
 roomsRouter.get('/', async (req: IVerifiedRequest, res) => {
   try {
@@ -46,7 +48,7 @@ roomsRouter.get('/:roomId', async (req, res) => {
   }
 });
 
-roomsRouter.post('/', roomValidationMiddleware, async (req: IVerifiedRequest, res, next) => {
+roomsRouter.post('/', createRoomValidationMiddleware, async (req: IVerifiedRequest, res, next) => {
   try {
     const { body } = req;
     const { auth = { userId: '' } } = req;
@@ -64,7 +66,7 @@ roomsRouter.post('/', roomValidationMiddleware, async (req: IVerifiedRequest, re
   }
 });
 
-roomsRouter.put('/:roomId', async (req, res) => {
+roomsRouter.put('/:roomId', updateRoomValidationMiddleware, async (req, res) => {
   try {
     const roomUpdate = req.body;
     const roomId = req.params.roomId;
@@ -77,7 +79,7 @@ roomsRouter.put('/:roomId', async (req, res) => {
   }
 });
 
-roomsRouter.patch('/:roomId', async (req, res) => {
+roomsRouter.patch('/:roomId', updateRoomValidationMiddleware, async (req, res) => {
   try {
     const roomUpdate = req.body;
     const roomId = req.params.roomId;
@@ -103,7 +105,7 @@ roomsRouter.patch('/:roomId/removeSong', async (req, res) => {
   }
 });
 
-roomsRouter.post('/:roomId/songs', async (req, res) => {
+roomsRouter.post('/:roomId/songs', songValidationMiddleware, async (req, res) => {
   const roomId = req.params.roomId;
   const { url } = req.body;
   try {

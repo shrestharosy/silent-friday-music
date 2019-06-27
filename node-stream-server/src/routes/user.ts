@@ -3,8 +3,12 @@ import { Router } from 'express';
 import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService, searchUser } from '../services/user';
 import * as authServices from '../utils/auth';
 import { IVerifiedRequest } from '../middlewares/verifyToken';
+import validationMiddleware from '../middlewares/validation';
+import { createUserSchema } from '../validationSchema/user';
 
 const userRouter = Router();
+
+const userValidationMiddleware = validationMiddleware(createUserSchema);
 
 userRouter.get('/', async (req, res) => {
   try {
@@ -44,7 +48,7 @@ userRouter.get('/google/:gid', async (req, res) => {
   }
 });
 
-userRouter.post('/', async (req, res) => {
+userRouter.post('/', userValidationMiddleware, async (req, res) => {
   try {
     const data = await createUser(req.body);
     res.json(data);
