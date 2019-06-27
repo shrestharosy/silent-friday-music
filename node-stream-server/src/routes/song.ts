@@ -19,8 +19,10 @@ songsRouter.get(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },

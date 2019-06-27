@@ -28,8 +28,10 @@ roomsRouter.get(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -55,8 +57,10 @@ roomsRouter.get(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -82,8 +86,10 @@ roomsRouter.post(
       next();
     } catch (error) {
       next({
-        status: 500,
-        error: error,
+        error: {
+          status: 500,
+          error: error,
+        },
       });
     }
   },
@@ -104,8 +110,10 @@ roomsRouter.put(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -127,8 +135,10 @@ roomsRouter.patch(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -149,8 +159,10 @@ roomsRouter.patch(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -175,8 +187,10 @@ roomsRouter.post(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
@@ -195,8 +209,10 @@ roomsRouter.get(
       next();
     } catch (error) {
       next({
-        status: 500,
-        message: error,
+        error: {
+          status: 500,
+          message: error,
+        },
       });
     }
   },
