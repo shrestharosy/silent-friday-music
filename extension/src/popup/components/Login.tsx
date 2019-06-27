@@ -7,6 +7,7 @@ import { getAuthToken } from '../utils/auth.utils';
 import * as GoogleLogo from '../../../public/assets/images/google-logo.svg';
 import { fillActiveAction } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
+import * as storage from 'src/utils/storage.utils';
 
 interface ILoginResponse {
   accessToken: string;
@@ -19,6 +20,9 @@ interface ILoginProps {
 }
 
 class Login extends React.Component<ILoginProps, {}> {
+  componentDidMount() {
+    storage.clearStorage();
+  }
   handleLogin = async () => {
     const { token } = await getAuthToken()
       .then((response: { token: string }) => {

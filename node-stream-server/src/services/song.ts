@@ -43,7 +43,7 @@ export async function getSongDetails(url: string) {
       channelName: name,
       title,
       thumbnailUrl: `https://i1.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-      streamUrl: `http://localhost:3002/stream?v=${url}`,
+      streamUrl: `${url}`,
       lengthSeconds,
     };
     return response;
