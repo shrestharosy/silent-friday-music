@@ -40,7 +40,7 @@ export async function fetchRoomInfo(payload: string) {
 
 export function leaveRoomAPI(payload: string) {
   return axiosInstance
-    .get(`/rooms/${payload}`)
+    .get(`/rooms/${payload}/leave`)
     .then(({ data }) => data)
     .catch(error => {
       throw error;

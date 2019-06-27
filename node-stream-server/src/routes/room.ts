@@ -31,6 +31,8 @@ roomsRouter.get('/:roomId', async (req, res) => {
 
     const roomWithGivenId = await roomServices.getRoomById(roomId);
 
+    roomServices.isMasterActiveInRoom(roomWithGivenId);
+
     res.json(roomWithGivenId);
   } catch (error) {
     res.status(500).send({
