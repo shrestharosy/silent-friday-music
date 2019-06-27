@@ -1,11 +1,21 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 
-export function errorHandler(err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) {
-  if (res.headersSent) {
-    // return next(err);
+interface IErrorRequest extends ErrorRequestHandler {
+  error: {
+    status: number;
+    message: string;
+  };
+}
+
+export function errorHandler(err: IErrorRequest, req: Request, res: Response, next: NextFunction) {
+  if (err.error && err.error.status) {
+    const { status, message } = err.error;
+    res.status(status).send({
+      message,
+    });
+  } else {
+    res.status(500).send({
+      message: err,
+    });
   }
-  res.status(500).send({
-    message: err,
-  });
-  //   res.render('error', { error: err });
 }

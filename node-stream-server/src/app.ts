@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRouter);
-app.use('/broadcast', verifyToken, broadcastRouter);
+// app.use('/broadcast', verifyToken, broadcastRouter);
 app.use('/stream', streamRouter);
 app.use('/users', verifyToken, userRouter);
 app.use('/rooms', verifyToken, roomsRouter);
