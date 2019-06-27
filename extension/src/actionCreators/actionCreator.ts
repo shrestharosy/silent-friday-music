@@ -8,7 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
-import { ICreateRoomPayload, IRemoveFinishedSongPayload } from 'src/sagas/room/apis';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload, IAddMembersToRoomPayload } from 'src/sagas/room/apis';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -190,5 +190,18 @@ export function resetRoomStateAction(): ActionTypes.ResetRoomStateType {
 export function resetBroadcastStateAction(): ActionTypes.ResetBroadcastStateType {
   return {
     type: actionConstants.RESET_BROADCAST_STATE,
+  };
+}
+
+export function addMembersToRoomAction(
+  payload: IAddMembersToRoomPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.AddMembersToRoomType {
+  return {
+    type: actionConstants.ADD_MEMBERS_TO_ROOM,
+    payload,
+    resolve,
+    reject,
   };
 }

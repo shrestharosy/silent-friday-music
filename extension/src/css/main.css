@@ -225,6 +225,10 @@ input {
   padding-top: 6px;
 }
 
+.is-muted {
+  background: rgba(0,0,0,0.2) !important;
+}
+
 .dash-buttons span {
   margin: 5px;
   background: var(--primary-color);
@@ -552,6 +556,12 @@ input {
   transition: 0.3s ease;
   cursor: pointer;
 }
+
 .back-icon:hover {
   color: var(--primary-color);
+}
+
+.add-member-form-wrapper {
+  padding: 20px;
+  height: 100%;
 }
