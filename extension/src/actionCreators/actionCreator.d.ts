@@ -91,3 +91,15 @@ export interface RemoveFinishedSongType extends ActionCallbacks {
   type: typeof actionConstants.REMOVE_FINISHED_SONG;
   payload: IRemoveFinishedSongPayload;
 }
+
+export interface ResetNowPlayingStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_NOW_PLAYING_STATE;
+}
+
+export interface ResetRoomStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_ROOM_STATE;
+}
+
+export interface ResetBroadcastStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_BROADCAST_STATE;
+}

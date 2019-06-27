@@ -3,16 +3,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import axios from 'src/utils/axios';
-
 import RoomList from './List';
 
 import {
   fillActiveAction,
   fetchRoomsListAction,
-  fillNowPlayingAction,
-  fillRoomAction,
-  fillBroadcastAction,
+  resetNowPlayingStateAction,
+  resetRoomStateAction,
+  resetBroadcastStateAction,
 } from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
@@ -34,9 +32,9 @@ interface IRoomsState {
 interface IRoomsProps {
   fillActiveAction: typeof fillActiveAction;
   fetchRoomsListAction: typeof fetchRoomsListAction;
-  fillNowPlayingAction: typeof fillNowPlayingAction;
-  fillRoomAction: typeof fillRoomAction;
-  fillBroadcastAction: typeof fillBroadcastAction;
+  resetNowPlayingStateAction: typeof resetNowPlayingStateAction;
+  resetRoomStateAction: typeof resetRoomStateAction;
+  resetBroadcastStateAction: typeof resetBroadcastStateAction;
 }
 
 class Rooms extends React.Component<IRoomsProps, IRoomsState> {
@@ -62,24 +60,9 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
   }
 
   clearReduxState = () => {
-    this.props.fillNowPlayingAction({
-      songId: '',
-      streamUrl: '',
-      timestamp: '',
-    });
-    this.props.fillRoomAction({
-      _id: '',
-      members: [],
-      requests: [],
-      name: '',
-      master: '',
-    });
-    this.props.fillBroadcastAction({
-      streamUrl: '',
-      songId: '',
-      status: false,
-      lengthSeconds: 0,
-    });
+    this.props.resetBroadcastStateAction();
+    this.props.resetNowPlayingStateAction();
+    this.props.resetRoomStateAction();
   };
 
   handleDetailsView = (roomId: string) => {
@@ -122,18 +105,18 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillActiveAction: typeof fillActiveAction;
     fetchRoomsListAction: typeof fetchRoomsListAction;
-    fillNowPlayingAction: typeof fillNowPlayingAction;
-    fillRoomAction: typeof fillRoomAction;
-    fillBroadcastAction: typeof fillBroadcastAction;
+    resetNowPlayingStateAction: typeof resetNowPlayingStateAction;
+    resetRoomStateAction: typeof resetRoomStateAction;
+    resetBroadcastStateAction: typeof resetBroadcastStateAction;
   }>
 ) =>
   bindActionCreators(
     {
       fillActiveAction,
       fetchRoomsListAction,
-      fillNowPlayingAction,
-      fillRoomAction,
-      fillBroadcastAction,
+      resetNowPlayingStateAction,
+      resetRoomStateAction,
+      resetBroadcastStateAction,
     },
     dispatch
   );

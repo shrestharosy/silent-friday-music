@@ -17,7 +17,9 @@ const initialBroadcastReduxState: IBroadcastReduxState = {
 
 export type IFillBroadcastActionPayload = IBroadcastReduxState;
 
-type BroadcastActionType = ActionType<typeof ActionConstants.FILL_BROADCAST_ACTION, IFillBroadcastActionPayload>;
+type BroadcastActionType =
+  | ActionType<typeof ActionConstants.FILL_BROADCAST_ACTION, IFillBroadcastActionPayload>
+  | ActionType<typeof ActionConstants.RESET_BROADCAST_STATE, {}>;
 
 const broadcastReducer = (state = initialBroadcastReduxState, action: BroadcastActionType) => {
   switch (action.type) {
@@ -25,6 +27,11 @@ const broadcastReducer = (state = initialBroadcastReduxState, action: BroadcastA
       return {
         ...state,
         ...action.payload,
+      };
+    }
+    case ActionConstants.RESET_BROADCAST_STATE: {
+      return {
+        ...initialBroadcastReduxState,
       };
     }
     default: {

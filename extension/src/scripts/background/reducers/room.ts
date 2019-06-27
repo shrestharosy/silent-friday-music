@@ -20,7 +20,9 @@ const initialroomReduxState: IRoomReduxState = {
 
 export type IFillRoomActionPayload = IRoomReduxState;
 
-type RoomActionType = ActionType<typeof ActionConstants.FILL_ROOM_ACTION, IFillRoomActionPayload>;
+type RoomActionType =
+  | ActionType<typeof ActionConstants.FILL_ROOM_ACTION, IFillRoomActionPayload>
+  | ActionType<typeof ActionConstants.RESET_ROOM_STATE, {}>;
 
 const roomReducer = (state = initialroomReduxState, action: RoomActionType) => {
   switch (action.type) {
@@ -28,6 +30,11 @@ const roomReducer = (state = initialroomReduxState, action: RoomActionType) => {
       return {
         ...state,
         ...action.payload,
+      };
+    }
+    case ActionConstants.RESET_ROOM_STATE: {
+      return {
+        ...initialroomReduxState,
       };
     }
     default: {

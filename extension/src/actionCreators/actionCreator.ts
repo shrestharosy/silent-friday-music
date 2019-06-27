@@ -174,3 +174,21 @@ export function removeFinishedSongAction(
     reject,
   };
 }
+
+export function resetNowPlayingStateAction(): ActionTypes.ResetNowPlayingStateType {
+  return {
+    type: actionConstants.RESET_NOW_PLAYING_STATE,
+  };
+}
+
+export function resetRoomStateAction(): ActionTypes.ResetRoomStateType {
+  return {
+    type: actionConstants.RESET_ROOM_STATE,
+  };
+}
+
+export function resetBroadcastStateAction(): ActionTypes.ResetBroadcastStateType {
+  return {
+    type: actionConstants.RESET_BROADCAST_STATE,
+  };
+}
