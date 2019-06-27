@@ -14,6 +14,7 @@ import Player from './Player';
 import { BROADCAST_SONG_TIMESTAMP, UPDATE_NOW_PLAYING } from 'src/constants/socket';
 import { IBroadcastReduxState } from '../../reducers/broadcast';
 import { INowPlayingReduxState } from '../../reducers/nowPlaying';
+import { removeFinishedSong } from 'src/sagas/room/apis';
 
 interface ITimeKeeperProps {
   room: IRoomReduxState;
@@ -80,7 +81,7 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
     const { songId, streamUrl, lengthSeconds } = this.props.broadcast;
     const { _id: roomId } = this.props.room;
 
-    if (timestamp >= lengthSeconds) {
+    if (roomId && lengthSeconds && timestamp >= lengthSeconds) {
       console.log(timestamp, lengthSeconds, 'Partys over');
       this.changeSong();
     }
@@ -101,15 +102,21 @@ class TimeKeeper extends React.Component<ITimeKeeperProps> {
   };
 
   changeSong = () => {
-    const { _id: roomId } = this.props.room;
     const { _id: songId, streamUrl, lengthSeconds } = this.getNextSong();
-    setTimeout(() => {
-      this.props.fillBroadcastAction({ streamUrl, songId, status: true, lengthSeconds });
-      const resp = new Promise((resolve, reject) => {
-        return this.props.removeFinishedSongAction({ roomId, songId }, resolve, reject);
-      });
-      console.log(resp);
+    setTimeout(async () => {
+      await this.removeSongFromPlaylist();
+      await this.props.fillBroadcastAction({ streamUrl, songId, status: true, lengthSeconds });
     }, config.ApiEnv.songChangeBufferTime);
+  };
+
+  removeSongFromPlaylist = async () => {
+    try {
+      const { _id: roomId } = this.props.room;
+      const { _id: songId } = this.getNowPlaying();
+      await removeFinishedSong({ roomId, songId });
+    } catch (error) {
+      console.log('removeSongFromPlaylist', error);
+    }
   };
 
   render() {
