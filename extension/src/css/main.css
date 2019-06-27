@@ -225,6 +225,10 @@ input {
   padding-top: 6px;
 }
 
+.is-muted {
+  background: rgba(0,0,0,0.2) !important;
+}
+
 .dash-buttons span {
   margin: 5px;
   background: var(--primary-color);
