@@ -3,8 +3,13 @@ import { Router } from 'express';
 import * as roomServices from '../services/room';
 import * as songControllers from '../controllers/song';
 import { IVerifiedRequest } from '../middlewares/verifyToken';
+import validateCreateRoom from '../middlewares/validation';
+import validationMiddleware from '../middlewares/validation';
+import { createRoomSchema } from '../validationSchema/room';
 
 const roomsRouter = Router();
+
+const roomValidationMiddleware = validationMiddleware(createRoomSchema);
 
 roomsRouter.get('/', async (req: IVerifiedRequest, res) => {
   try {
@@ -41,7 +46,7 @@ roomsRouter.get('/:roomId', async (req, res) => {
   }
 });
 
-roomsRouter.post('/', async (req: IVerifiedRequest, res) => {
+roomsRouter.post('/', roomValidationMiddleware, async (req: IVerifiedRequest, res, next) => {
   try {
     const { body } = req;
     const { auth = { userId: '' } } = req;
@@ -52,9 +57,10 @@ roomsRouter.post('/', async (req: IVerifiedRequest, res) => {
     });
     res.json(createdRoom);
   } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
+    next(error);
+    // res.status(500).send({
+    //   message: error.message
+    // });
   }
 });
 
