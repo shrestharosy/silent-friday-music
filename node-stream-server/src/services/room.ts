@@ -1,3 +1,4 @@
+import { Mongoose, Schema } from 'mongoose';
 import RoomModel, { IRoom, IRoomUpdate } from '../models/room';
 import getSocketInstance from '../services/socket';
 import {
@@ -66,6 +67,24 @@ export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
     const updatedRoom = await RoomModel.findByIdAndUpdate(
       { _id: roomId },
       { name, master, $push: { members, requests } },
+      { new: true }
+    ).populate('requests');
+    if (updatedRoom) {
+      return updatedRoom;
+    } else {
+      throw new Error("Room doesn't exist for a given id. Room couldn't be updated.");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteCompletedSong(roomId: string, songId: string) {
+  try {
+    const { name, master, members } = await getRoomById(roomId);
+    const updatedRoom = await RoomModel.findByIdAndUpdate(
+      { _id: roomId },
+      { name, master, members, $pull: { requests: songId } },
       { new: true }
     ).populate('requests');
     if (updatedRoom) {

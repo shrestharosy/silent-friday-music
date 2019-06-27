@@ -10,6 +10,8 @@ import {
   fetchRoomInfoAction,
   leaveRoomAction,
   fillActiveAction,
+  fillNowPlayingAction,
+  fillBroadcastAction,
 } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
@@ -37,11 +39,13 @@ interface IRoomProps {
   roomId: string;
   songId: string;
   fillRoomAction: typeof fillRoomAction;
+  fillNowPlayingAction: typeof fillNowPlayingAction;
   addToPlaylistAction: typeof addToPlaylistAction;
   fetchRoomInfoAction: typeof fetchRoomInfoAction;
   fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
   leaveRoomAction: typeof leaveRoomAction;
   fillActiveAction: typeof fillActiveAction;
+  fillBroadcastAction: typeof fillBroadcastAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -206,6 +210,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
 const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
+    fillNowPlayingAction: typeof fillNowPlayingAction;
     addToPlaylistAction: typeof addToPlaylistAction;
     fetchRoomInfoAction: typeof fetchRoomInfoAction;
     fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
@@ -216,11 +221,13 @@ const mapDispatchToProps = (
   bindActionCreators(
     {
       fillRoomAction,
+      fillNowPlayingAction,
       addToPlaylistAction,
       fetchRoomInfoAction,
       fetchCurrentSongDetailsAction,
       leaveRoomAction,
       fillActiveAction,
+      fillBroadcastAction,
     },
     dispatch
   );

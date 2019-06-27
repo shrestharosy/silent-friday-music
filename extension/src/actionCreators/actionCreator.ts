@@ -8,7 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
-import { ICreateRoomPayload } from 'src/sagas/room/apis';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload } from 'src/sagas/room/apis';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -156,6 +156,19 @@ export function createRoomAction(
 export function leaveRoomAction(payload: string, resolve?: Function, reject?: Function): ActionTypes.LeaveRoomAction {
   return {
     type: actionConstants.LEAVE_ROOM_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function removeFinishedSongAction(
+  payload: IRemoveFinishedSongPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.RemoveFinishedSongType {
+  return {
+    type: actionConstants.REMOVE_FINISHED_SONG,
     payload,
     resolve,
     reject,

@@ -84,6 +84,19 @@ roomsRouter.patch('/:roomId', async (req, res) => {
   }
 });
 
+roomsRouter.patch('/:roomId/removeSong', async (req, res) => {
+  try {
+    const roomId = req.params.roomId;
+    const songId = req.body.songId;
+    const updatedRoom = await roomServices.deleteCompletedSong(roomId, songId);
+    res.json(updatedRoom);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+});
+
 roomsRouter.post('/:roomId/songs', async (req, res) => {
   const roomId = req.params.roomId;
   const { url } = req.body;

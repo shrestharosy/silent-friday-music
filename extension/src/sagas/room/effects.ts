@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects';
 
 import * as ActionCreatorsTypes from '../../actionCreators/actionCreator.d';
 import * as ActionCreators from 'src/actionCreators/actionCreator';
-import { createRoomAPI } from './apis';
+import { createRoomAPI, removeFinishedSong } from './apis';
 import { fetchRoomsList, fetchRoomInfo } from 'src/sagas/room/apis';
 import { leaveRoomAPI } from './apis';
 
@@ -51,6 +51,19 @@ export function* fetchRoomInfoEffect(action: ActionCreatorsTypes.FetchRoomInfoAc
 export function* leaveRoomEffect(action: ActionCreatorsTypes.LeaveRoomAction) {
   try {
     const data = yield call(leaveRoomAPI, action.payload);
+    if (action.resolve) {
+      action.resolve(data);
+    }
+  } catch (error) {
+    if (action.reject) {
+      action.reject(error);
+    }
+  }
+}
+
+export function* removeFinishedSongEffect(action: ActionCreatorsTypes.RemoveFinishedSongType) {
+  try {
+    const data = yield call(removeFinishedSong, action.payload);
     if (action.resolve) {
       action.resolve(data);
     }
