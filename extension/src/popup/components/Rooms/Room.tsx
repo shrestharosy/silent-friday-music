@@ -93,19 +93,23 @@ class Room extends React.Component<IRoomProps, IMainState> {
     event.preventDefault();
 
     const { searchLink } = this.state;
-    sendActionToBackground({
-      type: 'LOAD_AUDIO',
-      data: {
-        requestUrl: this.state.searchLink,
-      },
-    });
 
     this.addToPlaylist(searchLink);
   };
 
-  addToPlaylist = (url: string) => {
-    const { roomId, addToPlaylistAction } = this.props;
-    addToPlaylistAction({ roomId, url });
+  addToPlaylist = async (url: string) => {
+    try {
+      await new Promise((resolve, reject) => {
+        this.props.addToPlaylistAction(
+          {
+            roomId: this.props.roomId,
+            url,
+          },
+          resolve,
+          reject
+        );
+      });
+    } catch (error) {}
   };
 
   fetchRoomDetails = async () => {
