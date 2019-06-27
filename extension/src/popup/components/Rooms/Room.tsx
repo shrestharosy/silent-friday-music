@@ -26,12 +26,14 @@ import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { INowPlayingReduxState } from 'src/scripts/background/reducers/nowPlaying';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
+import AddMembers from './AddMembers/AddMembers';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
   currentRoom: IRoom | null;
   showPlaylist: boolean;
+  showAddMembers: boolean;
   currentSong: ISong | null;
 }
 
@@ -56,6 +58,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       searchLink: '',
       currentRoom: null,
       showPlaylist: false,
+      showAddMembers: false,
       currentSong: null,
     };
   }
@@ -140,6 +143,12 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }));
   };
 
+  toggleAddMembers = () => {
+    this.setState(prevState => ({
+      showAddMembers: !prevState.showAddMembers,
+    }));
+  };
+
   handleLeaveRoom = async () => {
     try {
       await new Promise((resolve, reject) => {
@@ -155,7 +164,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, currentRoom, showPlaylist, currentSong } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong, showAddMembers } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -166,7 +175,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               <span>
                 <FontAwesomeIcon icon={faVolumeMute} />
               </span>
-              <span>
+              <span onClick={this.toggleAddMembers}>
                 <FontAwesomeIcon icon={faUserPlus} />
               </span>
               <span onClick={this.handleLeaveRoom}>
@@ -202,6 +211,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
           togglePlaylist={this.togglePlaylist}
           currentSongId={currentSong && currentSong._id}
         />
+        <AddMembers roomId={roomId} showAddMembers={showAddMembers} toggleAddMembers={this.toggleAddMembers} />
       </React.Fragment>
     );
   }

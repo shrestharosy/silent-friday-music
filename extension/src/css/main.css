@@ -552,6 +552,12 @@ input {
   transition: 0.3s ease;
   cursor: pointer;
 }
+
 .back-icon:hover {
   color: var(--primary-color);
+}
+
+.add-member-form-wrapper {
+  padding: 20px;
+  height: 100%;
 }
