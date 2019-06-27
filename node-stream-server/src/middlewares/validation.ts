@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 import { Response, NextFunction } from 'express';
 import { IVerifiedRequest } from './verifyToken';
-import { handleErrorObjet } from '../utils/error';
+import { handleErrorObject } from '../utils/error';
 
 export default function validationMiddleware(schema: Joi.SchemaLike) {
   return function(request: IVerifiedRequest, response: Response, next: NextFunction) {
@@ -10,15 +10,14 @@ export default function validationMiddleware(schema: Joi.SchemaLike) {
 
     Joi.validate(body, schema, (err, value) => {
       if (err) {
-        response.status(422).send({
-          status: 'error',
-          errorMessage: handleErrorObjet(err),
+        next({
+          status: 400,
+          error: {
+            message: handleErrorObject(err),
+          },
         });
       } else {
-        response.json({
-          status: 'success',
-          message: 'Room created successfully',
-        });
+        next();
       }
     });
   };
