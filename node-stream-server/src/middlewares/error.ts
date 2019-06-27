@@ -8,7 +8,7 @@ interface IErrorRequest extends ErrorRequestHandler {
 }
 
 export function errorHandler(err: IErrorRequest, req: Request, res: Response, next: NextFunction) {
-  if (err.error.status) {
+  if (err.error && err.error.status) {
     const { status, message } = err.error;
     res.status(status).send({
       message,

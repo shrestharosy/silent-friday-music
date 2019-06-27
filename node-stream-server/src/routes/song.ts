@@ -18,7 +18,7 @@ songsRouter.get(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware

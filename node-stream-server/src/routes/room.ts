@@ -27,7 +27,7 @@ roomsRouter.get(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -51,7 +51,7 @@ roomsRouter.get(
 
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -75,7 +75,7 @@ roomsRouter.post(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -94,7 +94,7 @@ roomsRouter.put(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -114,7 +114,7 @@ roomsRouter.patch(
 
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -133,7 +133,7 @@ roomsRouter.patch(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -156,7 +156,7 @@ roomsRouter.post(
 
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
@@ -173,7 +173,7 @@ roomsRouter.get(
       };
       next();
     } catch (error) {
-      next(error);
+      next(error.message);
     }
   },
   responseMiddleware
