@@ -1,13 +1,31 @@
-version: '3'
-services:
-   app:
-     build: .
-     ports:
-      - '3002:3002'
-     volumes:
-       - $PWD:/app/
-     container_name: sfm-server-node
-   db:
-     image: mongo
-     ports:
-     - '8001:27017'
+version: '3.0'
+services: 
+  backend:
+    build:
+      context: .
+    container_name: sfm_node
+    env_file:
+     - /home/ubuntu/env/.env
+    ports:
+      - '8080:3002'
+    networks:
+      - sfm_network
+    volumes:
+      - /home/ubuntu/node_volume:/app
+
+  mongo:
+    image: mongo:3.4
+    container_name: sfm_mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - sfm_network
+    restart: always
+    env_file:
+      - /home/ubuntu/env/.mongoenv
+    volumes:
+      - /home/ubuntu/mongo_volume:/data/db
+
+networks:
+  sfm_network:
+    driver: bridge
