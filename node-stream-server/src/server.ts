@@ -5,7 +5,7 @@ import getSocketInstance from './services/socket';
 import initializeSockerListeners from './socket';
 
 const { dbUrl } = config.mongo;
-mongoose.connect(dbUrl, {
+mongoose.connect(`${dbUrl}?authSource=admin`, {
   useNewUrlParser: true,
   useFindAndModify: false,
   user: config.mongo.mongoUsername,
