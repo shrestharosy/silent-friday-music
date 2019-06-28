@@ -63,22 +63,21 @@ export async function getSongDetails(url: string) {
 
 export async function addSong(url: string) {
   try {
-    const songs = await searchByUrl(url);
-    if (songs) {
-      return songs[0];
-    } else {
-      const songDetails = await getSongDetails(url);
-      const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
+    // const songs = await searchByUrl(url);
+    // if (songs) {
+    //   return songs[0];
+    // } else {
+    const songDetails = await getSongDetails(url);
+    const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
 
-      const song = new SongModel({
-        title,
-        thumbnailUrl,
-        streamUrl,
-        lengthSeconds,
-      });
-      const addedSong: ISong = await song.save();
-      return addedSong;
-    }
+    const song = new SongModel({
+      title,
+      thumbnailUrl,
+      streamUrl,
+      lengthSeconds,
+    });
+    const addedSong: ISong = await song.save();
+    return addedSong;
   } catch (error) {
     throw error;
   }
