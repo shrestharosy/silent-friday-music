@@ -15,7 +15,9 @@ const initialState: INowPlayingReduxState = {
 
 export type IFillNowPlayingActionPayload = INowPlayingReduxState;
 
-type NowPlayingActionType = ActionType<typeof ActionConstants.FILL_NOW_PLAYING_ACTION, IFillNowPlayingActionPayload>;
+type NowPlayingActionType =
+  | ActionType<typeof ActionConstants.FILL_NOW_PLAYING_ACTION, IFillNowPlayingActionPayload>
+  | ActionType<typeof ActionConstants.RESET_NOW_PLAYING_STATE, {}>;
 
 const nowPlayingReducer = (state = initialState, action: NowPlayingActionType) => {
   switch (action.type) {
@@ -23,6 +25,10 @@ const nowPlayingReducer = (state = initialState, action: NowPlayingActionType) =
       return {
         ...state,
         ...action.payload,
+      };
+    case ActionConstants.RESET_NOW_PLAYING_STATE:
+      return {
+        ...initialState,
       };
     default:
       return state;

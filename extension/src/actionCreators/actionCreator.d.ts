@@ -8,6 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from 'src/scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload, IAddMembersToRoomPayload } from 'src/sagas/room/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -62,9 +63,18 @@ export interface FetchProfileAction extends ActionCallbacks {
   type: typeof actionConstants.FETCH_PROFILE_ACTION;
 }
 
-export interface FillNowPlayingAction {
+export interface FillNowPlayingActionType {
   type: typeof actionConstants.FILL_NOW_PLAYING_ACTION;
   payload: IFillNowPlayingActionPayload;
+}
+
+export interface FetchUsersActionType extends ActionCallbacks {
+  type: typeof actionConstants.FETCH_USERS;
+}
+
+export interface CreateRoomActionType extends ActionCallbacks {
+  type: typeof actionConstants.CREATE_ROOM;
+  payload: ICreateRoomPayload;
 }
 
 export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
@@ -75,4 +85,26 @@ export interface FetchCurrentSongDetailsAction extends ActionCallbacks {
 export interface LeaveRoomAction extends ActionCallbacks {
   type: typeof actionConstants.LEAVE_ROOM_ACTION;
   payload: string;
+}
+
+export interface RemoveFinishedSongType extends ActionCallbacks {
+  type: typeof actionConstants.REMOVE_FINISHED_SONG;
+  payload: IRemoveFinishedSongPayload;
+}
+
+export interface ResetNowPlayingStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_NOW_PLAYING_STATE;
+}
+
+export interface ResetRoomStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_ROOM_STATE;
+}
+
+export interface ResetBroadcastStateType extends ActionCallbacks {
+  type: typeof actionConstants.RESET_BROADCAST_STATE;
+}
+
+export interface AddMembersToRoomType extends ActionCallbacks {
+  type: typeof actionConstants.ADD_MEMBERS_TO_ROOM;
+  payload: IAddMembersToRoomPayload;
 }

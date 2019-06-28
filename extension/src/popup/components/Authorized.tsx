@@ -17,11 +17,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
+import CreateRoom from './Rooms/Create';
 
 const mapStateToProps = ({ profile }: IReduxState) => ({ profile });
 
 const mapDispatchToProps = (
-  dispatch: Dispatch<{ fillActiveAction: typeof fillActiveAction; fetchProfileAction: typeof fetchProfileAction }>
+  dispatch: Dispatch<{
+    fillActiveAction: typeof fillActiveAction;
+    fetchProfileAction: typeof fetchProfileAction;
+  }>
 ) => bindActionCreators({ fillActiveAction, fetchProfileAction }, dispatch);
 
 interface IUserProps {
@@ -43,13 +47,19 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
         this.props.fetchProfileAction(resolve, reject);
       });
     } catch (error) {
-      console.log(error);
+      this.props.fillActiveAction({
+        component: AvailableComponents.LOGIN,
+        id: '',
+      });
     }
   }
 
   logout = () => {
     storageUtils.clearStorage();
-    this.props.fillActiveAction({ component: AvailableComponents.LOGIN, id: '' });
+    this.props.fillActiveAction({
+      component: AvailableComponents.LOGIN,
+      id: '',
+    });
   };
 
   render() {
@@ -66,7 +76,7 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
         </div>
         {component === AvailableComponents.ROOM_LIST && <Rooms />}
         {component === AvailableComponents.ROOM_DETAILS && <Room roomId={id} />}
-        {component === AvailableComponents.CREATE_ROOM && <p>Create a room</p>}
+        {component === AvailableComponents.CREATE_ROOM && <CreateRoom />}
       </React.Fragment>
     );
   }

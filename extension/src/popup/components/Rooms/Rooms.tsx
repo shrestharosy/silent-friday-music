@@ -3,11 +3,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import axios from 'src/utils/axios';
-
 import RoomList from './List';
 
-import { fillActiveAction, fetchRoomsListAction } from 'src/actionCreators/actionCreator';
+import {
+  fillActiveAction,
+  fetchRoomsListAction,
+  resetNowPlayingStateAction,
+  resetRoomStateAction,
+  resetBroadcastStateAction,
+} from 'src/actionCreators/actionCreator';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,6 +32,9 @@ interface IRoomsState {
 interface IRoomsProps {
   fillActiveAction: typeof fillActiveAction;
   fetchRoomsListAction: typeof fetchRoomsListAction;
+  resetNowPlayingStateAction: typeof resetNowPlayingStateAction;
+  resetRoomStateAction: typeof resetRoomStateAction;
+  resetBroadcastStateAction: typeof resetBroadcastStateAction;
 }
 
 class Rooms extends React.Component<IRoomsProps, IRoomsState> {
@@ -41,6 +48,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
   async componentDidMount() {
     try {
+      await this.clearReduxState();
       const rooms = await new Promise<Array<IRoom>>((resolve, reject) => {
         this.props.fetchRoomsListAction(resolve, reject);
       });
@@ -51,8 +59,24 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
     } catch (error) {}
   }
 
+  clearReduxState = () => {
+    this.props.resetBroadcastStateAction();
+    this.props.resetNowPlayingStateAction();
+    this.props.resetRoomStateAction();
+  };
+
   handleDetailsView = (roomId: string) => {
-    this.props.fillActiveAction({ component: AvailableComponents.ROOM_DETAILS, id: roomId });
+    this.props.fillActiveAction({
+      component: AvailableComponents.ROOM_DETAILS,
+      id: roomId,
+    });
+  };
+
+  handleCreateRoom = () => {
+    this.props.fillActiveAction({
+      component: AvailableComponents.CREATE_ROOM,
+      id: '',
+    });
   };
 
   render() {
@@ -60,7 +84,7 @@ class Rooms extends React.Component<IRoomsProps, IRoomsState> {
 
     return (
       <React.Fragment>
-        <div className="button-wrapper">
+        <div className="button-wrapper" onClick={() => this.handleCreateRoom()}>
           <span>CREATE NEW ROOM</span>
           <span className="button-icon">
             <FontAwesomeIcon icon={faPlusCircle} />
@@ -81,8 +105,21 @@ const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillActiveAction: typeof fillActiveAction;
     fetchRoomsListAction: typeof fetchRoomsListAction;
+    resetNowPlayingStateAction: typeof resetNowPlayingStateAction;
+    resetRoomStateAction: typeof resetRoomStateAction;
+    resetBroadcastStateAction: typeof resetBroadcastStateAction;
   }>
-) => bindActionCreators({ fillActiveAction, fetchRoomsListAction }, dispatch);
+) =>
+  bindActionCreators(
+    {
+      fillActiveAction,
+      fetchRoomsListAction,
+      resetNowPlayingStateAction,
+      resetRoomStateAction,
+      resetBroadcastStateAction,
+    },
+    dispatch
+  );
 
 export default connect(
   null,

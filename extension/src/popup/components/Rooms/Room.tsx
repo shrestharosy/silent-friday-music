@@ -10,6 +10,8 @@ import {
   fetchRoomInfoAction,
   leaveRoomAction,
   fillActiveAction,
+  fillNowPlayingAction,
+  fillBroadcastAction,
 } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
@@ -24,12 +26,14 @@ import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { INowPlayingReduxState } from 'src/scripts/background/reducers/nowPlaying';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
+import AddMembers from './AddMembers/AddMembers';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
   currentRoom: IRoom | null;
   showPlaylist: boolean;
+  showAddMembers: boolean;
   currentSong: ISong | null;
 }
 
@@ -37,11 +41,13 @@ interface IRoomProps {
   roomId: string;
   songId: string;
   fillRoomAction: typeof fillRoomAction;
+  fillNowPlayingAction: typeof fillNowPlayingAction;
   addToPlaylistAction: typeof addToPlaylistAction;
   fetchRoomInfoAction: typeof fetchRoomInfoAction;
   fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
   leaveRoomAction: typeof leaveRoomAction;
   fillActiveAction: typeof fillActiveAction;
+  fillBroadcastAction: typeof fillBroadcastAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -52,6 +58,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       searchLink: '',
       currentRoom: null,
       showPlaylist: false,
+      showAddMembers: false,
       currentSong: null,
     };
   }
@@ -89,19 +96,23 @@ class Room extends React.Component<IRoomProps, IMainState> {
     event.preventDefault();
 
     const { searchLink } = this.state;
-    sendActionToBackground({
-      type: 'LOAD_AUDIO',
-      data: {
-        requestUrl: this.state.searchLink,
-      },
-    });
 
     this.addToPlaylist(searchLink);
   };
 
-  addToPlaylist = (url: string) => {
-    const { roomId, addToPlaylistAction } = this.props;
-    addToPlaylistAction({ roomId, url });
+  addToPlaylist = async (url: string) => {
+    try {
+      await new Promise((resolve, reject) => {
+        this.props.addToPlaylistAction(
+          {
+            roomId: this.props.roomId,
+            url,
+          },
+          resolve,
+          reject
+        );
+      });
+    } catch (error) {}
   };
 
   fetchRoomDetails = async () => {
@@ -136,6 +147,12 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }));
   };
 
+  toggleAddMembers = () => {
+    this.setState(prevState => ({
+      showAddMembers: !prevState.showAddMembers,
+    }));
+  };
+
   handleLeaveRoom = async () => {
     try {
       await new Promise((resolve, reject) => {
@@ -151,7 +168,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, currentRoom, showPlaylist, currentSong } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong, showAddMembers } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -162,7 +179,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               <span>
                 <FontAwesomeIcon icon={faVolumeMute} />
               </span>
-              <span>
+              <span onClick={this.toggleAddMembers}>
                 <FontAwesomeIcon icon={faUserPlus} />
               </span>
               <span onClick={this.handleLeaveRoom}>
@@ -198,6 +215,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
           togglePlaylist={this.togglePlaylist}
           currentSongId={currentSong && currentSong._id}
         />
+        <AddMembers roomId={roomId} showAddMembers={showAddMembers} toggleAddMembers={this.toggleAddMembers} />
       </React.Fragment>
     );
   }
@@ -206,6 +224,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
 const mapDispatchToProps = (
   dispatch: Dispatch<{
     fillRoomAction: typeof fillRoomAction;
+    fillNowPlayingAction: typeof fillNowPlayingAction;
     addToPlaylistAction: typeof addToPlaylistAction;
     fetchRoomInfoAction: typeof fetchRoomInfoAction;
     fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
@@ -216,11 +235,13 @@ const mapDispatchToProps = (
   bindActionCreators(
     {
       fillRoomAction,
+      fillNowPlayingAction,
       addToPlaylistAction,
       fetchRoomInfoAction,
       fetchCurrentSongDetailsAction,
       leaveRoomAction,
       fillActiveAction,
+      fillBroadcastAction,
     },
     dispatch
   );

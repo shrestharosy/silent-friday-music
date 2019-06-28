@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwtServices from '../utils/jwt';
+import { NOT_AUTHORIZED } from '../constants/errors';
 
 export interface IVerifiedRequest extends Request {
   auth?: {
@@ -23,7 +24,12 @@ async function verifyToken(request: IVerifiedRequest, response: Response, next: 
       }
     }
   } catch (error) {
-    response.status(403).send({ message: 'Not Authorized' });
+    next({
+      error: {
+        status: 403,
+        message: NOT_AUTHORIZED,
+      },
+    });
   }
 }
 

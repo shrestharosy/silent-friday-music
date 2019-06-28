@@ -1,7 +1,16 @@
+import { Mongoose, Schema } from 'mongoose';
 import RoomModel, { IRoom, IRoomUpdate } from '../models/room';
 import getSocketInstance from '../services/socket';
-import { BROADCAST_MASTER_SELECTION_REQUEST, REQUEST_TO_BE_MASTER } from '../../../extension/src/constants/socket';
+import {
+  BROADCAST_MASTER_SELECTION_REQUEST,
+  REQUEST_TO_BE_MASTER,
+  CHECK_MASTER_IS_ONLINE,
+  ACK_MASTER_IS_ONLINE,
+  UPDATE_ROOM_DETAILS,
+} from '../../../extension/src/constants/socket';
 import { ISocketRequest, getSocketIds } from '../socket';
+import { Document } from 'mongoose';
+import config from '../config';
 
 interface IRoomQueryParams {
   search?: string;
@@ -10,11 +19,12 @@ interface IRoomQueryParams {
 
 export async function createRoom(newRoom: IRoom) {
   try {
-    const { name, members = [], requests = [] } = newRoom;
+    const { name, members = [], requests = [], master } = newRoom;
     const room = new RoomModel({
       name,
       members,
       requests,
+      master,
     });
     const createdRoom: IRoom = await room.save();
     return createdRoom;
@@ -26,7 +36,6 @@ export async function createRoom(newRoom: IRoom) {
 export async function getAllRooms(queryParams: IRoomQueryParams = { search: '', userId: '' }) {
   try {
     const { search = '', userId = '' } = queryParams;
-
     const searchRegex = new RegExp(search, 'i');
     const roomList: Array<IRoom> = await RoomModel.find({ name: searchRegex, members: userId });
 
@@ -70,6 +79,24 @@ export async function updateRoom(roomId: string, updateRoom: IRoomUpdate) {
   }
 }
 
+export async function deleteCompletedSong(roomId: string, songId: string) {
+  try {
+    const { name, master, members } = await getRoomById(roomId);
+    const updatedRoom = await RoomModel.findByIdAndUpdate(
+      { _id: roomId },
+      { name, master, members, $pull: { requests: songId } },
+      { new: true }
+    ).populate('requests');
+    if (updatedRoom) {
+      return updatedRoom;
+    } else {
+      throw new Error("Room doesn't exist for a given id. Room couldn't be updated.");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function selectMaster(roomId: string) {
   try {
     const { members } = await getRoomById(roomId);
@@ -92,7 +119,8 @@ export async function selectMaster(roomId: string) {
       potentialMasterIds.push(userId);
       if (potentialMasterIds.length === 1) {
         try {
-          await updateRoom(roomId, { master: userId });
+          const updatedRoom = await updateRoom(roomId, { master: userId });
+          ioInstance.emit(roomId, { type: UPDATE_ROOM_DETAILS, payload: updatedRoom });
         } catch (error) {
           throw error;
         }
@@ -104,6 +132,40 @@ export async function selectMaster(roomId: string) {
 
       activeSocket.once(JSON.stringify({ type: REQUEST_TO_BE_MASTER, roomId }), masterRequestCallBack);
     });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function isMasterActiveInRoom(room: IRoom & Document) {
+  try {
+    const ioInstance = getSocketInstance().getIOInstance();
+
+    const [masterSocketId] = getSocketIds([room.master]);
+
+    if (!masterSocketId) {
+      selectMaster(room._id);
+    } else {
+      const activeSockets = ioInstance.sockets.sockets;
+
+      let shouldSelectNewMaster = true;
+
+      activeSockets[masterSocketId].once(
+        JSON.stringify({ type: ACK_MASTER_IS_ONLINE, roomId: room._id }),
+        (request: ISocketRequest) => {
+          if (!!request.message && !!request.receiverId) {
+            shouldSelectNewMaster = false;
+          }
+        }
+      );
+      setTimeout(() => {
+        if (shouldSelectNewMaster) {
+          selectMaster(room._id);
+        }
+      }, +config.masterResponseTimeTolerance);
+
+      ioInstance.emit(room._id, { type: CHECK_MASTER_IS_ONLINE });
+    }
   } catch (error) {
     console.log(error);
   }

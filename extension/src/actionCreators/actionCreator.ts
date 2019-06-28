@@ -8,6 +8,7 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload, IAddMembersToRoomPayload } from 'src/sagas/room/apis';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -112,13 +113,20 @@ export function fetchProfileAction(resolve?: Function, reject?: Function): Actio
   };
 }
 
-export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingAction {
+export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingActionType {
   return {
     type: actionConstants.FILL_NOW_PLAYING_ACTION,
     payload,
   };
 }
 
+export function fetchUsersAction(resolve?: Function, reject?: Function): ActionTypes.FetchUsersActionType {
+  return {
+    type: actionConstants.FETCH_USERS,
+    resolve,
+    reject,
+  };
+}
 export function fetchCurrentSongDetailsAction(
   payload: string,
   resolve?: Function,
@@ -132,9 +140,66 @@ export function fetchCurrentSongDetailsAction(
   };
 }
 
+export function createRoomAction(
+  payload: ICreateRoomPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.CreateRoomActionType {
+  return {
+    type: actionConstants.CREATE_ROOM,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
 export function leaveRoomAction(payload: string, resolve?: Function, reject?: Function): ActionTypes.LeaveRoomAction {
   return {
     type: actionConstants.LEAVE_ROOM_ACTION,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function removeFinishedSongAction(
+  payload: IRemoveFinishedSongPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.RemoveFinishedSongType {
+  return {
+    type: actionConstants.REMOVE_FINISHED_SONG,
+    payload,
+    resolve,
+    reject,
+  };
+}
+
+export function resetNowPlayingStateAction(): ActionTypes.ResetNowPlayingStateType {
+  return {
+    type: actionConstants.RESET_NOW_PLAYING_STATE,
+  };
+}
+
+export function resetRoomStateAction(): ActionTypes.ResetRoomStateType {
+  return {
+    type: actionConstants.RESET_ROOM_STATE,
+  };
+}
+
+export function resetBroadcastStateAction(): ActionTypes.ResetBroadcastStateType {
+  return {
+    type: actionConstants.RESET_BROADCAST_STATE,
+  };
+}
+
+export function addMembersToRoomAction(
+  payload: IAddMembersToRoomPayload,
+  resolve?: Function,
+  reject?: Function
+): ActionTypes.AddMembersToRoomType {
+  return {
+    type: actionConstants.ADD_MEMBERS_TO_ROOM,
     payload,
     resolve,
     reject,

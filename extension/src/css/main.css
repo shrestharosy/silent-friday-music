@@ -9,12 +9,16 @@
 
 body {
   width: 500px;
-  height: 280px;
+  height: 363px;
   /* font-family: "Roboto", arial, sans-serif; */
   font-family: 'Open Sans', sans-serif;
   margin: 0;
   padding: 0;
   color: var(--primary-font-color);
+}
+
+button {
+  font-family: 'Open Sans', sans-serif;
 }
  
 /* Custom Scrollbars */
@@ -172,7 +176,8 @@ input {
   padding: 0;
   list-style-type: none;
   overflow-y: hidden;
-  max-height: 150px;
+  min-height: 185px;
+  max-height: 185px;
   font-size: 13px;
 }
 
@@ -218,6 +223,10 @@ input {
   float: right;
   display: block;
   padding-top: 6px;
+}
+
+.is-muted {
+  background: rgba(0,0,0,0.2) !important;
 }
 
 .dash-buttons span {
@@ -472,4 +481,87 @@ input {
 
 .close-icon:hover {
   cursor: pointer;
+}
+
+/* ======= PLAYLIST PANEL ======= */
+
+.new-room-wrapper {
+}
+
+.new-room-title-wrapper {
+  padding-top: 40px;
+  padding-bottom: 10px;
+}
+
+.new-room-title {
+  display: block;
+  text-align: center;
+  font-size: 18px;
+}
+
+.new-room-subtitle {
+  display: block;
+  text-align: center;
+  color: rgba(0,0,0,0.3);
+  margin-top: 10px;
+}
+
+.new-room-form-wrapper {
+  padding: 20px;
+}
+
+.name-input {
+  margin-bottom: 20px;
+  text-align: center;
+  width: 95%;
+  border: none;
+  background: rgba(94,94,94,0.1);
+  padding: 12px;
+}
+
+.user-select {
+  margin-bottom: 20px;
+}
+
+.create-button {
+  width: 100%;
+  text-align: center;
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  background: var(--primary-color);
+  color: rgb(255,255,255);
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+.create-button:hover {
+  cursor: pointer;
+}
+
+.create-button:disabled {
+  cursor: not-allowed;
+}
+
+.back-btn {
+  position: fixed;
+  top: 70px;
+  left: 30px;
+  border: 0;
+  background: none;
+}
+
+.back-btn:hover {
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.back-icon:hover {
+  color: var(--primary-color);
+}
+
+.add-member-form-wrapper {
+  padding: 20px;
+  height: 100%;
 }
