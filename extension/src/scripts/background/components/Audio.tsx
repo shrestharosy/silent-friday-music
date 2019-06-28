@@ -48,8 +48,7 @@ class Audio extends React.Component<IAudioProps, IAudioState> {
     }
   }
   render() {
-    const { url, mute = false } = this.props;
-
+    const { url, mute } = this.props;
     return <audio ref={this.audioRef} src={url} muted={mute} />;
   }
 }

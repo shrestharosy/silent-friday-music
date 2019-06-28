@@ -9,6 +9,7 @@ import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from '../scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
 import { ICreateRoomPayload, IRemoveFinishedSongPayload } from 'src/sagas/room/apis';
+import { IFillPlayerActionPayload } from '../scripts/background/reducers/player';
 
 export function fillBroadcastAction(payload: IFillBroadcastActionPayload): ActionTypes.FillBroadcastActionType {
   return {
@@ -116,6 +117,13 @@ export function fetchProfileAction(resolve?: Function, reject?: Function): Actio
 export function fillNowPlayingAction(payload: IFillNowPlayingActionPayload): ActionTypes.FillNowPlayingActionType {
   return {
     type: actionConstants.FILL_NOW_PLAYING_ACTION,
+    payload,
+  };
+}
+
+export function fillPlayerAction(payload: IFillPlayerActionPayload): ActionTypes.FillPlayerActionType {
+  return {
+    type: actionConstants.FILL_PLAYER_ACTION,
     payload,
   };
 }
