@@ -1,6 +1,6 @@
 import ytdl from 'ytdl-core';
 
-import SongModel, { ISong, ICreateSong } from '../models/song';
+import SongModel, { ISong } from '../models/song';
 import { getRoomById, updateRoom } from './room';
 
 export async function addToPlaylist(roomId: string, url: string) {
@@ -21,6 +21,15 @@ export async function getPlaylist(roomId: string) {
 export async function getSongById(songId: string) {
   try {
     const song = await SongModel.findById(songId);
+    return song;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function searchByUrl(url: string) {
+  try {
+    const song = await SongModel.find({ streamUrl: url });
     return song;
   } catch (error) {
     throw error;
@@ -54,16 +63,22 @@ export async function getSongDetails(url: string) {
 
 export async function addSong(url: string) {
   try {
-    const songDetails = await getSongDetails(url);
-    const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
-    const song = new SongModel({
-      title,
-      thumbnailUrl,
-      streamUrl,
-      lengthSeconds,
-    });
-    const addedSong: ISong = await song.save();
-    return addedSong;
+    const songs = await searchByUrl(url);
+    if (songs) {
+      return songs[0];
+    } else {
+      const songDetails = await getSongDetails(url);
+      const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
+
+      const song = new SongModel({
+        title,
+        thumbnailUrl,
+        streamUrl,
+        lengthSeconds,
+      });
+      const addedSong: ISong = await song.save();
+      return addedSong;
+    }
   } catch (error) {
     throw error;
   }

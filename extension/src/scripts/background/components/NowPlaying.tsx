@@ -11,11 +11,15 @@ import Config from 'src/config';
 
 interface INowPlayingProps {
   nowPlaying: INowPlayingReduxState;
+  mute: boolean;
   roomId: string;
   fillNowPlayingAction: typeof fillNowPlayingAction;
 }
 
-const mapStateToProps = ({ nowPlaying }: IReduxState) => ({ nowPlaying });
+const mapStateToProps = ({ nowPlaying, player: { mute } }: IReduxState) => ({
+  nowPlaying,
+  mute,
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<{}>) => bindActionCreators({ fillNowPlayingAction }, dispatch);
 
@@ -33,8 +37,11 @@ class NowPlaying extends React.Component<INowPlayingProps> {
       });
   }
   render() {
-    const { streamUrl, timestamp } = this.props.nowPlaying;
-    return <Audio url={`${Config.ApiEnv.baseURL}stream?v=${streamUrl}&t=${timestamp}`} />;
+    const {
+      nowPlaying: { streamUrl, timestamp },
+      mute,
+    } = this.props;
+    return <Audio url={`${Config.ApiEnv.baseURL}stream?v=${streamUrl}&t=${timestamp}`} mute={mute} />;
   }
 }
 

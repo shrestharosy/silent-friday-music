@@ -26,6 +26,7 @@ const nowPlayingReducer = (state = initialState, action: NowPlayingActionType) =
         ...state,
         ...action.payload,
       };
+
     case ActionConstants.RESET_NOW_PLAYING_STATE:
       return {
         ...initialState,

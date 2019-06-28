@@ -3,9 +3,13 @@ import { Router } from 'express';
 import { getAllUsers, getUserById, getUserByGoogleId, createUser, userService, searchUser } from '../services/user';
 
 import { IVerifiedRequest } from '../middlewares/verifyToken';
+import validationMiddleware from '../middlewares/validation';
+import { createUserSchema } from '../validationSchema/user';
 import responseMiddleware, { IResponseRequest } from '../middlewares/response';
 
 const userRouter = Router();
+
+const userValidationMiddleware = validationMiddleware(createUserSchema);
 
 userRouter.get(
   '/',
@@ -74,7 +78,7 @@ userRouter.get(
   responseMiddleware
 );
 
-userRouter.post('/', async (req: IResponseRequest, res, next) => {
+userRouter.post('/', userValidationMiddleware, async (req: IResponseRequest, res, next) => {
   try {
     const data = await createUser(req.body);
     req.response = {

@@ -18,6 +18,8 @@ class Player extends React.Component<IPlayerProps> {
   }
 }
 
-const mapStateToProps = ({ broadcast }: IReduxState) => ({ ...broadcast });
+const mapStateToProps = ({ broadcast }: IReduxState) => ({
+  ...broadcast,
+});
 
 export default connect(mapStateToProps)(Player);

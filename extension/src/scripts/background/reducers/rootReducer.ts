@@ -6,6 +6,7 @@ import profile, { IProfileReduxState } from './profile';
 import active, { IActiveReduxState } from './active';
 import song, { IPlaylistReduxState } from './song';
 import nowPlaying, { INowPlayingReduxState } from './nowPlaying';
+import player, { IPlayerReduxState } from './player';
 
 export interface IReduxState {
   broadcast: IBroadcastReduxState;
@@ -14,6 +15,7 @@ export interface IReduxState {
   active: IActiveReduxState;
   song: IPlaylistReduxState;
   nowPlaying: INowPlayingReduxState;
+  player: IPlayerReduxState;
 }
 
 export default combineReducers<IReduxState>({
@@ -23,4 +25,5 @@ export default combineReducers<IReduxState>({
   active,
   song,
   nowPlaying,
+  player,
 });

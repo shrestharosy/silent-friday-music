@@ -17,7 +17,7 @@ export interface IAddMembersToRoomPayload {
 
 export async function createRoomAPI(payload: ICreateRoomPayload) {
   const { name, members } = payload;
-  const URL = `/rooms/`;
+  const URL = `/rooms`;
   const DATA = {
     name,
     members,

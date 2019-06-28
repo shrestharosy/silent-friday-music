@@ -12,19 +12,18 @@ import {
   fillActiveAction,
   fillNowPlayingAction,
   fillBroadcastAction,
+  fillPlayerAction,
 } from 'src/actionCreators/actionCreator';
 import * as storageUtils from 'src/utils/storage.utils';
 import sendActionToBackground from 'src/popup/service/background.service';
 import { IRoom } from './Rooms';
 import NowPlaying from '../Songs/NowPlaying';
-import axiosInstance from 'src/utils/axios';
 import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
 import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
-import { INowPlayingReduxState } from 'src/scripts/background/reducers/nowPlaying';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
 import AddMembers from './AddMembers/AddMembers';
 
@@ -35,6 +34,7 @@ interface IMainState {
   showPlaylist: boolean;
   showAddMembers: boolean;
   currentSong: ISong | null;
+  mute: boolean;
 }
 
 interface IRoomProps {
@@ -48,6 +48,7 @@ interface IRoomProps {
   leaveRoomAction: typeof leaveRoomAction;
   fillActiveAction: typeof fillActiveAction;
   fillBroadcastAction: typeof fillBroadcastAction;
+  fillPlayerAction: typeof fillPlayerAction;
 }
 
 class Room extends React.Component<IRoomProps, IMainState> {
@@ -60,6 +61,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       showPlaylist: false,
       showAddMembers: false,
       currentSong: null,
+      mute: false,
     };
   }
 
@@ -115,6 +117,14 @@ class Room extends React.Component<IRoomProps, IMainState> {
     } catch (error) {}
   };
 
+  toggleMute = () => {
+    const { mute } = this.state;
+    this.setState({
+      mute: !mute,
+    });
+    this.props.fillPlayerAction({ mute: !mute });
+  };
+
   fetchRoomDetails = async () => {
     if (this.props.roomId) {
       const { roomId } = this.props;
@@ -131,14 +141,16 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   fetchSongDetails = async () => {
     const { songId } = this.props;
-    try {
-      const currentSong = await new Promise<ISong>((resolve, reject) => {
-        this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
-      });
-      this.setState({
-        currentSong,
-      });
-    } catch (error) {}
+    if (songId.length > 0) {
+      try {
+        const currentSong = await new Promise<ISong>((resolve, reject) => {
+          this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
+        });
+        this.setState({
+          currentSong,
+        });
+      } catch (error) {}
+    }
   };
 
   togglePlaylist = () => {
@@ -168,7 +180,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, currentRoom, showPlaylist, currentSong, showAddMembers } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong, mute, showAddMembers } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -176,7 +188,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
           <div className="dash-title-bar">
             <span className="room-name">{currentRoom && currentRoom.name}</span>
             <div className="dash-buttons">
-              <span>
+              <span onClick={() => this.toggleMute()} className={`${mute ? 'is-muted' : ''}`}>
                 <FontAwesomeIcon icon={faVolumeMute} />
               </span>
               <span onClick={this.toggleAddMembers}>
@@ -230,6 +242,7 @@ const mapDispatchToProps = (
     fetchCurrentSongDetailsAction: typeof fetchCurrentSongDetailsAction;
     leaveRoomAction: typeof leaveRoomAction;
     fillActiveAction: typeof fillActiveAction;
+    fillPlayerAction: typeof fillPlayerAction;
   }>
 ) =>
   bindActionCreators(
@@ -242,11 +255,14 @@ const mapDispatchToProps = (
       leaveRoomAction,
       fillActiveAction,
       fillBroadcastAction,
+      fillPlayerAction,
     },
     dispatch
   );
 
-const mapStateToProps = ({ nowPlaying: { songId } }: IReduxState) => ({ songId });
+const mapStateToProps = ({ nowPlaying: { songId } }: IReduxState) => ({
+  songId,
+});
 
 export default connect(
   mapStateToProps,

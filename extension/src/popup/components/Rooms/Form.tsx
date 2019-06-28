@@ -9,6 +9,7 @@ import { IUser } from '../../../sagas/user/effects';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
+import { IRoom } from './Rooms';
 
 interface ICreateRoomFormProps {
   profile: IProfileReduxState;
@@ -24,6 +25,7 @@ interface IFormValues {
 
 interface ICreateRoomFormState {
   isLoading: boolean;
+  isSubmit: boolean;
   options: Array<IOptionsProps>;
 }
 
@@ -41,12 +43,13 @@ class CreateRoomForm extends React.Component<
     this.state = {
       isLoading: false,
       options: [],
+      isSubmit: false,
     };
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    this.props.setFieldValue('roomName', value.trim());
+    this.props.setFieldValue('roomName', value);
   };
 
   getOptionsAsync = async (input: string) => {
@@ -98,6 +101,8 @@ class CreateRoomForm extends React.Component<
     } = this.props;
 
     const { isLoading, options } = this.state;
+
+    console.log(isSubmitting);
     return (
       <div className="new-room-form-wrapper">
         <Form>
@@ -116,13 +121,11 @@ class CreateRoomForm extends React.Component<
           <Select
             id={'usersList'}
             name={'usersList'}
-            // classNamePrefix={'select-active'}
             placeholder={'Enter name of your friends...'}
             isLoading={isLoading}
             options={options}
             onChange={this.handleUserSelect}
             onMenuOpen={() => this.getOptionsAsync('')}
-            // onInputChange={this.handleInputChange}
             value={usersList}
             isSearchable={true}
             isClearable={true}
@@ -132,7 +135,7 @@ class CreateRoomForm extends React.Component<
 
           {touched.usersList && errors && errors.usersList && <span>{errors.usersList}</span>}
           <button type="submit" disabled={!dirty || isSubmitting} className="create-button">
-            START STREAMING
+            {isSubmitting ? 'PLEASE WAIT...' : 'START STREAMING'}
           </button>
         </Form>
       </div>
@@ -152,29 +155,32 @@ const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
   },
   validate: (values: IFormValues) => {
     let errors: { [key: string]: string } = {};
-    if (values.roomName.length === 0) {
+    if (values.roomName.trim().length === 0) {
       errors.roomName = 'Please enter a room name';
-    }
-    if (values.usersList.length === 0) {
-      errors.usersList = 'Please select at least one user';
     }
     return errors;
   },
   handleSubmit: async (values: IFormValues, actions: FormikBag<ICreateRoomFormProps, {}>) => {
-    const { roomName: name, usersList } = values;
+    const { roomName, usersList } = values;
+    const trimmedName = roomName.trim();
     const members: string[] = usersList.map((user: IOptionsProps) => {
       return user.value;
     });
     try {
-      await actions.props.createRoomAction({ name, members });
-      actions.props.fillActiveAction({
-        component: AvailableComponents.ROOM_LIST,
-        id: '',
+      const room = await new Promise((resolve, reject) => {
+        actions.props.createRoomAction({ name: trimmedName, members }, resolve, reject);
+      }).then((room: IRoom) => {
+        return room;
       });
+      actions.props.fillActiveAction({
+        component: AvailableComponents.ROOM_DETAILS,
+        id: room._id,
+      });
+      actions.setSubmitting(false);
     } catch (error) {
+      actions.setSubmitting(false);
       throw error;
     }
-    actions.setSubmitting(false);
   },
 })(CreateRoomForm);
 

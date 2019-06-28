@@ -4,12 +4,15 @@ import * as roomServices from '../services/room';
 import * as songControllers from '../controllers/song';
 import { IVerifiedRequest } from '../middlewares/verifyToken';
 import validationMiddleware from '../middlewares/validation';
-import { createRoomSchema } from '../validationSchema/room';
+import { createRoomSchema, updateRoomSchema } from '../validationSchema/room';
+import { addSongSchema } from '../validationSchema/song';
 import responseMiddleware, { IResponseRequest } from '../middlewares/response';
 
 const roomsRouter = Router();
 
-const roomValidationMiddleware = validationMiddleware(createRoomSchema);
+const createRoomValidationMiddleware = validationMiddleware(createRoomSchema);
+const updateRoomValidationMiddleware = validationMiddleware(updateRoomSchema);
+const songValidationMiddleware = validationMiddleware(addSongSchema);
 
 roomsRouter.get(
   '/',
@@ -59,7 +62,7 @@ roomsRouter.get(
 
 roomsRouter.post(
   '/',
-  roomValidationMiddleware,
+  createRoomValidationMiddleware,
   async (req: IVerifiedRequest & IResponseRequest, res, next) => {
     try {
       const { body } = req;
@@ -83,6 +86,7 @@ roomsRouter.post(
 
 roomsRouter.put(
   '/:roomId',
+  updateRoomValidationMiddleware,
   async (req: IResponseRequest, res, next) => {
     try {
       const roomUpdate = req.body;
@@ -102,6 +106,7 @@ roomsRouter.put(
 
 roomsRouter.patch(
   '/:roomId',
+  updateRoomValidationMiddleware,
   async (req: IResponseRequest, res, next) => {
     try {
       const roomUpdate = req.body;
@@ -141,6 +146,7 @@ roomsRouter.patch(
 
 roomsRouter.post(
   '/:roomId/songs',
+  songValidationMiddleware,
   async (req: IResponseRequest, res, next) => {
     const roomId = req.params.roomId;
     const { url } = req.body;
