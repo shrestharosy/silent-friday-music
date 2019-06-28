@@ -21,9 +21,8 @@ services:
     networks:
       - sfm_network
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: sfm-admin
-      MONGO_INITDB_ROOT_PASSWORD: sfm-admin-123
+    env_file:
+      - /home/ubuntu/env/.mongoenv
     volumes:
       - /home/ubuntu/mongo_volume:/data/db
 
