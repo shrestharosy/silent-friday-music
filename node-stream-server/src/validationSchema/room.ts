@@ -1,7 +1,6 @@
 import Joi from 'joi';
 
 const name = Joi.string()
-  .alphanum()
   .max(30)
   .error(errors => {
     errors.forEach(err => {
@@ -22,7 +21,7 @@ const name = Joi.string()
   });
 
 const members = Joi.array()
-  .items(Joi.string().required())
+  .items(Joi.string())
   .unique();
 
 const master = Joi.string();
@@ -37,7 +36,7 @@ const baseRoom = Joi.object().keys({
 });
 
 export const createRoomSchema = baseRoom.keys({
-  members: members.min(1),
+  name: name.required(),
 });
 
 export const updateRoomSchema = baseRoom;

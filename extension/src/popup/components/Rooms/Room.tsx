@@ -122,8 +122,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
     this.setState({
       mute: !mute,
     });
-    console.log('roz', this.state.mute);
-    this.props.fillPlayerAction({ mute });
+    this.props.fillPlayerAction({ mute: !mute });
   };
 
   fetchRoomDetails = async () => {
@@ -142,14 +141,16 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   fetchSongDetails = async () => {
     const { songId } = this.props;
-    try {
-      const currentSong = await new Promise<ISong>((resolve, reject) => {
-        this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
-      });
-      this.setState({
-        currentSong,
-      });
-    } catch (error) {}
+    if (songId.length > 0) {
+      try {
+        const currentSong = await new Promise<ISong>((resolve, reject) => {
+          this.props.fetchCurrentSongDetailsAction(songId, resolve, reject);
+        });
+        this.setState({
+          currentSong,
+        });
+      } catch (error) {}
+    }
   };
 
   togglePlaylist = () => {
