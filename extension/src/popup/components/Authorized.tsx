@@ -47,7 +47,10 @@ class Authorized extends React.Component<IAuthorizedComponentsProps> {
         this.props.fetchProfileAction(resolve, reject);
       });
     } catch (error) {
-      console.log(error);
+      this.props.fillActiveAction({
+        component: AvailableComponents.LOGIN,
+        id: '',
+      });
     }
   }
 

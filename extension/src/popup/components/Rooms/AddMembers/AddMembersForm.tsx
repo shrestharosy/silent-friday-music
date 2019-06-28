@@ -1,30 +1,28 @@
 import * as React from 'react';
+import { withFormik, FormikBag, InjectedFormikProps, Form } from 'formik';
+import { fetchUsersAction, addMembersToRoomAction } from 'src/actionCreators/actionCreator';
+import { IRoomReduxState } from 'src/scripts/background/reducers/room';
+import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
+import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { Form, InjectedFormikProps, withFormik, FormikBag } from 'formik';
+import { IUser } from 'src/sagas/user/effects';
+import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
 import Select from 'react-select';
 
-import { fetchUsersAction, createRoomAction, fillActiveAction } from 'src/actionCreators/actionCreator';
-import { IUser } from '../../../sagas/user/effects';
-import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
-import { IProfileReduxState } from 'src/scripts/background/reducers/profile';
-import { AvailableComponents } from 'src/scripts/background/reducers/active';
+interface IAddMembersFormState {
+  isLoading: boolean;
+  options: Array<IOptionsProps>;
+}
 
-interface ICreateRoomFormProps {
+interface IAddMembersFormProps {
+  room: IRoomReduxState;
   profile: IProfileReduxState;
   fetchUsersAction: typeof fetchUsersAction;
-  createRoomAction: typeof createRoomAction;
-  fillActiveAction: typeof fillActiveAction;
+  addMembersToRoomAction: typeof addMembersToRoomAction;
 }
 
 interface IFormValues {
-  roomName: string;
   usersList: Array<IOptionsProps>;
-}
-
-interface ICreateRoomFormState {
-  isLoading: boolean;
-  options: Array<IOptionsProps>;
 }
 
 interface IOptionsProps {
@@ -32,11 +30,11 @@ interface IOptionsProps {
   label: string;
 }
 
-class CreateRoomForm extends React.Component<
-  InjectedFormikProps<ICreateRoomFormProps, IFormValues>,
-  ICreateRoomFormState
+class AddMembersForm extends React.Component<
+  InjectedFormikProps<IAddMembersFormProps, IFormValues>,
+  IAddMembersFormState
 > {
-  constructor(props: Readonly<InjectedFormikProps<ICreateRoomFormProps, IFormValues>>) {
+  constructor(props: Readonly<InjectedFormikProps<IAddMembersFormProps, IFormValues>>) {
     super(props);
     this.state = {
       isLoading: false,
@@ -44,17 +42,14 @@ class CreateRoomForm extends React.Component<
     };
   }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    this.props.setFieldValue('roomName', value.trim());
+  clearUserSelect = () => {
+    this.setState({});
   };
-
   getOptionsAsync = async (input: string) => {
     this.setState({
       isLoading: true,
     });
 
-    // const formattedInput = input ? input : '';
     const users = await new Promise((resolve, reject) => {
       this.props.fetchUsersAction(resolve, reject);
     })
@@ -65,8 +60,14 @@ class CreateRoomForm extends React.Component<
         throw error;
       });
 
+    const currentUsers = this.props.room.members;
+
+    const isNotCurrentlyInRoom = (userId: string) => {
+      return !currentUsers.includes(userId);
+    };
+
     const filteredUsers: Array<IUser> = users.filter((user: IUser) => {
-      return user._id !== this.props.profile._id;
+      return user._id !== this.props.profile._id && isNotCurrentlyInRoom(user._id);
     });
 
     const mappedOptions: Array<IOptionsProps> = filteredUsers.map((user: IUser) => {
@@ -79,10 +80,6 @@ class CreateRoomForm extends React.Component<
     });
   };
 
-  // handleInputChange = (input: string) => {
-  //   this.getOptionsAsync(input);
-  // };
-
   handleUserSelect = (value: Array<IOptionsProps>) => {
     value = value ? value : [];
     this.props.setFieldValue('usersList', value);
@@ -90,7 +87,7 @@ class CreateRoomForm extends React.Component<
 
   render() {
     const {
-      values: { roomName, usersList },
+      values: { usersList },
       dirty,
       isSubmitting,
       errors,
@@ -98,21 +95,10 @@ class CreateRoomForm extends React.Component<
     } = this.props;
 
     const { isLoading, options } = this.state;
+
     return (
-      <div className="new-room-form-wrapper">
+      <div className="add-member-form-wrapper">
         <Form>
-          <input
-            name={'roomName'}
-            id={'roomName'}
-            type="text"
-            className={'name-input'}
-            value={roomName}
-            onChange={event => this.handleChange(event)}
-            placeholder={'Enter Room Name'}
-          />
-
-          {touched.roomName && errors && errors.roomName && <span>{errors.roomName}</span>}
-
           <Select
             id={'usersList'}
             name={'usersList'}
@@ -129,10 +115,9 @@ class CreateRoomForm extends React.Component<
             isMulti={true}
             className={'user-select'}
           />
-
           {touched.usersList && errors && errors.usersList && <span>{errors.usersList}</span>}
           <button type="submit" disabled={!dirty || isSubmitting} className="create-button">
-            START STREAMING
+            {isSubmitting ? 'Working on it...' : 'Add Members'}
           </button>
         </Form>
       </div>
@@ -140,57 +125,49 @@ class CreateRoomForm extends React.Component<
   }
 }
 
-const WrappedForm = withFormik<ICreateRoomFormProps, IFormValues>({
+const WrappedWithFormik = withFormik<IAddMembersFormProps, IFormValues>({
   enableReinitialize: true,
   mapPropsToValues() {
     return {
-      roomName: '',
       usersList: [],
-      errorInRoomName: '',
       errorInUsersList: '',
     };
   },
   validate: (values: IFormValues) => {
     let errors: { [key: string]: string } = {};
-    if (values.roomName.length === 0) {
-      errors.roomName = 'Please enter a room name';
-    }
     if (values.usersList.length === 0) {
       errors.usersList = 'Please select at least one user';
     }
     return errors;
   },
-  handleSubmit: async (values: IFormValues, actions: FormikBag<ICreateRoomFormProps, {}>) => {
-    const { roomName: name, usersList } = values;
+  handleSubmit: async (values: IFormValues, actions: FormikBag<IAddMembersFormProps, {}>) => {
+    const { usersList } = values;
+    const { _id: roomId } = actions.props.room;
     const members: string[] = usersList.map((user: IOptionsProps) => {
       return user.value;
     });
     try {
-      await actions.props.createRoomAction({ name, members });
-      actions.props.fillActiveAction({
-        component: AvailableComponents.ROOM_LIST,
-        id: '',
-      });
+      await actions.props.addMembersToRoomAction({ roomId, members });
+      actions.resetForm();
     } catch (error) {
       throw error;
     }
     actions.setSubmitting(false);
   },
-})(CreateRoomForm);
+})(AddMembersForm);
 
-const mapStateToProps = ({ profile }: IReduxState) => ({ profile });
+const mapStateToProps = ({ room, profile }: IReduxState) => ({ room, profile });
 
 const mapDispatchToProps = (
   dispatch: Dispatch<{
     fetchUsersAction: typeof fetchUsersAction;
-    createRoomAction: typeof createRoomAction;
-    fillActiveAction: typeof fillActiveAction;
+    addMembersToRoomAction: typeof addMembersToRoomAction;
   }>
-) => bindActionCreators({ fetchUsersAction, createRoomAction, fillActiveAction }, dispatch);
+) => bindActionCreators({ fetchUsersAction, addMembersToRoomAction }, dispatch);
 
-const ConnectedForm = connect(
+const AddMembersConnectedForm = connect(
   mapStateToProps,
   mapDispatchToProps
-)(WrappedForm);
+)(WrappedWithFormik);
 
-export default ConnectedForm;
+export default AddMembersConnectedForm;

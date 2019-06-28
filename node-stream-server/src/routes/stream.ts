@@ -4,7 +4,7 @@ import FfmpegCommand from 'fluent-ffmpeg';
 
 const streamRouter = Router();
 
-streamRouter.get('/', (req, res) => {
+streamRouter.get('/', (req, res, next) => {
   try {
     const requestLink: string = req.query.v;
     const startTimestamp: string = req.query.t;
@@ -35,7 +35,7 @@ streamRouter.get('/', (req, res) => {
       youtubeStream.pipe(res);
     }
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 

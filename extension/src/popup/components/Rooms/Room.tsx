@@ -25,12 +25,14 @@ import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/fre
 import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
+import AddMembers from './AddMembers/AddMembers';
 
 interface IMainState {
   isLoaded: boolean;
   searchLink: string;
   currentRoom: IRoom | null;
   showPlaylist: boolean;
+  showAddMembers: boolean;
   currentSong: ISong | null;
   mute: boolean;
 }
@@ -57,6 +59,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       searchLink: '',
       currentRoom: null,
       showPlaylist: false,
+      showAddMembers: false,
       currentSong: null,
       mute: false,
     };
@@ -95,19 +98,23 @@ class Room extends React.Component<IRoomProps, IMainState> {
     event.preventDefault();
 
     const { searchLink } = this.state;
-    sendActionToBackground({
-      type: 'LOAD_AUDIO',
-      data: {
-        requestUrl: this.state.searchLink,
-      },
-    });
 
     this.addToPlaylist(searchLink);
   };
 
-  addToPlaylist = (url: string) => {
-    const { roomId, addToPlaylistAction } = this.props;
-    addToPlaylistAction({ roomId, url });
+  addToPlaylist = async (url: string) => {
+    try {
+      await new Promise((resolve, reject) => {
+        this.props.addToPlaylistAction(
+          {
+            roomId: this.props.roomId,
+            url,
+          },
+          resolve,
+          reject
+        );
+      });
+    } catch (error) {}
   };
 
   toggleMute = () => {
@@ -151,6 +158,12 @@ class Room extends React.Component<IRoomProps, IMainState> {
     }));
   };
 
+  toggleAddMembers = () => {
+    this.setState(prevState => ({
+      showAddMembers: !prevState.showAddMembers,
+    }));
+  };
+
   handleLeaveRoom = async () => {
     try {
       await new Promise((resolve, reject) => {
@@ -166,7 +179,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, currentRoom, showPlaylist, currentSong, mute } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong, mute, showAddMembers } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -177,7 +190,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
               <span onClick={() => this.toggleMute()} className={`${mute ? 'is-muted' : ''}`}>
                 <FontAwesomeIcon icon={faVolumeMute} />
               </span>
-              <span>
+              <span onClick={this.toggleAddMembers}>
                 <FontAwesomeIcon icon={faUserPlus} />
               </span>
               <span onClick={this.handleLeaveRoom}>
@@ -213,6 +226,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
           togglePlaylist={this.togglePlaylist}
           currentSongId={currentSong && currentSong._id}
         />
+        <AddMembers roomId={roomId} showAddMembers={showAddMembers} toggleAddMembers={this.toggleAddMembers} />
       </React.Fragment>
     );
   }

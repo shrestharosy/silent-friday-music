@@ -1,0 +1,13 @@
+version: '3'
+services:
+   app:
+     build: .
+     ports:
+      - '3002:3002'
+     volumes:
+       - $PWD:/app/
+     container_name: sfm-server-node
+   db:
+     image: mongo
+     ports:
+     - '8001:27017'

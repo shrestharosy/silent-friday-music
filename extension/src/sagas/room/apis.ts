@@ -10,6 +10,11 @@ export interface IRemoveFinishedSongPayload {
   songId: string;
 }
 
+export interface IAddMembersToRoomPayload {
+  roomId: string;
+  members: Array<string>;
+}
+
 export async function createRoomAPI(payload: ICreateRoomPayload) {
   const { name, members } = payload;
   const URL = `/rooms/`;
@@ -57,6 +62,18 @@ export function removeFinishedSong(payload: IRemoveFinishedSongPayload) {
   return axiosInstance
     .patch(`/rooms/${roomId}/removeSong`, {
       songId,
+    })
+    .then(({ data }) => data)
+    .catch(error => {
+      throw error;
+    });
+}
+
+export function addMembersToRoom(payload: IAddMembersToRoomPayload) {
+  const { roomId, members } = payload;
+  return axiosInstance
+    .patch(`/rooms/${roomId}`, {
+      members,
     })
     .then(({ data }) => data)
     .catch(error => {

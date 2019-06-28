@@ -8,8 +8,8 @@ import { ILoginPayload } from 'src/sagas/auth/apis';
 import { IAddtoPlaylistPayload, ISongsPayload } from 'src/sagas/song/apis';
 import { IFillPlaylistActionPayload } from 'src/scripts/background/reducers/song';
 import { IFillNowPlayingActionPayload } from 'src/scripts/background/reducers/nowPlaying';
-import { ICreateRoomPayload, IRemoveFinishedSongPayload } from 'src/sagas/room/apis';
 import { IFillPlayerActionPayload } from '../scripts/background/reducers/player';
+import { ICreateRoomPayload, IRemoveFinishedSongPayload, IAddMembersToRoomPayload } from 'src/sagas/room/apis';
 
 export interface FillBroadcastActionType {
   type: typeof actionConstants.FILL_BROADCAST_ACTION;
@@ -108,4 +108,9 @@ export interface ResetRoomStateType extends ActionCallbacks {
 
 export interface ResetBroadcastStateType extends ActionCallbacks {
   type: typeof actionConstants.RESET_BROADCAST_STATE;
+}
+
+export interface AddMembersToRoomType extends ActionCallbacks {
+  type: typeof actionConstants.ADD_MEMBERS_TO_ROOM;
+  payload: IAddMembersToRoomPayload;
 }

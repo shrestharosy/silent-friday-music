@@ -6,6 +6,7 @@ import { IVerifiedRequest } from '../middlewares/verifyToken';
 import validationMiddleware from '../middlewares/validation';
 import { createRoomSchema, updateRoomSchema } from '../validationSchema/room';
 import { addSongSchema } from '../validationSchema/song';
+import responseMiddleware, { IResponseRequest } from '../middlewares/response';
 
 const roomsRouter = Router();
 
@@ -13,130 +14,186 @@ const createRoomValidationMiddleware = validationMiddleware(createRoomSchema);
 const updateRoomValidationMiddleware = validationMiddleware(updateRoomSchema);
 const songValidationMiddleware = validationMiddleware(addSongSchema);
 
-roomsRouter.get('/', async (req: IVerifiedRequest, res) => {
-  try {
-    const { query } = req;
-    const { auth = { userId: '' } } = req;
-    const roomList = await roomServices.getAllRooms({
-      ...query,
-      userId: auth.userId,
-    });
+roomsRouter.get(
+  '/',
+  async (req: IVerifiedRequest & IResponseRequest, res, next) => {
+    try {
+      const { query } = req;
+      const { auth = { userId: '' } } = req;
+      const roomList = await roomServices.getAllRooms({
+        ...query,
+        userId: auth.userId,
+      });
 
-    res.json(roomList);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
+      req.response = {
+        payload: roomList,
+      };
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
 
-roomsRouter.get('/:roomId', async (req, res) => {
-  try {
-    const {
-      params: { roomId },
-    } = req;
+roomsRouter.get(
+  '/:roomId',
+  async (req: IResponseRequest, res, next) => {
+    try {
+      const {
+        params: { roomId },
+      } = req;
 
-    const roomWithGivenId = await roomServices.getRoomById(roomId);
+      const roomWithGivenId = await roomServices.getRoomById(roomId);
 
-    roomServices.isMasterActiveInRoom(roomWithGivenId);
+      roomServices.isMasterActiveInRoom(roomWithGivenId);
 
-    res.json(roomWithGivenId);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
+      req.response = {
+        payload: roomWithGivenId,
+      };
 
-roomsRouter.post('/', createRoomValidationMiddleware, async (req: IVerifiedRequest, res, next) => {
-  try {
-    const { body } = req;
-    const { auth = { userId: '' } } = req;
-    const createdRoom = await roomServices.createRoom({
-      ...body,
-      master: auth.userId,
-      members: [...body.members, auth.userId],
-    });
-    res.json(createdRoom);
-  } catch (error) {
-    next(error);
-    // res.status(500).send({
-    //   message: error.message
-    // });
-  }
-});
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
 
-roomsRouter.put('/:roomId', updateRoomValidationMiddleware, async (req, res) => {
-  try {
-    const roomUpdate = req.body;
+roomsRouter.post(
+  '/',
+  createRoomValidationMiddleware,
+  async (req: IVerifiedRequest & IResponseRequest, res, next) => {
+    try {
+      const { body } = req;
+      const { auth = { userId: '' } } = req;
+      const createdRoom = await roomServices.createRoom({
+        ...body,
+        master: auth.userId,
+        members: [...body.members, auth.userId],
+      });
+
+      req.response = {
+        payload: createdRoom,
+      };
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
+
+roomsRouter.put(
+  '/:roomId',
+  updateRoomValidationMiddleware,
+  async (req: IResponseRequest, res, next) => {
+    try {
+      const roomUpdate = req.body;
+      const roomId = req.params.roomId;
+      const updatedRoom = await roomServices.updateRoom(roomId, roomUpdate);
+
+      req.response = {
+        payload: updatedRoom,
+      };
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
+
+roomsRouter.patch(
+  '/:roomId',
+  updateRoomValidationMiddleware,
+  async (req: IResponseRequest, res, next) => {
+    try {
+      const roomUpdate = req.body;
+      const roomId = req.params.roomId;
+      const updatedRoom = await roomServices.updateRoom(roomId, roomUpdate);
+
+      req.response = {
+        payload: updatedRoom,
+      };
+
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
+
+roomsRouter.patch(
+  '/:roomId/removeSong',
+  async (req: IResponseRequest, res, next) => {
+    try {
+      const roomId = req.params.roomId;
+      const songId = req.body.songId;
+      const updatedRoom = await roomServices.deleteCompletedSong(roomId, songId);
+
+      req.response = {
+        payload: updatedRoom,
+      };
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
+
+roomsRouter.post(
+  '/:roomId/songs',
+  songValidationMiddleware,
+  async (req: IResponseRequest, res, next) => {
     const roomId = req.params.roomId;
-    const updatedRoom = await roomServices.updateRoom(roomId, roomUpdate);
-    res.json(updatedRoom);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
+    const { url } = req.body;
+    try {
+      const updatedPlaylist = await songControllers.addToPlaylist({
+        roomId,
+        url,
+      });
 
-roomsRouter.patch('/:roomId', updateRoomValidationMiddleware, async (req, res) => {
-  try {
-    const roomUpdate = req.body;
+      req.response = {
+        payload: updatedPlaylist,
+      };
+
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
+
+roomsRouter.get(
+  '/:roomId/songs',
+  async (req: IResponseRequest, res, next) => {
     const roomId = req.params.roomId;
-    const updatedRoom = await roomServices.updateRoom(roomId, roomUpdate);
-    res.json(updatedRoom);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
+    try {
+      const playlist = await songControllers.getPlaylist({ roomId });
+      req.response = {
+        payload: playlist,
+      };
+      next();
+    } catch (error) {
+      next(error.message);
+    }
+  },
+  responseMiddleware
+);
 
-roomsRouter.patch('/:roomId/removeSong', async (req, res) => {
-  try {
+roomsRouter.get(
+  '/:roomId/leave',
+  async (req: IResponseRequest, res, next) => {
     const roomId = req.params.roomId;
-    const songId = req.body.songId;
-    const updatedRoom = await roomServices.deleteCompletedSong(roomId, songId);
-    res.json(updatedRoom);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
+    roomServices.selectMaster(roomId);
 
-roomsRouter.post('/:roomId/songs', songValidationMiddleware, async (req, res) => {
-  const roomId = req.params.roomId;
-  const { url } = req.body;
-  try {
-    const updatedPlaylist = await songControllers.addToPlaylist({
-      roomId,
-      url,
-    });
-    res.json(updatedPlaylist);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
-
-roomsRouter.get('/:roomId/songs', async (req, res) => {
-  const roomId = req.params.roomId;
-  try {
-    const playlist = await songControllers.getPlaylist({ roomId });
-    res.json(playlist);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message,
-    });
-  }
-});
-
-roomsRouter.get('/:roomId/leave', async (req, res) => {
-  const roomId = req.params.roomId;
-  roomServices.selectMaster(roomId);
-  res.status(200).send();
-});
+    next();
+  },
+  responseMiddleware
+);
 
 export default roomsRouter;

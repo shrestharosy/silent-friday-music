@@ -2,7 +2,7 @@ import { takeLatest } from 'redux-saga/effects';
 
 import * as actionConstants from 'src/constants/actions';
 
-import { createRoomEffect, removeFinishedSongEffect } from './effects';
+import { createRoomEffect, removeFinishedSongEffect, addMembersToRoomEffect } from './effects';
 
 import { fetchRoomsListEffect, fetchRoomInfoEffect, leaveRoomEffect } from './effects';
 
@@ -26,6 +26,10 @@ export function* removeFinishedSongWatcher() {
   yield takeLatest(actionConstants.REMOVE_FINISHED_SONG, removeFinishedSongEffect);
 }
 
+export function* addMembersToRoomWatcher() {
+  yield takeLatest(actionConstants.ADD_MEMBERS_TO_ROOM, addMembersToRoomEffect);
+}
+
 export default function roomWatchers() {
   return [
     createRoomWatcher(),
@@ -33,5 +37,6 @@ export default function roomWatchers() {
     fetchRoomInfoWatcher(),
     leaveRoomWatcher(),
     removeFinishedSongWatcher(),
+    addMembersToRoomWatcher(),
   ];
 }

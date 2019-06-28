@@ -7,6 +7,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { IReduxState } from '../reducers/rootReducer';
 import { UPDATE_NOW_PLAYING } from 'src/constants/socket';
+import Config from 'src/config';
 
 interface INowPlayingProps {
   nowPlaying: INowPlayingReduxState;
@@ -40,7 +41,7 @@ class NowPlaying extends React.Component<INowPlayingProps> {
       nowPlaying: { streamUrl, timestamp },
       mute,
     } = this.props;
-    return <Audio url={`${streamUrl}&t=${timestamp}`} mute={mute} />;
+    return <Audio url={`${Config.ApiEnv.baseURL}stream?v=${streamUrl}&t=${timestamp}`} mute={mute} />;
   }
 }
 
