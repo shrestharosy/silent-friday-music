@@ -29,7 +29,7 @@ export async function getSongById(songId: string) {
 
 export async function searchByUrl(url: string) {
   try {
-    const song = await SongModel.find({ streamUrl: url });
+    const song = await SongModel.findOne({ streamUrl: url });
     return song;
   } catch (error) {
     throw error;
@@ -63,21 +63,23 @@ export async function getSongDetails(url: string) {
 
 export async function addSong(url: string) {
   try {
-    // const songs = await searchByUrl(url);
-    // if (songs) {
-    //   return songs[0];
-    // } else {
-    const songDetails = await getSongDetails(url);
-    const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
+    const existingSong = await searchByUrl(url);
 
-    const song = new SongModel({
-      title,
-      thumbnailUrl,
-      streamUrl,
-      lengthSeconds,
-    });
-    const addedSong: ISong = await song.save();
-    return addedSong;
+    if (existingSong === null) {
+      const songDetails = await getSongDetails(url);
+      const { title, thumbnailUrl, streamUrl, lengthSeconds } = songDetails;
+
+      const song = new SongModel({
+        title,
+        thumbnailUrl,
+        streamUrl,
+        lengthSeconds,
+      });
+      const addedSong: ISong = await song.save();
+      return addedSong;
+    } else {
+      return existingSong;
+    }
   } catch (error) {
     throw error;
   }
