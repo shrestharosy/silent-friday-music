@@ -1,4 +1,3 @@
-import { Mongoose, Schema } from 'mongoose';
 import RoomModel, { IRoom, IRoomUpdate } from '../models/room';
 import getSocketInstance from '../services/socket';
 import {
@@ -11,6 +10,7 @@ import {
 import { ISocketRequest, getSocketIds } from '../socket';
 import { Document } from 'mongoose';
 import config from '../config';
+import * as log from 'winston-logger-setup';
 
 interface IRoomQueryParams {
   search?: string;
@@ -133,7 +133,7 @@ export async function selectMaster(roomId: string) {
       activeSocket.once(JSON.stringify({ type: REQUEST_TO_BE_MASTER, roomId }), masterRequestCallBack);
     });
   } catch (error) {
-    console.log(error);
+    log.error(error);
   }
 }
 
@@ -167,6 +167,6 @@ export function isMasterActiveInRoom(room: IRoom & Document) {
       ioInstance.emit(room._id, { type: CHECK_MASTER_IS_ONLINE });
     }
   } catch (error) {
-    console.log(error);
+    log.error(error);
   }
 }

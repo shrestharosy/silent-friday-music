@@ -9,7 +9,6 @@ export interface IResponseRequest extends Request {
 export default function responseMiddleware(req: IResponseRequest, res: Response) {
   if (req.response && req.response) {
     const { payload } = req.response;
-    console.log(payload);
     res.json(payload);
   } else {
     res.send();

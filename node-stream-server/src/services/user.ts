@@ -1,4 +1,5 @@
 import User from '../models/user';
+import * as log from 'winston-logger-setup';
 
 export interface ICreateUser {
   userId: string;
@@ -103,7 +104,7 @@ export async function updateUser(id: string, updatedUserData: IUser) {
 
 export async function searchUser(searchTerm: string) {
   try {
-    console.log('searching');
+    log.cnsl('searching');
     const user = await new Promise<IUser>((resolve, reject) => {
       User.find({ name: { $regex: searchTerm, $options: 'i' } }, (error: Object, response: IUser) => {
         if (error) {
