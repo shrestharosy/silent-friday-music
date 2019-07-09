@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 import config from './config';
 import getSocketInstance from './services/socket';
 import initializeSockerListeners from './socket';
+import * as log from 'winston-logger-setup';
 
 const { dbUrl } = config.mongo;
-mongoose.connect(`${dbUrl}?authSource=admin`, {
+mongoose.connect(`${dbUrl}`, {
   useNewUrlParser: true,
   useFindAndModify: false,
   user: config.mongo.mongoUsername,
@@ -14,15 +15,15 @@ mongoose.connect(`${dbUrl}?authSource=admin`, {
 const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log(`Connected to DB ${dbUrl}`);
+  log.info(`Connected to DB ${dbUrl}`);
 });
 
 db.on('error', (error: any) => {
-  console.log(error);
+  log.error(error);
 });
 
 const server = app.listen(3002, () => {
-  console.log('Server is running..');
+  log.info('Server is running..');
   try {
     getSocketInstance(server);
     initializeSockerListeners();

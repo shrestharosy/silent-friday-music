@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import ytdl from 'ytdl-core';
 import FfmpegCommand from 'fluent-ffmpeg';
+import * as log from 'winston-logger-setup';
 
 const streamRouter = Router();
 
@@ -9,7 +10,7 @@ streamRouter.get('/', (req, res, next) => {
     const requestLink: string = req.query.v;
     const startTimestamp: string = req.query.t;
 
-    console.log(requestLink, req.query, startTimestamp, 'stream router');
+    log.cnsl(requestLink, req.query, startTimestamp, 'stream router');
 
     const youtubeStream = ytdl(requestLink, { filter: 'audioonly' });
 

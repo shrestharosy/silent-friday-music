@@ -9,6 +9,7 @@ dist
 
 ## logs
 yarn-error.log
+*.log
 
 ## environment
 .env*

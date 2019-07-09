@@ -1,6 +1,7 @@
 import getSocketInstance from './services/socket';
-import { BROADCAST_SONG_TIMESTAMP, REQUEST_TO_BE_MASTER } from '../../extension/src/constants/socket';
+import { BROADCAST_SONG_TIMESTAMP } from '../../extension/src/constants/socket';
 import { getUserIdFromAuthHeader } from './utils/auth';
+import * as log from 'winston-logger-setup';
 
 export interface ISocketRequest {
   receiverId: string;
@@ -43,14 +44,13 @@ export default function initializeSockerListeners() {
   });
 
   socketInstance.getIOInstance().on('connect', (socket: ICustomSocket) => {
-    console.log('User connected..', socket.id, socket.auth);
+    log.info('User connected..', socket.id, `${socket.auth}`);
 
     if (socket.auth) {
       ConnectedSocketHash[socket.auth.userId] = socket.id;
     }
 
     socket.on(JSON.stringify({ type: BROADCAST_SONG_TIMESTAMP }), (request: ISocketRequest) => {
-      console.log(request, BROADCAST_SONG_TIMESTAMP);
       socketInstance.getIOInstance().emit(request.receiverId, request.message);
     });
   });

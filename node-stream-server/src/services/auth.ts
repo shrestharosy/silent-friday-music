@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as jwtServices from '../utils/jwt';
 import * as userServices from './user';
+import * as log from 'winston-logger-setup';
 
 interface IUserPayload {
   userId: string;
@@ -45,7 +46,7 @@ export async function loginUser(googleToken: string) {
 
     return authData;
   } catch (error) {
-    console.log(error);
+    log.error(error);
     throw error;
   }
 }
