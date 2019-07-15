@@ -243,6 +243,9 @@ input {
 
 .form-wrapper {
   padding: 0px 20px;
+  display: grid;
+  grid-template-columns: 90% 10%;
+  grid-gap: 10px;
 }
 
 .song-input {
@@ -255,6 +258,17 @@ input {
 
 .song-input::placeholder {
   color: rgba(0,0,0,0.4);
+}
+
+.song-input-button {
+  background-color: rgb(66, 124, 158);
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.song-input-button:hover {
+  cursor: pointer;
 }
 
 .now-playing-wrapper {
