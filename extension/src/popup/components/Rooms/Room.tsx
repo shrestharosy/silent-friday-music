@@ -21,7 +21,7 @@ import NowPlaying from '../Songs/NowPlaying';
 import Playlist from '../Songs/Playlist';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeMute, faUserPlus, faDoorOpen, faListOl } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeMute, faUserPlus, faDoorOpen, faListOl, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ISong } from 'src/scripts/background/reducers/song';
 import { IReduxState } from 'src/scripts/background/reducers/rootReducer';
 import { AvailableComponents } from 'src/scripts/background/reducers/active';
@@ -35,6 +35,7 @@ interface IMainState {
   showAddMembers: boolean;
   currentSong: ISong | null;
   mute: boolean;
+  isSubmitting: boolean;
 }
 
 interface IRoomProps {
@@ -62,6 +63,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
       showAddMembers: false,
       currentSong: null,
       mute: false,
+      isSubmitting: false
     };
   }
 
@@ -94,9 +96,8 @@ class Room extends React.Component<IRoomProps, IMainState> {
     });
   };
 
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  handleSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
     const { searchLink } = this.state;
 
     this.addToPlaylist(searchLink);
@@ -104,7 +105,10 @@ class Room extends React.Component<IRoomProps, IMainState> {
 
   addToPlaylist = async (url: string) => {
     try {
-      await new Promise((resolve, reject) => {
+      this.setState({
+        isSubmitting: true
+      });
+      const response =  await new Promise((resolve, reject) => {
         this.props.addToPlaylistAction(
           {
             roomId: this.props.roomId,
@@ -114,7 +118,17 @@ class Room extends React.Component<IRoomProps, IMainState> {
           reject
         );
       });
+      
+        this.setState({
+          searchLink: ''
+        });
+      
     } catch (error) {}
+     finally {
+      this.setState({
+        isSubmitting: false
+      });
+     }
   };
 
   toggleMute = () => {
@@ -180,7 +194,7 @@ class Room extends React.Component<IRoomProps, IMainState> {
   };
 
   render() {
-    const { searchLink, currentRoom, showPlaylist, currentSong, mute, showAddMembers } = this.state;
+    const { searchLink, currentRoom, showPlaylist, currentSong, mute, showAddMembers, isSubmitting } = this.state;
     const { roomId } = this.props;
     return (
       <React.Fragment>
@@ -199,16 +213,24 @@ class Room extends React.Component<IRoomProps, IMainState> {
               </span>
             </div>
           </div>
-          <div className="form-wrapper">
-            <form onSubmit={this.handleSubmit}>
+          <form>
+            <div className="form-wrapper">
               <input
                 className="song-input"
                 placeholder="Paste a youtube URL to add song to queue..."
                 onChange={this.handleSearchLinkChange}
                 value={searchLink}
+                disabled={this.state.isSubmitting}
               />
-            </form>
-          </div>
+              <button
+                className="song-input-button"
+                onClick={this.handleSubmit}
+                disabled={this.state.isSubmitting}
+              > 
+              { isSubmitting ? <FontAwesomeIcon icon={faSpinner} spin /> : <FontAwesomeIcon icon={faPlus} /> }
+              </button>
+            </div>
+          </form>
           {currentSong ? (
             <NowPlaying title={currentSong.title} imageUrl={currentSong.thumbnailUrl} />
           ) : (
