@@ -20,7 +20,13 @@ export default {
     mongoHostname: process.env.MONGO_HOSTNAME,
     mongoPort: process.env.MONGO_PORT,
     mongoDb: process.env.MONGO_DB,
-    dbUrl: process.env.DB_URL || 'example',
+    dbUrl: (() => {
+      if (process.env.NODE_ENV === 'production') {
+        return `${process.env.DB_URL}?authSource=${process.env.DB_AUTH_SOURCE}`;
+      } else {
+        return process.env.DB_URL || 'example';
+      }
+    })(),
   },
   masterResponseTimeTolerance: process.env.MASTER_RESPONSE_TIME_TOLERANCE || '30000',
 };

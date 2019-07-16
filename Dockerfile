@@ -15,4 +15,4 @@ EXPOSE 8080
 
 WORKDIR node-stream-server
 RUN yarn install 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "run:production" ]

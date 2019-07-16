@@ -20,6 +20,7 @@ db.once('open', () => {
 
 db.on('error', (error: any) => {
   log.error(error);
+  throw error;
 });
 
 const server = app.listen(3002, () => {
