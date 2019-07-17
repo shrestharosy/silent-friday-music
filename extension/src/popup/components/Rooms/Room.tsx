@@ -202,14 +202,17 @@ class Room extends React.Component<IRoomProps, IMainState> {
           <div className="dash-title-bar">
             <span className="room-name">{currentRoom && currentRoom.name}</span>
             <div className="dash-buttons">
-              <span onClick={() => this.toggleMute()} className={`${mute ? 'is-muted' : ''}`}>
+              <span onClick={() => this.toggleMute()} className={`${mute ? 'is-muted' : ''} tooltip`}>
                 <FontAwesomeIcon icon={faVolumeMute} />
+                <span className="tooltiptext">Mute</span>
               </span>
-              <span onClick={this.toggleAddMembers}>
+              <span onClick={this.toggleAddMembers} className={`tooltip`}>
                 <FontAwesomeIcon icon={faUserPlus} />
+                <span className="tooltiptext">Add People</span>
               </span>
-              <span onClick={this.handleLeaveRoom}>
+              <span onClick={this.handleLeaveRoom} className={`tooltip`}>
                 <FontAwesomeIcon icon={faDoorOpen} />
+                <span className="tooltiptext">Leave Room</span>
               </span>
             </div>
           </div>
