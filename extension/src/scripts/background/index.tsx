@@ -6,7 +6,9 @@ import store from './store';
 import BackgroundApp from './App';
 
 const renderBackgroundApp = () => {
-  const [rootDiv] = document.getElementsByTagName('body');
+  const [body] = document.getElementsByTagName('body');
+  const rootDiv = document.createElement('div');
+  body.appendChild(rootDiv);
   if (rootDiv)
     render(
       <Provider store={store}>
